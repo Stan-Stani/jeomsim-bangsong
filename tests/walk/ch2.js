@@ -34,10 +34,14 @@
  {check:()=>state.f.hariMaybe&&state.items.includes('하리 연락처')&&state.items.includes('생수'),msg:'contact + water'},
  {check:()=>!state.f.nextDay&&C.NPC.hariMic.hide()&&C.NPC.daonL.hide(),msg:'same evening: the crew is not in the 방송실 yet'},
  {walkTo:['hall',18,7],then:'12b-hall-doors'},
- {talk:'gureumL',wrong:true,shotBefore:'13-broadcast-evening'},
+ {talk:'gureumL',wrong:true,shotBefore:'13-broadcast-evening',shotSay:{text:'오전 수업이 시작됐어요',name:'13a-morning-classes'}},
+ {check:()=>state.f.nextDay&&!state.f.ready&&ZID==='class'&&player.x===11&&player.y===11&&!$('fade').classList.contains('on'),msg:'the lunch bell leaves you at your desk in 2학년 3반, the room in view'},
+ {pause:0,shot:'13b-classroom-lunch'},
+ {check:()=>state.items.includes('생수')&&!state.items.includes('하리 연락처'),msg:'water still in the bag; the contact went to 구름'},
+ {greet:'gureumL',wrong:true,shotBefore:'13c-broadcast-crowd'},  // walking into the 방송실 starts the crowded run-through
  {check:()=>state.f.nextDay&&state.f.ready&&!state.items.includes('생수')&&!state.items.includes('하리 연락처'),msg:'next day, ready to broadcast'},
  {bump:['yard','G']},
- {talk:'daonL',shotBefore:'13b-broadcast-crew'},
+ {talk:'daonL',shotBefore:'13d-broadcast-crew'},
  {talk:'chanL'},
  // the mic is yours: too early (her breathing on air), then too late (a dead mic), each restarts the 반주; then on as the 전주 ends
  {talk:'hariMic',wrong:true,pick:['마이크 켜기','기다리기','기다리기','기다리기','마이크 켜기'],shotSay:{text:'복도가 조용해졌어요',name:'14-on-air'},shotBuild:'14b-build'},
