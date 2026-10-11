@@ -18,11 +18,6 @@ for r in [repo,here.parent]:
         for m in re.finditer(r"^\s*'([가-힣 ]{2,})':\{k:",src,flags=re.M):
             w=m.group(1)
             if ' ' not in w: names.add((w,'NNG'))
-# plus every name in the shared dictionary (English written as "Name — … name/people/creature…")
-_defs=json.loads((here/'defs.json').read_text(encoding='utf-8')) if (here/'defs.json').exists() else {}
-for w,v in _defs.items():
-    if v and ' — ' in (v.get('e') or '') and re.fullmatch('[가-힣]{2,}',w): names.add((w,'NNP'))
-for w,tag in names: kiwi.add_user_word(w,tag,score=5)
 texts=[]
 for p in sorted((repo/'src/chapters').glob('ch*.js'))+[q for q in [repo/'src/school.js',repo/'src/culture.js',repo/'src/grammar.js'] if q.exists()]:  # school.js: the school every 교시 shares; culture.js: 문화 노트; grammar.js: 문법 노트
     src=p.read_text(encoding='utf-8')
@@ -30,6 +25,15 @@ for p in sorted((repo/'src/chapters').glob('ch*.js'))+[q for q in [repo/'src/sch
     for m in re.finditer(r"'((?:[^'\\\n]|\\.)*)'|`([^`]*)`|\"((?:[^\"\\\n]|\\.)*)\"",src):
         t=next(g for g in m.groups() if g is not None)
         if re.search('[가-힣]',t): texts.append(re.sub(r'\{([^|}]+)\|[^}]+\}',r'\1',t))
+# plus every name in the shared dictionary (English written as "Name — … name/people/creature…"). Every game shares it, so a
+# 2-syllable name is taught only when this game writes it with a particle no verb takes (다온이, 하리의, 꼬렛을): else another
+# game's name beats a verb (단어 마을's 지나 read 지나서 as 지나, not 지나다; 형제's 세서 took 성실호's "중력이 세서")
+_defs=json.loads((here/'defs.json').read_text(encoding='utf-8')) if (here/'defs.json').exists() else {}
+_words={re.sub(r'^[^가-힣]+|[^가-힣]+$','',e) for t in texts for e in t.split()}
+_NAME_P=('이','의','을','를','한테','에게','께','씨','님','랑','이랑','하고','와','과','아','이가','이는','이도','이를','이의','이한테','이야','이에요','예요')
+for w,v in _defs.items():
+    if v and ' — ' in (v.get('e') or '') and re.fullmatch('[가-힣]{2,}',w) and (len(w)>2 or any(w+x in _words for x in _NAME_P)): names.add((w,'NNP'))
+for w,tag in names: kiwi.add_user_word(w,tag,score=5)
 CONTENT={'NNG','NNP','NNB','NR','NP','VV','VA','VX','MAG','MAJ','MM','XR','IC','SL'}
 def lemmas(eoj):
     toks=kiwi.tokenize(eoj);out=[];i=0
