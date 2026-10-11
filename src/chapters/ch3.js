@@ -1020,7 +1020,7 @@ function face(X,Y){r(X,Y,16,16,'#EDE3CF');r(X,Y,16,1,'#F8F2E6');r(X,Y+11,16,5,'#
 function cap(X,Y,x,y){r(X,Y,16,16,'#6B6157');r(X,Y,16,1,'#81766A');r(X,Y+15,16,1,'#5A5148');if(hash(x,y)<25)r(X+3+hash(y,x)%9,Y+5+hash(x,y)%6,2,1,'#74695E')}
 function hallF(X,Y,x,y){r(X,Y,16,16,'#C9CCC0');r(X,Y,16,1,'#B9BCB0');r(X,Y,1,16,'#B9BCB0');const h=hash(x,y);r(X+h%13+1,Y+(h>>3)%13+1,1,1,'#A9AD9F');r(X+(h*3)%14+1,Y+(h*7)%14+1,1,1,'#DCDED4')}
 function checkF(X,Y,x,y){r(X,Y,16,16,'#D8D2C2');r(X,Y,8,8,'#CBC4B2');r(X+8,Y+8,8,8,'#CBC4B2')}
-function oldF(X,Y,x,y){r(X,Y,16,16,'#8E6E4E');for(let j=3;j<16;j+=5)r(X,Y+j,16,1,'#7A5C40');const h=hash(x,y);r(X+h%14,Y+(h>>2)%14,2,1,'#A58A6C');if(h<30)r(X+(h*5)%13,Y+(h*3)%13,1,1,'#B9A488')}
+function oldF(X,Y,x,y){r(X,Y,16,16,'#8E6E4E');for(let j=3;j<16;j+=5){r(X,Y+j,16,1,'#7A5C40');r(X,Y+j+1,16,1,'#997858')}const h=hash(x,y);r(X+h%12,Y+((h>>2)%3)*5+1,4,1,'#85664A')}  // swept since 3교시: plank seams with a little sheen and a dark grain line, no dust
 function carpetF(X,Y,x,y){r(X,Y,16,16,'#7F9073');r(X,Y,8,8,'#78896C');r(X+8,Y+8,8,8,'#78896C');const h=hash(x,y);if(h<30)r(X+h%14+1,Y+(h>>2)%14+1,1,1,'#8E9F82')}
 function walkF(X,Y,x,y){r(X,Y,16,16,'#C9C2B4');r(X,Y,16,1,'#B3AC9E');r(X,Y+8,16,1,'#B3AC9E');r(X+(y%2?4:12),Y,1,8,'#B3AC9E');r(X+(y%2?12:4),Y+8,1,8,'#B3AC9E');const h=hash(x,y);if(h<25)r(X+h%14+1,Y+(h>>3)%14+1,1,1,'#DAD4C8')}
 function nrF(X,Y,x,y,t){r(X,Y,16,16,'#3B2F52');r(X,Y,16,1,'#463A60');const h=hash(x,y);if(h<40){const on=Math.floor(t/450+h)%3===0;r(X+h%14+1,Y+(h>>2)%14+1,1,1,on?['#F27AD8','#6FE0F2','#F2D86F'][h%3]:'#53457A')}}
@@ -1034,6 +1034,7 @@ const shopOf=x=>x<6?0:x<12?1:x<18?2:3;
 
 /* 3교시's story variants of school tiles (src/school.js): same tile, this 교시's look */
 const VARIANTS={
+ oldFloor:(X,Y,x,y)=>oldF(X,Y,x,y),  // the swept floor, not the school's dusty one
  rack:(X,Y,x,y)=>{face(X,Y);r(X,Y+1,16,14,'#6B4A2E');r(X+1,Y+2,14,5,'#3E2A1A');r(X+1,Y+8,14,5,'#3E2A1A');const h=hash(x,y),C=['#E3ECE4','#F2C46B','#E07A5A','#5A8FB0','#B9C1C9'];
   for(let i=0;i<7;i++){r(X+1+i*2,Y+3,1,4,C[(h+i)%5]);if(!(x===5&&i===3))r(X+1+i*2,Y+9,1,4,C[(h+i*3)%5])}},  // a gap where the 1994 tape was
  onair:(X,Y,x,y,t)=>{face(X,Y);r(X+2,Y+3,12,6,'#2B2E36');const on=!!state.f.aired&&!state.f.done;r(X+3,Y+4,10,4,on?'#E85A4A':'#5A2E2E');r(X+5,Y+5,6,1,on?'#FFD0C8':'#6E3A3A')},  // lit while the 사연 airs

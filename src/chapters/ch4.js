@@ -511,15 +511,15 @@ const ads=()=>shops()===3;
 /* 느티고 (src/school.js): the 방송실, the 2층 and the 운동장 (festival stage, tents) are open; the 정문 leads to the 동네 상가 after the 상담. */
 const ZONES={...SCHOOL({open:['bcast','hall2','music','library'],gate:{to:'town',x:10,y:8,dir:'down',lock:()=>!f().counsel&&'정문이에요. 아직 학교가 안 끝나서 못 나가요.'},zones:{
  bcast:{paint:[[13,0,'b'],[7,2,'T']],
-  things:{'#':['벽에 먼지가 많아요.','구름이 벽을 닦았어요. 거기만 하얘요.','벽에 지난 방송 순서표가 붙어 있어요.'],
+  things:{'#':['벽에 하리 첫 방송 사진이 붙어 있어요.','깨끗한 벽이에요. 다 같이 닦았어요.','벽에 지난 방송 순서표가 붙어 있어요.'],
    'r':['카세트테이프가 가득해요. 다 옛날 노래예요.','테이프 이름이 다 손글씨예요.','테이프 하나에 "1994 축제"라고 쓰여 있어요.'],
    'A':()=>f().done?'"방송 중" 램프. 방송은 끝났는데 아직 깜빡여요.':f().fixed?'"방송 중" 램프. 이제 불이 들어와요.':'"방송 중" 램프예요. 불이 꺼졌어요.',
    'b':()=>f().done?'사연함에 벌써 사연이 많아요. 방송 듣고 쓴 사연이에요.':'사연함이에요. 복도 구멍으로 사연이 벌써 열 통 들어왔어요.',
    'O':['빛바랜 포스터예요. 아주 옛날 거예요.','포스터에 마이크 그림이 있어요.'],
-   'W':['창문이 먼지 때문에 뿌예요.','창밖에 학교 앞 길이 보여요.'],
+   'W':['창문이 깨끗해요. 밖이 잘 보여요.','창밖에 학교 앞 길이 보여요.'],
    'M':()=>f().fixed?'방송 기계예요. 초록 불이 깜빡깜빡해요.':f().taesikCome?{steps:fixTalk()}:'방송 기계예요. 까맣게 탔어요. 탄 냄새가 나요.',  // with 태식 here, the mixer starts the fix
    'i':()=>f().fixed?'마이크예요. "아, 아…" 소리가 잘 나요.':'마이크예요. 기계가 죽어서 소리가 안 나요.',
-   's':['낡은 소파예요. 앉으면 먼지가 펑!','소파 밑에 과자 봉지가 있어요.'],
+   's':['낡은 소파예요. 이제 앉아도 먼지가 안 나요.','소파 밑에 과자 봉지가 있어요.'],
    'c':'옛날 녹음기예요. 테이프가 걸려 있어요.',
    'x':['상자에 "축제 1998"이라고 쓰여 있어요.','상자 안에 전선이 가득해요.','상자가 무거워요. 안 움직여요.']},
   npcs:['gureumA','gureumF','daonA']},
@@ -1235,7 +1235,7 @@ function cap(X,Y,x,y){r(X,Y,16,16,'#6B6157');r(X,Y,16,1,'#81766A');r(X,Y+15,16,1
 function woodF(X,Y,x,y){r(X,Y,16,16,'#C99A62');for(let j=3;j<16;j+=4)r(X,Y+j,16,1,'#B5854F');const h=hash(x,y);r(X+(h%12)+2,Y+(h%4)*4,1,3,'#B5854F');r(X+(h*7%13),Y+((h>>2)%4)*4+1,2,1,'#D6AA74')}
 function hallF(X,Y,x,y){r(X,Y,16,16,'#C9CCC0');r(X,Y,16,1,'#B9BCB0');r(X,Y,1,16,'#B9BCB0');const h=hash(x,y);r(X+h%13+1,Y+(h>>3)%13+1,1,1,'#A9AD9F');r(X+(h*3)%14+1,Y+(h*7)%14+1,1,1,'#DCDED4')}
 function checkF(X,Y,x,y){r(X,Y,16,16,'#D8D2C2');r(X,Y,8,8,'#CBC4B2');r(X+8,Y+8,8,8,'#CBC4B2')}
-function oldF(X,Y,x,y){r(X,Y,16,16,'#8E6E4E');for(let j=3;j<16;j+=5)r(X,Y+j,16,1,'#7A5C40');const h=hash(x,y);r(X+h%14,Y+(h>>2)%14,2,1,'#A58A6C');if(h<30)r(X+(h*5)%13,Y+(h*3)%13,1,1,'#B9A488')}
+function oldF(X,Y,x,y){r(X,Y,16,16,'#8E6E4E');for(let j=3;j<16;j+=5){r(X,Y+j,16,1,'#7A5C40');r(X,Y+j+1,16,1,'#997858')}const h=hash(x,y);r(X+h%12,Y+((h>>2)%3)*5+1,4,1,'#85664A')}  // swept since 3교시: plank seams with a little sheen and a dark grain line, no dust
 function hF(X,Y,x,y){r(X,Y,16,16,'#D9DCE0');r(X,Y,16,1,'#C6CAD0');r(X,Y,1,16,'#C6CAD0');const h=hash(x,y);if(h<35)r(X+h%13+1,Y+(h>>2)%13+1,2,1,'#E8EAEE')}
 function sandF(X,Y,x,y){r(X,Y,16,16,'#D9BC8C');const h=hash(x,y);r(X+h%14+1,Y+(h>>3)%14+1,1,1,'#C4A574');r(X+(h*3)%14+1,Y+(h*7)%14+1,1,1,'#E8D3AA');if(h<20)r(X+(h*11)%13+1,Y+(h*5)%13+1,2,1,'#BFA06E')}
 function paveF(X,Y,x,y){r(X,Y,16,16,'#C9C6BC');r(X,Y,16,1,'#B3B0A6');r(X,Y+8,16,1,'#B3B0A6');r(X+(y%2?4:12),Y,1,8,'#B3B0A6');r(X+(y%2?12:4),Y+8,1,8,'#B3B0A6');
@@ -1256,7 +1256,7 @@ const VARIANTS={
  onair:(X,Y,x,y,t)=>{face(X,Y);r(X+2,Y+3,12,6,'#2B2E36');const F=state.f,on=F.fixed&&(F.done?Math.floor(t/700)%3===0:Math.floor(t/900)%2===0);r(X+3,Y+4,10,4,on?'#E85A4A':'#5A2E2E');r(X+5,Y+5,6,1,on?'#FFD0C8':'#6E3A3A')},  // lit once the line is fixed
  sayeon:(X,Y,x,y)=>{face(X,Y);r(X+3,Y+1,10,10,'#C98F5A');r(X+3,Y+1,10,2,'#E3B07A');r(X+5,Y+4,6,1,'#3E2A1A');r(X+5,Y+6,6,3,'#F4F1E6');r(X+6,Y+7,4,1,'#E86D8A');
   if(state.f.done){r(X+9,Y+2,4,3,'#F7F3E8');r(X+10,Y+3,2,1,'#F2A38A')}},  // a new note after the festival
- oldFloor:(X,Y,x,y)=>oldF(X,Y,x,y),  // scorch marks until the fix
+ oldFloor:(X,Y,x,y)=>oldF(X,Y,x,y),  // the swept floor, not the school's dusty one
  mixer:(X,Y,x,y,t)=>{oldF(X,Y,x,y);const F=state.f,on=F.fixed||F.lamp;r(X,Y+3,16,10,'#3A3E48');r(X,Y+3,16,2,'#535866');r(X,Y+12,16,1,'#22252C');
   for(let i=0;i<4;i++){r(X+2+i*4,Y+6,1,5,'#1E2128');r(X+1+i*4,Y+7+(hash(x+i,y)%3),3,2,'#B9C1C9');r(X+2+i*4,Y+4,1,1,on&&(Math.floor(t/200)+i+x)%3?'#7CF07A':'#4A2A2A')}
   r(X+3,Y+3,3,1,'#8A8E96');r(X+10,Y+4,2,1,'#8A8E96');
