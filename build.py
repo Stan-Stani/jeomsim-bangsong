@@ -14,6 +14,8 @@ used={l for ls in lexmap.values() for l in ls}
 lex={'map':{k:v for k,v in lexmap.items() if any(l in alldefs and alldefs[l] for l in v)},'defs':{l:d for l,d in alldefs.items() if l in used and d}}
 parts=['<script>\n/* Tap-a-word dictionary: word as written → dictionary forms, and learner definitions (lexicon/). */\nwindow.LEX='+json.dumps(lex,ensure_ascii=False,separators=(',',':'))+';\n</script>',
  '<script>\n/* Chapters register themselves here; each keeps its own save. */\nconst CHAPTERS=[];\n</script>']
+en_p=root/'src/lines-en.json'  # whole-line English behind the dialogue box's ? (walk-engine/tools/lines_en.py lists the lines)
+if en_p.exists(): parts.append('<script>\n/* Close English for whole lines, Korean line as written → English (the last aid after word taps). */\nglobalThis.LINES_EN='+json.dumps({k:v for k,v in json.loads(en_p.read_text(encoding='utf-8')).items() if v},ensure_ascii=False,separators=(',',':'))+';\n</script>')
 parts.append(f'<script>\n{(root/"src/school.js").read_text(encoding="utf-8")}</script>')  # the school every 교시 is set in
 parts+=[f'<script>\n{p.read_text(encoding="utf-8")}</script>' for p in chs]
 parts.append(f'<script>\n{(root/"src/game.js").read_text(encoding="utf-8")}</script>')  # this game's settings for the shared engine
