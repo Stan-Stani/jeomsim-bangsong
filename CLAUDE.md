@@ -12,6 +12,10 @@ Never edit `index.html` by hand. Each chapter (교시) is a cartridge with its o
 
 ## Checks before publishing
 - `python3 build.py && node tests/validate.mjs`
+- Whole-line English (`src/lines-en.json`, behind the ?) is keyed by each line's exact Korean: editing a line, even a particle, drops
+  its English with no error. `build.py` runs `../walk-engine/tools/lines_en.py .` and must report `0 English entries no longer in the
+  game`; for each edited line, translate it again (`src/lines-todo.json` gives the old line and English as "was"/"was_en"), close and
+  faithful like its neighbours, and delete the old entry. New lines need English too once their 교시 is translated.
 - `python3 lexicon/extract.py .` must report `0 without a definition` (add to lexicon/defs.json; analyzer misreads → lexicon/fixes.json).
 - `node tests/coverage.mjs chN`: every object tile says something when inspected; keep it at 100%.
 - `node tests/play.mjs chN` plays `tests/walk/chN.js` with real key presses (400px phone viewport) and must end with `ERRORS: none`.

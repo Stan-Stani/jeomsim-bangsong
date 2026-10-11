@@ -25,3 +25,7 @@ parts.append(f'<script>\n{(root/"src/engine.js").read_text(encoding="utf-8")}</s
 out=pathlib.Path(sys.argv[sys.argv.index('--out')+1]) if '--out' in sys.argv else root/'index.html'
 out.write_text(shell.replace('<!--SCRIPTS-->','\n'.join(parts)),encoding='utf-8')
 print('built',out.name,'with',len(chs),'chapter(s)')
+# Each line's English is keyed by its Korean, so editing a line drops its English silently: report it on every build.
+chk=root.parent/'walk-engine/tools/lines_en.py'
+if en_p.exists() and chk.exists():
+    import subprocess; sys.stdout.flush(); subprocess.run([sys.executable,str(chk),str(root)])
