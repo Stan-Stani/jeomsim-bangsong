@@ -19790,5 +19790,13 @@
 "뒷산": {
 "e": "hill behind (a house, a school)",
 "k": "집이나 학교 뒤에 있는 낮은 산."
+},
+"채점": {
+"e": "grading, marking (tests)",
+"k": "시험지를 보고 맞았는지 틀렸는지 표시하는 일."
+},
+"채점하다": {
+"e": "to grade, to mark (tests)",
+"k": "시험지를 보고 맞았는지 틀렸는지 표시해요."
 }
 }

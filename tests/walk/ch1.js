@@ -5,6 +5,7 @@
  {inspect:['yard',3,9],shot:'02-zelkova'},
  {talk:'guard',shotBefore:'02b-yard-gate'},
  {bump:['hall','R']},
+ {talk:'mathT'},{talk:'musicT'},  // the other teachers at their desks (수학 선생님 points to 정 선생님's seat)
  {talk:'jung',wrong:true,shotBefore:'03-teachers-office',shotChoice:'03a-teacher-question',shotTap:'03b-tap-word'},
  {talk:'principal',shotBefore:'04-principal-office'},
  {talk:'daon',wrong:true,shotBefore:'05-classroom-daon',shotSay:{text:'넷째 줄',name:'05-daon-last-line'}},

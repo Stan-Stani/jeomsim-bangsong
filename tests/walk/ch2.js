@@ -14,6 +14,7 @@
  {talk:'hariM',wrong:true,shotBefore:'03-music-room',shotSay:{text:'얼었어요',name:'03b-hari-freezes'}},
  {check:()=>ghosts.length===1,msg:'하리 runs out of the music room'},
  {check:()=>state.f.metHari&&state.items.includes('명찰'),msg:'name tag dropped'},
+ {talk:'mathT'},{talk:'musicT'},  // the other teachers at their desks (수학 선생님 sends the 명찰 to 정 선생님)
  {talk:'jung',wrong:true,shotBefore:'04-teachers-office',shotTap:'04b-tap-word'},
  {check:()=>state.f.knowHari,msg:'teacher names her'},
  {greet:'chanG',wrong:true,shotBefore:'05-gym'},  // walking into the gym, 찬 talks first
