@@ -1,7 +1,7 @@
 # 점심 방송 — school walk-around Korean game (formerly 방과 후)
 
-Source lives in `src/` (`shell.html`, `chapters/chN.js`, `engine.js` — the engine is a copy of 성실호's, exodus-a); `python3 build.py`
-assembles the single-file `index.html`, published as a claude.ai artifact and on GitHub Pages (public repo Stan-Stani/jeomsim-bangsong, renamed from banghu on 2026-10-10; save keys still start with `banghu-`).
+Source lives in `src/` (`shell.html`, `chapters/chN.js`, `school.js`, `engine.js` — generated from the shared walk-engine); `python3 build.py`
+assembles the single-file `index.html`, published by pushing to GitHub Pages (public repo Stan-Stani/jeomsim-bangsong, renamed from banghu on 2026-10-10; save keys still start with `banghu-`).
 Never edit `index.html` by hand. Each chapter (교시) is a cartridge with its own save key; never change an existing key or break its saves.
 
 ## What the game is
@@ -9,6 +9,8 @@ Never edit `index.html` by hand. Each chapter (교시) is a cartridge with its o
 - **Vocabulary:** from that webtoon's first four free episodes, one chapter per episode. `tools/build_words.py` builds `src/words.json` from the
   local tallies in `source/`, which is gitignored and never committed: no dialogue, notes, images, or Korean gloss fragments in anything public.
 - **Learner:** rusty intermediate (~TOPIK 3) on a phone. Korean only, with English behind ?. No on-screen instruction text.
+- **Writing a 교시:** `docs/CHAPTER_GUIDE.md`. Review is in character: each 교시's `REVIEW` lists lines people say in their own
+  scenes with a learned word blanked (earlier 교시's words too); the 복습 노트 asks the generic `BANK` sentences.
 
 ## Checks before publishing
 - `python3 build.py && node tests/validate.mjs`
