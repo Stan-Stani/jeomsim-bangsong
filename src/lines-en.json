@@ -1452,7 +1452,6 @@
 "칠판에 음표가 춤을 추는 것 같아요.": "The musical notes seem to be dancing on the board.",
 "옛날 음악가 사진이에요. 하얀 머리가 길어요.": "[It's] a photo of a musician from long ago. [Their] white hair is long.",
 "옛날 음악가 사진. 눈이 나를 따라와요…": "A photo of a musician from long ago. [Their] eyes follow me…",
-"창밖에 운동장이 보여요.": "The schoolyard is visible outside the window.",
 "창문이 조금 열려 있어요. 노래가 밖으로 나갔겠어요.": "The window is open a little. The singing must have gone outside.",
 "피아노 위에 악보가 펼쳐져 있어요.": "Sheet music is spread open on the piano.",
 "피아노예요. 건반 하나가 안 눌려요.": "[It's] a piano. One key won't go down.",
@@ -2441,7 +2440,6 @@
 "\"맞춤법 사전\"이 보여요. 두꺼워요.": "A \"Spelling Dictionary\" is visible. [It]'s thick.",
 "역사책 칸이에요. 먼지가 조금 있어요.": "[It]'s the history book section. There's a little dust.",
 "시집 칸이에요. 얇은 책이 많아요.": "[It]'s the poetry collection section. There are lots of thin books.",
-"창밖에 느티나무가 보여요. 햇빛이 따뜻해요.": "The zelkova tree is visible outside the window. The sunlight is warm.",
 "책장이에요. 만화책 칸은 텅 비었어요.": "[It]'s a bookshelf. The comic book section is completely empty.",
 "\"1990년대 학교 신문\" 묶음이 있어요.": "There's a bundle of \"1990s School Newspapers\".",
 "책 사이에 누가 쪽지를 끼웠어요. \"재밌다!\"": "Someone tucked a note between the books. \"[It]'s fun!\"",
@@ -4024,5 +4022,8 @@
 " 1~3교시 단어도 있어요.": " There are words from first through third period too.",
 "다시 맞힐수록 ★가 늘어나요. 사람들이 또 물어볼 거예요.": "The more [you] get [them] right again, the more ★ [you] get. People will ask [you] again.",
 "근데 문제가 있어. 나 혼자였을 때 방송부는 정식 동아리에서 빠졌어.": "But there's a problem. When it was just me, the broadcast club was dropped from the official clubs.",
-"다섯 명 이름으로 동아리 등록 신청서를 다시 내야 돼. 정 선생님한테.": "[We] have to hand in a club registration form again, with five names. To Ms. Jung."
+"다섯 명 이름으로 동아리 등록 신청서를 다시 내야 돼. 정 선생님한테.": "[We] have to hand in a club registration form again, with five names. To Ms. Jung.",
+"창밖에 학교 뒷산이 보여요.": "The hill behind the school is visible outside the window.",
+"창밖에 학교 뒷산이 보여요. 나무가 많아요.": "The hill behind the school is visible outside the window. There are lots of trees.",
+"창밖이 조용해요. 운동장 소리도 잘 안 들려요.": "It's quiet outside the window. Even the schoolyard noise is hard to hear."
 }
