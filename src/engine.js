@@ -1,4 +1,4 @@
-/* GENERATED from walk-engine/engine.js (3890eec) — do not edit here; edit walk-engine and run its sync.sh. */
+/* GENERATED from walk-engine/engine.js (882e2d9) — do not edit here; edit walk-engine and run its sync.sh. */
 /* =====================================================================
    Engine: tiles, movement, zones, dialogue, spaced review, speech, saving.
    ===================================================================== */
@@ -803,7 +803,8 @@ function greet(){
  player.dir=Math.abs(dx)>=Math.abs(dy)&&dx?(dx>0?'right':'left'):(dy>0?'down':'up');state.dir=player.dir;  // look at them
  talkWith(n);return true}
 function openDialog(name,steps,opts={}){
- steps=steps.filter(s=>!s.when||s.when());
+ steps=(steps||[]).filter(s=>s&&(!s.when||s.when()));
+ if(!steps.length)return;  // nothing to say: never an empty box
  talkN++;dlg={name,steps:steps.map(s=>({...s})),i:0,cur:null,next:null,missed:new Set(),npc:opts.npc||null,review:!!opts.review,snap:opts.snap||JSON.stringify(state)};
  $('tag').hidden=!opts.review;$('dlg').hidden=false;$('zone').classList.add('dim');show(dlg.steps[0]);placeBox(talkRows());  // the room label never shows through a box at the top
 }
@@ -822,6 +823,7 @@ function playScene(name){
  frame(performance.now());
 }
 function show(s){
+ if(!s||!dlg){if(dlg)closeDialog();return}  // a step that isn't there closes the talk instead of leaving a blank box
  if(s&&(s.set||s.award||s.give||s.take||s.go)&&dlg)dlg.moved=1;  // a story beat (spaced review counts them)
  if(s&&s.expand){const more=says(s.expand()||[]);dlg.steps.splice(dlg.i,1,...more);if(dlg.i>=dlg.steps.length){closeDialog();return}return show(dlg.steps[dlg.i])}  // expand:()=>steps, made when it's reached (class time picks words you have by then)
  dlg.cur=s;hideGloss();
@@ -912,7 +914,8 @@ function typeText(text,done){
  if(reduce)return fin();
  const seg=(()=>{try{return [...new Intl.Segmenter('ko',{granularity:'grapheme'}).segment(p)].map(x=>x.segment)}catch(e){return Array.from(p)}})();  // whole characters: never half an emoji (it shows as ? for a tick)
  const esc=x=>x.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));  // the whole line is laid out from the start: words never jump down a line
- typing.id=setInterval(()=>{i++;el.innerHTML=esc(seg.slice(0,i).join(''))+'<span style="visibility:hidden">'+esc(seg.slice(i).join(''))+'</span>';if(i>=seg.length)fin()},26);
+ const t0=performance.now();  // by elapsed time, not ticks: a phone that slows timers (battery saver) shows more per tick, never a blank box
+ typing.id=setInterval(()=>{const k=Math.min(seg.length,1+Math.floor((performance.now()-t0)/26));if(k===i)return;i=k;el.innerHTML=esc(seg.slice(0,i).join(''))+'<span style="visibility:hidden">'+esc(seg.slice(i).join(''))+'</span>';if(i>=seg.length)fin()},26);
 }
 let allDicts=null;
 const otherDict=k=>{if(!allDicts){allDicts={};for(const ch of CHAPTERS)if(ch!==CH)try{Object.assign(allDicts,ch.make().DICT||{})}catch(e){}}return allDicts[k]};
@@ -1087,6 +1090,13 @@ function advance(){
  show(dlg.steps[dlg.i]);
 }
 let closedAt=0;
+/* leave whatever conversation is open without finishing it (처음부터, switching chapters): its black, scene, box, phone and queued
+   walks go with it. Starting over during a review round (it plays over black) once kept the screen black for good. */
+function dropTalk(){
+ walks.length=0;leaves.length=0;ghosts=[];pending=null;
+ if(dlg){dlg=null;camT=null;clearInterval(typing?.id);$('dlg').hidden=true;$('dlg').classList.remove('attop');closePhone();hideGloss();if(TTS)try{speechSynthesis.cancel()}catch(e){}}
+ $('fade').classList.remove('on');playScene(null);
+}
 function closeDialog(){
  const wasBlack=dlg&&dlg.black;if(wasBlack){$('fade').classList.remove('on');playScene(null)}
  closedAt=performance.now();if(dlg&&dlg.moved){pushBack(dlg.snap);beat()}dlg=null;camT=null;startWalks();clearInterval(typing?.id);$('dlg').hidden=true;$('dlg').classList.remove('attop');closePhone();hideGloss();if(TTS)try{speechSynthesis.cancel()}catch(e){}
@@ -1107,7 +1117,7 @@ function cancel(){
  if(choosing()||building()){speak(dlg.cur.listenLine||dlg.cur.listen||dlg.cur.ask||'');return} // B never throws away a question; it replays it
  if(dlg)closeDialog();
 }
-const says=a=>(Array.isArray(a)?a:[a]).map(t=>typeof t==='string'?{say:t}:t);  // a line, or a full step (set:, sfx:, …)
+const says=a=>(Array.isArray(a)?a:[a]).filter(t=>t!=null&&t!=='').map(t=>typeof t==='string'?{say:t}:t);  // a missing line (an NPC with no after:) is no step, not a crash  // a line, or a full step (set:, sfx:, …)
 
 function allQuestions(){
  const out=[...(C.BANK||[])];Object.keys(C.Q).forEach(k=>{if(k!=='cafe')out.push(...C.Q[k])});return out;
@@ -1206,7 +1216,8 @@ function talkWith(n){
  }
  {const id=npcId(n);if(id&&!metIds().includes(id)){metIds().push(id);save()}if(id&&status(n)==='star')starAcc[id]=Math.max(starAcc[id]||0,STAR_MS)}  // met: from now on they can review and chat; a ★ over them starts to fade once you've talked
  if(pair&&isReview&&!n.pos&&!sitting(n)&&!n.fixed){n.dir=OPP[player.dir];n.turnAt=performance.now()+6000}  // a review question is for you: the one asking turns to you (and back to their friend after, as after any talk)
- if(pair&&!isReview){const said=m=>(m===n?steps:(m.script&&m.script())||m.talk()).map(s=>s.who?s:{...s,who:m.name,look:m.look});steps=[...said(pair[0]),...said(pair[1])]}
+ if(pair&&!isReview){const said=m=>(m===n?steps:(m.script&&m.script())||m.talk()).map(s=>s.who?s:{...s,who:m.name,look:m.look});steps=[...said(pair[0]),...said(pair[1])];
+  for(const m of pair){const id=npcId(m);if(id&&!metIds().includes(id)){metIds().push(id);save()}}}  // both of them spoke: both count as met, so either can ask a review next time (not only the one you faced)
  openDialog(n.name,steps,{npc:n,review:isReview,snap});
 }
 function interact(){
@@ -1437,7 +1448,7 @@ $('resetBtn').addEventListener('click',()=>{
  const b=$('resetBtn');
  if(!b.classList.contains('armed')){b.classList.add('armed');b.textContent='한 번 더 누르면 지워져요';clearTimeout(armT);armT=setTimeout(()=>{b.classList.remove('armed');b.textContent='처음부터'},3000);return}
  b.classList.remove('armed');b.textContent='처음부터';
- state=fresh();state.seenIntro=true;save();forgetNotes();store.set(backKey(),'[]');updBack();loadZone(state.zone,state.x,state.y,state.dir);updateHud();updateQuest();$('panel').hidden=true;
+ dropTalk();state=fresh();state.seenIntro=true;save();forgetNotes();store.set(backKey(),'[]');updBack();loadZone(state.zone,state.x,state.y,state.dir);updateHud();updateQuest();$('panel').hidden=true;
  setTimeout(()=>openDialog(CH.introWho||G.title||'이야기',C.INTRO),300);  // starting over replays the intro, like a first start
 });
 document.addEventListener('contextmenu',e=>e.preventDefault());
@@ -1461,8 +1472,7 @@ function boot(id){
  C=CH.make();mergeLooks();
  Object.keys(TILES).forEach(k=>{if(!(k in BASE_TILES))delete TILES[k]});Object.assign(TILES,C.TILES||{});
  player.look=typeof C.PLAYER==='function'?myLook():myLook(C.PLAYER||CREW_LOOK);  // PLAYER as a function = a disguise, drawn at render time // a chapter may put the player in someone else's shoes (5장: Terence)
- if(dlg){dlg=null;clearInterval(typing?.id);$('dlg').hidden=true}
- pending=null;held=null;warping=false;$('panel').hidden=true;$('chPanel').hidden=true;$('toast').hidden=true;logSel=null;
+ dropTalk();held=null;warping=false;$('panel').hidden=true;$('chPanel').hidden=true;$('toast').hidden=true;logSel=null;
  store.set(KEY('chapter'),CH.id);
  loadState();loadTalk();
  loadZone(state.zone,state.x,state.y,state.dir);
