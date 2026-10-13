@@ -17,9 +17,10 @@
  {talk:'jungLib'},  // she takes the form right there: no walk back to the 교무실
  {check:()=>state.f.submitted&&!state.items.includes('동아리 등록 신청서')&&!state.items.includes('찬 독후감'),msg:'form submitted in the 도서관'},
  {check:()=>C.NPC.jungLib.hide()&&!C.NPC.jung.hide(),msg:'…and she is back at her desk'},
- {talk:'daonBoard',shotBefore:'06-notice-board'},
+ {talk:'daonBoard',shotBefore:'06-notice-board',shotSay:{text:'테이프로',name:'06a-taping-black'}},
  {check:()=>state.f.posted,msg:'poster posted'},
- {talk:'box'},
+ {check:()=>!$('fade').classList.contains('on'),msg:'the room is back after the taping (over black)'},
+ {inspect:['hall',26,9],shot:'06b-sayeon-slot'},  // the poster points to the 방송실 사연함's slot by the door (no second box)
  {talk:'chanRumor',wrong:true,shotBefore:'07-rumor'},
  {check:()=>state.f.rumor,msg:'the rumor'},
  {talk:'kid'},

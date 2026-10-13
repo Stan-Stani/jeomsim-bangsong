@@ -12,6 +12,10 @@ CHAPTERS.push({id:'ch3',n:'3교시',title:'비밀 사연',place:'방송실 · �
    ===================================================================== */
 const WORDS=['비밀','엿듣다','오해하다','사과하다','독후감','맞춤법','제출하다','댓글','눈치','고민하다','답답하다','창피하다','무시하다','끼어들다','향기','복숭아','가입하다','감동','붙다','뽑다'];
 const DICT={
+  '나(저는)':{k:'자기 자신을 편하게 부르는 말이에요.',e:'I (plain)'},
+  '주다(도움)':{k:'다른 사람을 위해 해요.',e:'to do for someone'},
+  '-(으)ㄹ게':{k:'내가 하겠다고 약속할 때 써요. (갈게, 할게)',e:'I will (promise)'},
+  '사다(사요)':{k:'돈을 내고 물건을 가져요.',e:'to buy'},
  '학부모회':{k:'학생 부모님들의 모임.',e:"parents' committee (PTA)"},  // the principal's meeting (as in 4교시)
  '비밀':{k:'다른 사람한테 말하지 않는 이야기. "쉿!"',e:'secret',ex:'이건 우리 둘만의 비밀이야.',hj:'祕密 · 비밀번호의 비밀'},
  '엿듣다':{k:'남의 이야기를 몰래 들어요. 문 뒤에서, 벽 뒤에서. (엿들어요, 엿들었어요)',e:'to eavesdrop',ex:'문 뒤에서 이야기를 엿들었어요.'},
@@ -83,8 +87,8 @@ const BANK=[
  /* grammar: -(으)ㄴ 척하다 (pretend) · -대 (hearsay) */
  {w:'독후감',gram:1,ask:'독후감 숙제 안 했는데 한 ___했어. 들킬까 봐 무서워.',opts:[['척',1],['적',0,'"한 적 있다"는 경험이야. 아닌데 그런 것처럼 하면 "한 척".']]},
  {w:'눈치',gram:1,ask:'다 알면서 모르는 ___하는 거, 그것도 눈치야.',opts:[['척',1],['적',0,'"-ㄴ 적"은 경험이에요. 아는데 모르는 것처럼 하면 "척".']]},
- {w:'비밀',gram:1,ask:'하리가 그러는데, 내일 비밀 공연이 ___.',opts:[['있대',1],['있을게',0,'"-ㄹ게"는 내가 약속하는 말이야. 들은 말을 전하면 "있대".']]},
- {w:'댓글',gram:1,ask:'댓글 봤어? 시험 문제가 엄청 ___.',opts:[['쉽대',1],['쉬울게',0,'"-ㄹ게"는 내가 하겠다는 약속이야. 들은 말은 "쉽대".']]},
+ {w:'비밀',gram:1,ask:'하리가 그러는데, 내일 비밀 공연이 ___.',opts:[['있대',1],['있을게',0,'"{-ㄹ게|-(으)ㄹ게}"는 내가 약속하는 말이야. 들은 말을 전하면 "있대".']]},
+ {w:'댓글',gram:1,ask:'댓글 봤어? 시험 문제가 엄청 ___.',opts:[['쉽대',1],['쉬울게',0,'"{-ㄹ게|-(으)ㄹ게}"는 내가 하겠다는 약속이야. 들은 말은 "쉽대".']]},
 ];
 
 const Q={ // NPC questions, kept here so review can reuse them. who:'나' = the player says it; who:'…' = narration.
@@ -116,7 +120,7 @@ const Q={ // NPC questions, kept here so review can reuse them. who:'나' = the 
  ],
  chanR:[
   {w:'엿듣다',who:'나',ask:'너, 구름이 전화를 ___?',opts:[['엿들었어',1],['엿봤어',0,'엿보다는 몰래 보는 거야. 전화는 귀로 들으니까 "엿들었어".']]},
-  {w:'엿듣다',gram:1,own:1,ask:'큰일이야. 구름이가 방송부 그만___!',opts:[['둔대',1],['둘게',0,'"-ㄹ게"는 내가 약속하는 말이야. 남한테 들은 말은 "그만둔대".'],['둘래',0,'"그만둘래"는 내가 그만두고 싶을 때야. 남한테 들은 말은 "그만둔대".']]},
+  {w:'엿듣다',gram:1,own:1,ask:'큰일이야. 구름이가 방송부 그만___!',opts:[['둔대',1],['둘게',0,'"{-ㄹ게|-(으)ㄹ게}"는 내가 약속하는 말이야. 남한테 들은 말은 "그만둔대".'],['둘래',0,'"그만둘래"는 내가 그만두고 싶을 때야. 남한테 들은 말은 "그만둔대".']]},
   {w:'오해하다',who:'나',ask:'다 안 들었잖아. 네가 ___ 수도 있어.',opts:[['오해했을',1],['이해했을',0,'이해는 바르게 아는 거야. 다 안 듣고 잘못 알면 "오해했을".'],['오래 했을',0,'오래는 시간이 길 때야. 잘못 알면 "오해했을".']]},
  ],
  lib:[
@@ -274,7 +278,7 @@ const REVIEW=[
  {w:'데려오다',by:'daonNR',ask:'구름은 내가 손을 잡고 ___. 안 그랬으면 안 왔을걸.',opts:[['데려왔어',1],['데려갔어',0,'데려가다는 다른 곳으로 같이 가는 거야. 여기로 같이 오면 "데려왔어".'],['내려왔어',0,'내려오다는 위에서 아래로 오는 거야. 같이 오면 "데려왔어".']]},
  /* 정 선생님 · following the two days, as her own lines do */
  {w:'교장',by:'jung',when:()=>!f().rumor,ask:'___ 선생님한테는 제가 말씀드릴게요. 다섯 명!',opts:[['교장',1],['반장',0,'반장은 학생이에요. 말씀드리는 분은 "교장" 선생님.'],['교실',0,'교실은 방이에요. 사람은 "교장" 선생님.']]},
- {w:'사실대로',by:'jung',when:()=>f().rumor&&!f().secret,ask:'구름이는 물어보면 ___ 말해 줄 거예요.',opts:[['사실대로',1],['마음대로',0,'마음대로 말하면 안 되죠. 거짓말 없이는 "사실대로".'],['일부러',0,'일부러는 알면서 하는 거예요. 거짓말 없이는 "사실대로".']]},
+ {w:'사실대로',by:'jung',when:()=>f().rumor&&!f().secret,ask:'구름이는 물어보면 ___ 말해 {줄|주다(도움)} 거예요.',opts:[['사실대로',1],['마음대로',0,'마음대로 말하면 안 되죠. 거짓말 없이는 "사실대로".'],['일부러',0,'일부러는 알면서 하는 거예요. 거짓말 없이는 "사실대로".']]},
  {w:'평범하다',by:'jung',when:()=>f().oldSpelling&&!f().aired,ask:'옛날 맞춤법이라… ___ 편지는 아니네요.',opts:[['평범한',1],['평평한',0,'평평하다는 땅이 판판할 때예요. 보통 편지면 "평범한".'],['평범해',0,'"편지" 같은 말 앞에서는 "평범한"이에요.']]},
  {w:'분위기',by:'jung',when:()=>!!f().aired,ask:'사연 하나로 학교 ___ 확 달라졌네요.',opts:[['분위기가',1],['기분이',0,'기분은 한 사람 마음이에요. 학교 전체의 느낌은 "분위기".'],['날씨가',0,'날씨는 하늘이에요. 학교의 느낌은 "분위기".']]},
  {w:'명찰',by:'jung',ask:'하리 학생은 요즘 ___ 잘 달고 다니죠?',opts:[['명찰',1],['명함',0,'명함은 회사 사람이 주는 작은 종이예요. 교복에 다는 이름표는 "명찰".'],['경찰',0,'하하, 경찰은 도둑을 잡는 사람이에요. 이름표는 "명찰".']]},
@@ -296,7 +300,7 @@ const REVIEW=[
  {w:'벌금',by:'reader',pre:['쿨쿨…'],ask:'…지각… ___ 오백 원… 내일 낼게요… 쿨…',opts:[['벌금',1],['용돈',0,'…쿨… 용돈은 받는 돈… 지각하면 "벌금"…'],['월급',0,'…쿨… 월급 없어요… 학생이에요… "벌금"…']]},
  /* extras · day one, in school */
  {w:'반장',by:'xB1',ask:'3반 ___ 다온이는 시험 날짜 알겠지?',opts:[['반장',1],['교장',0,'교장 선생님이 3반에? 아니, 다온이 말이야. "반장".'],['반찬',0,'반찬? 하하, 밥이랑 먹는 거. 다온이는 "반장".']]},
- {w:'심장',by:'xB2',ask:'시험 얘기만 들어도 ___이 쿵쿵 뛰어.',opts:[['심장',1],['시장',0,'시장은 물건 사는 곳이야. 가슴에서 뛰는 건 "심장".'],['심판',0,'심판은 경기에서 규칙을 지키는지 보는 사람이야. 가슴에서 뛰는 건 "심장".']]},
+ {w:'심장',by:'xB2',ask:'시험 얘기만 들어도 ___이 쿵쿵 뛰어.',opts:[['심장',1],['시장',0,'시장은 물건 {사는|사다(사요)} 곳이야. 가슴에서 뛰는 건 "심장".'],['심판',0,'심판은 경기에서 규칙을 지키는지 보는 사람이야. 가슴에서 뛰는 건 "심장".']]},
  {w:'마주치다',by:'xB2',ask:'시험 날짜? 아까 담임 선생님이랑 ___ 때 물어볼걸.',opts:[['마주쳤을',1],['마쳤을',0,'마치다는 일을 끝내는 거야. 우연히 만나면 "마주쳤을".'],['맞췄을',0,'맞추다는 답을 맞게 하는 거야. 우연히 만나면 "마주쳤을".']]},
  {w:'종례',by:'xW',ask:'___ 끝나면 바로 운동장 갈 거야. 날씨 좋잖아.',opts:[['종례',1],['조례',0,'조례는 아침 모임이야. 하루 끝 모임은 "종례".'],['종이',0,'종이는 쓰는 거야. 하루 끝 모임은 "종례".']]},
  {w:'평범하다',by:'xW',ask:'오늘도 그냥 ___ 하루야. 수업, 급식, 또 수업.',opts:[['평범한',1],['평평한',0,'평평한 건 땅이야. 특별한 게 없는 하루는 "평범한" 하루.'],['평범해',0,'"하루" 앞에는 "평범한"이야.']]},
@@ -362,8 +366,10 @@ const has=w=>state.badges.includes(w);
 /* ---------- zones ---------- */
 /* 느티고 (src/school.js): the 방송실, the 매점 (in the 급식실) and the 2층 (도서관, 음악실) are open; the 정문 leads to 학교 앞 once school's out. */
 const ZONES={...SCHOOL({open:['cafe','hall2','music','library','bcast'],gate:{to:'street',x:10,y:8,dir:'up',lock:()=>!f().toNR&&'학교가 끝나야 밖에 나갈 수 있어요.'},zones:{
- bcast:{paint:[[7,2,'T']],
+ bcast:{paint:[[13,0,'b'],[7,2,'T']],  // the 방송실's 사연함 (as in 2교시 and 4교시): the poster points to its slot by the door
   things:{'#':['벽에 하리 첫 방송 사진이 붙어 있어요.','벽에 "방송 중 조용히!" 종이가 있어요.','먼지를 닦아서 벽이 깨끗해졌어요.'],
+   'b':()=>f().letter?'사연함이에요. 오늘도 편지가 오면 좋겠어요.':f().secret?'사연함 안에 편지가 있어요! 하리가 열쇠를 가지고 있어요.'
+    :['방송실 사연함이에요. 복도 벽 구멍으로 편지가 떨어져요.','지난주에 여기서 1994년 카세트가 나왔어요.'],
    'r':['카세트테이프가 가득해요. 다 옛날 노래예요.','테이프 이름이 다 손글씨예요.','빈자리 하나. "1994 방송부" 테이프 자리예요.'],
    'A':()=>f().done?'"방송 중" 램프가 꺼졌어요. 기계도 멈췄어요.':f().aired?'"방송 중" 램프에 빨간 불이 들어왔어요!':'"방송 중" 램프예요. 지금은 꺼져 있어요.',
    'O':['빛바랜 포스터예요. 마이크 그림이 있어요.','포스터 구석에 작은 복숭아 그림이 있어요.'],
@@ -374,9 +380,10 @@ const ZONES={...SCHOOL({open:['cafe','hall2','music','library','bcast'],gate:{to
    's':['낡은 소파예요. 하리가 먼지를 털었어요.','소파 밑에 찬의 과자 봉지가 있어요.'],
    'c':'옛날 녹음기예요. 구름이 매일 닦아요.',
    'x':['상자에 "축제 1998"이라고 쓰여 있어요.','상자 안에 전선이 가득해요.','상자 위에 빈 바나나우유 통이 있어요.']},
-  npcs:['gureum','gureumFin','daonB','daonEnd','hariFin','chanEnd']},
+  npcs:['gureum','gureumFin','daonB','daonEnd','hariFin','chanEnd','hariBox','chanBox']},
  hall:{locks:{class:()=>'2학년 3반 교실이에요. 지금은 아무도 없어요.'},
-  things:{'#':(x,y)=>y===0&&x<16?['하얀 벽이에요. 아래쪽은 초록색이에요.','깨끗한 벽이에요. 먼지 하나 없어요.']  // inside the 교무실 and the 교장실: no graffiti there
+  legend:{'b':{tile:'sayeonSlot'}},paint:[[26,9,'b']],  // the 방송실 사연함's slot, right of the 방송실 door (as in 2교시 and 4교시)
+  things:{'b':'방송실 사연함 구멍이에요. "방송부에 사연을 보내 주세요!"','#':(x,y)=>y===0&&x<16?['하얀 벽이에요. 아래쪽은 초록색이에요.','깨끗한 벽이에요. 먼지 하나 없어요.']  // inside the 교무실 and the 교장실: no graffiti there
     :['하얀 벽이에요. 아래쪽은 초록색이에요.','벽에 "복도에서 뛰지 마세요" 종이가 있어요.','누가 벽에 작게 "찬찬찬"이라고 낙서했어요.'],
    'N':x=>x===19&&f().posted?'"여러분의 사연을 보내 주세요! —방송부"':['게시판: "축제까지 한 달!"','게시판: "도서관 독후감 대회. 다음 주 제출."'][x%2],
    'V':['창문으로 2학년 3반 교실이 보여요.','빈 교실이에요. 칠판에 수학 문제가 남아 있어요.'],
@@ -388,7 +395,7 @@ const ZONES={...SCHOOL({open:['cafe','hall2','music','library','bcast'],gate:{to
    's':['신발장이에요. 실내화가 줄줄이 있어요.','신발장 하나에 "남궁찬" 이름표. 냄새가… 좀.'],
    'W':['창밖에 운동장하고 느티나무가 보여요.','창밖에서 새가 짹짹 울어요.'],
    'q':()=>f().done?'"방송실" 팻말이에요. "방송 중" 불이 꺼졌어요.':f().aired?'"방송실" 팻말. "방송 중" 불이 깜빡여요!':'"방송실" 팻말이에요. "방송 중" 불은 꺼져 있어요.'},
-  npcs:['jung','kimT','hanT','principal','daonBoard','box','hariBox','chanBox','chanRumor','kid','xB1','xB2','xW','xN2','xN3','xN4']},
+  npcs:['jung','kimT','hanT','principal','daonBoard','chanRumor','kid','xB1','xB2','xW','xN2','xN3','xN4']},
  cafe:{
   things:{'h':['과자하고 빵이 가득해요.','복숭아 주스가 한 줄 있어요. 분홍색이에요.','바나나우유는 벌써 다 팔렸어요.'],
    'm':'매점 계산대예요. "외상 안 돼요!"라고 쓰여 있어요.',
@@ -496,11 +503,6 @@ const LOOK={
  xT3:{hair:'#1E1C20',skin:'#DDAE88',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'bob',lashes:1,lips:'#CC7680'},
  xT4:{hair:'#262022',skin:'#C99470',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#C9A13A',style:'spiky'},
 };
-/* the 사연함: a small wooden box with a slot, a pink letter peeking out once letters arrive */
-const BOX={art:{pal:{O:'#1B1E2B',w:'#C9925A',W:'#A9743F',l:'#E3B07A',s:'#3A2A1A',p:'#F2A3B8',P:'#E07A98',y:'#F4F1E6'},
- down:['....pp......','....pPy.....','OOOOOOOOOOOO','OllllllllllO','OwwwssssswwO','OwwwwwwwwwwO','OwwyyyyywwwO','OwwyWWWywwwO','OwwyyyyywwwO','OWWWWWWWWWWO','OOOOOOOOOOOO']}};
-
-const POSTER={who:'…',say:'위 게시판에 분홍 포스터: "여러분의 사연을 보내 주세요! —방송부"'};  // behind the 사연함: you can't face that board tile
 const FINALE=()=>[{say:'보내 주신 사연, 잘 읽었어요.'},{say:'그리고… 복숭아 님, 누구세요?',face:'think',set:()=>{f().done=1},finale:1}];
 const NPC={
  /* ---------- 방송실 ---------- */
@@ -557,7 +559,7 @@ const NPC={
   script:()=>{const F=f();
    if(F.done)return null;
    if(has('감동'))return FINALE();
-   if(!F.letter)return [{say:'사연함 봤어? 하리가 복도에서 기다려.'}];
+   if(!F.letter)return [{say:'사연함에 편지가 왔대. 하리가 방송실에서 기다려.'}];
    if(!F.aired)return [{say:'오늘 사연은 내가 뽑았어. 하리가 읽어.'},{say:'주스? 좋지. 매점 거?',face:'happy'}];
    return null},
   talk:()=>[
@@ -716,20 +718,13 @@ look:LOOK.hanT,
    {say:'이거, 사연 코너 포스터. 내가 만들었어.'},
    {say:'"여러분의 사연을 보내 주세요!" 어때?'},
    {say:'게시판에 붙이자.'},
-   {who:'…',say:'둘이 같이 포스터를 테이프로 붙였어요.',set:()=>{f().posted=1}},
-   Q.daonBd[0],
-   {who:'…',say:'포스터 밑에 작은 {사연함|사연함}도 하나 더 놓았어요. 이제 복도에서도 사연을 받아요.',set:()=>{f().boxed=1}},
+   {who:'…',say:'둘이 같이 포스터를 테이프로 붙였어요.',black:1,set:()=>{f().posted=1}},  // the taping happens off-screen (they stand away from the board)
+   {...Q.daonBd[0],black:0},  // …and the room comes back with the poster up
+   {who:'…',say:'포스터에 화살표도 그렸어요. "{사연함|사연함}은 방송실 문 옆!"',set:()=>{f().boxed=1}},  // the existing 사연함 (2교시): its slot is in the hall wall
    {say:'…으, 근데 내 신발 밑에 이거 뭐야?',face:'angry'},
    Q.daonBd[1],
    {who:'…',say:'한참 뒤에 껌이 겨우 떨어졌어요.'},
    {say:'됐다. 사연이 많이 오면 좋겠다.',award:['붙다'],walk:{npc:'chanRumor',from:[9,8]}}]},
-
- box:{name:'사연함',zone:'hall',x:19,y:1,dir:'down',look:BOX,still:1,
-  hide:()=>!f().boxed,  /* put down two lines after the poster goes up */
-  script:()=>f().letter?[{who:'…',say:'사연함이에요. 오늘도 편지가 오면 좋겠어요.'},POSTER]
-   :f().secret?[{who:'…',say:'사연함 안에 편지가 있어요! 하리가 열쇠를 가지고 있어요.'}]
-   :[{who:'…',say:'사연함이에요. 아직 비어 있어요.'},{who:'…',say:'상자에 "방송부"라고 예쁘게 쓰여 있어요.'},POSTER],
-  talk:()=>[]},
 
  chanRumor:{name:'남궁찬',zone:'hall',x:22,y:7,dir:'left',look:LOOK.chan,banmal:1,badge:['엿듣다','오해하다'],
   hide:()=>!f().posted||!!f().toNR,
@@ -750,7 +745,7 @@ look:LOOK.hanT,
    {say:'누가 "방송부 {끝났대|-대}?" 이렇게 썼어.',grammar:'dae'},
    {say:'근데 댓글이 막… 도서관 서지민한테 물어봐.',face:'sad',award:['엿듣다','오해하다'],set:()=>{f().rumor=1}}]},
 
- hariBox:{name:'유하리',zone:'hall',x:20,y:1,dir:'left',look:LOOK.hari,badge:['향기'],
+ hariBox:{name:'유하리',zone:'bcast',x:13,y:1,dir:'down',look:LOOK.hari,badge:['향기'],
   hide:()=>!f().secret||!!f().letter,
   after:'선배, 이 편지 냄새 진짜 좋아요.',
   talk:()=>[
@@ -769,7 +764,7 @@ look:LOOK.hanT,
    {who:'남궁찬',say:'선생님한테 물어보자. 국어 선생님이잖아!',face:'happy'},
    {who:'…',say:'찬이 따라와요. {탐정|탐정} 눈빛이에요.',award:['향기'],set:()=>{f().letter=1}}]},
 
- chanBox:{name:'남궁찬',zone:'hall',x:21,y:2,dir:'left',look:LOOK.chan,banmal:1,
+ chanBox:{name:'남궁찬',zone:'bcast',x:14,y:2,dir:'left',look:LOOK.chan,banmal:1,
   hide:()=>!f().secret||!!f().letter,
   talk:()=>[{say:'어제 고마웠어. 진짜로.',face:'happy'},{say:'사연함 열어 봐. 하리가 기다려.'},{say:'…나한테 온 편지는 없겠지?',face:'think'}]},
 
@@ -974,7 +969,7 @@ look:LOOK.hanT,
   talk:()=>[{say:'너 사연 쓰면 창피해서 어떡해?'},{say:'이름 안 쓰면 돼. 하하.'}]},
  xN4:{name:'3학년 선배',zone:'hall',x:13,y:8,dir:'down',look:LOOK.xN4,banmal:1,
   hide:()=>!f().secret,
-  script:()=>f().done?[{say:'심화반 교실? 고3은 좋아하겠네.'},{say:'…난 점심 방송이 더 좋은데.'}]
+  script:()=>f().done?[{say:'심화반 교실? 고3은 좋아하겠네.'},{say:'…{난|나(저는)} 점심 방송이 더 좋은데.'}]
    :f().aired?[{say:'방송 들으면서 공부했어.'},{say:'이상하게 집중이 잘 되더라.'}]:null,
   talk:()=>[{say:'…논술 맞춤법 틀리면 감점이래.'},{say:'고3은 띄어쓰기도 무서워.'}]},
 
@@ -1020,7 +1015,7 @@ function questText(){
  if(!F.interrupt)return '학교 앞 · 코인 노래방 연습';
  if(!F.apology)return '노래방 · 다온이랑 얘기하기';
  if(!F.secret)return '노래방 · 구름 얘기 듣기';
- if(!F.letter)return '복도 · 사연함 열기';
+ if(!F.letter)return '방송실 · 사연함 열기';
  if(!F.oldSpelling)return '교무실 · 편지 보여 주기';
  if(!F.juice)return '급식실 매점 · 이모 만나기';
  if(!F.aired)return '방송실 · 하리한테 주스 주기';
