@@ -279,7 +279,7 @@ const REVIEW=[
  {w:'설레다',by:'xHome2',ask:'축제 방송, 생각만 해도 ___. 꼭 해!',opts:[['설레',1],['지겨워',0,'지겨워? 아니지! 두근두근하면 "설레".'],['피곤해',0,'피곤한 거 아니고! 두근두근하면 "설레".']]},
  {w:'구석',by:'xClean',ask:'복도 ___까지 싹 닦았어요. 뛰지 마요.',opts:[['구석',1],['구경',0,'구경은 보는 거예요. 안쪽 끝은 "구석".'],['구슬',0,'구슬은 작고 동그란 알이에요. 안쪽 끝은 "구석".']]},
  {w:'줍다',by:'xClean',ask:'쓰레기 보이면 좀 ___ 줘요. 고마워요.',opts:[['주워',1],['지워',0,'지우다는 글씨가 없어지게 하는 거예요. 손으로 들면 "주워".'],['추워',0,'춥다는 날씨가 차가울 때예요. 손으로 들면 "주워".']]},
- // the 수학 선생님 and the 음악 선생님 at their desks in the 교무실
+ // the teachers at their desks in the 교무실 (who is there follows the timetable: see mathT)
  {w:'벌금',by:'mathT',when:()=>!!f().paidFine,ask:'첫날부터 지각? ___은 냈어요? 하하.',opts:[['벌금',1],['월급',0,'월급은 일하고 받는 돈이에요. 지각해서 내는 돈은 "벌금".'],['용돈',0,'용돈은 부모님한테 받는 돈이에요. 지각해서 내는 돈은 "벌금".']]},
  {w:'평범하다',by:'mathT',ask:'3반은 다 착하고 ___ 애들이에요. 걱정 마요.',opts:[['평범한',1],['평평한',0,'평평하다는 땅이 판판할 때예요. 보통 애들이면 "평범한".'],['평범해',0,'"애들" 앞에서는 "평범한"이에요.']]},
  {w:'지우개',by:'mathT',ask:'빨간 펜도 없고 ___도 없어요. 큰일이네요.',opts:[['지우개',1],['지우기',0,'지우기는 지우는 일이에요. 지우는 물건은 "지우개".'],['지붕',0,'하하, 지붕은 집 위에 있어요. 지우는 물건은 "지우개".']]},
@@ -290,6 +290,13 @@ const REVIEW=[
  {w:'걷다',by:'musicT',when:()=>!!f().lunch,ask:'아까 반장이 악보를 다 ___ 줬어요. 착하네요.',opts:[['걷어',1],['건너',0,'건너다는 길 저쪽으로 가는 거예요. 종이를 모으면 "걷어".'],['걸려',0,'걸려는 감기예요. 종이를 모으면 "걷어".']]},
  {w:'동갑',by:'musicT',ask:'3반 애들은 다 학생하고 ___이에요. 금방 친해질 거예요.',opts:[['동갑',1],['동생',0,'동생은 나보다 어린 사람이에요. 같은 2학년이면 "동갑".'],['동네',0,'동네는 사는 곳이에요. 나이가 같으면 "동갑".']]},
  {w:'친해지다',by:'musicT',when:()=>!!f().metChan,ask:'반 친구들하고 좀 ___? 얼굴이 밝아졌네요.',opts:[['친해졌어요',1],['친했어요',0,'"친했어요"는 원래 친한 거예요. 오늘 그렇게 됐으면 "친해졌어요".'],['진해졌어요',0,'진해지는 건 색이에요. 친구는 "친해졌어요".']]},
+ {w:'사실대로',by:'engT',when:()=>!!f().paidFine&&!f().deal,ask:'지각한 이유, 정 선생님한테 ___ 말했어요?',opts:[['사실대로',1],['마음대로',0,'마음대로 말하면 안 돼요. 거짓말 없이는 "사실대로".'],['거꾸로',0,'거꾸로 말하면 아무도 몰라요. 거짓말 없이는 "사실대로".']]},
+ {w:'하필',by:'engT',when:()=>!f().deal,ask:'___ 단어 시험 날 전학 왔네요. 하하.',opts:[['하필',1],['항상',0,'항상은 매번이에요. 다른 날도 많은데 왜 꼭 오늘 → "하필".'],['마침',0,'마침은 때가 딱 좋을 때예요. 운이 나쁜 날은 "하필".']]},
+ {w:'전하다',by:'engT',when:()=>!!f().deal,ask:'교장 선생님한테 안내문을 직접 ___? 용감하네요.',opts:[['전했어요',1],['정했어요',0,'정하다는 고르는 거예요. 물건이나 말을 건네면 "전했어요".'],['전학했어요',0,'전학은 학교를 옮기는 거예요. 물건이나 말을 건네면 "전했어요".']]},
+ {w:'일부러',by:'engT',when:()=>!!f().deal,ask:'___ 교장실까지 찾아갔다면서요? 대단해요.',opts:[['일부러',1],['사실대로',0,'사실대로는 거짓말 없이 말할 때예요. 마음먹고 하면 "일부러".'],['하필',0,'하필은 운이 나쁠 때예요. 마음먹고 하면 "일부러".']]},
+ {w:'반장',by:'sciT',ask:'아까 영상 끝나고 ___이 불을 켜 줬어요. 착해요.',opts:[['반장',1],['교장',0,'교장 선생님은 3반에 없었어요. 불을 켠 학생은 "반장".'],['반찬',0,'반찬은 먹는 거예요. 하하. "반장".']]},
+ {w:'줍다',by:'sciT',ask:'복도에 쓰레기가 있으면 ___ 버려요.',opts:[['주워서',1],['지워서',0,'지우다는 글씨가 없어지게 하는 거예요. 손으로 들면 "주워서".'],['추워서',0,'춥다는 날씨예요. 손으로 들면 "주워서".']]},
+ {w:'설레다',by:'sciT',when:()=>!!f().metChan,ask:'첫날인데 얼굴이 밝네요. 좀 ___?',opts:[['설레요',1],['지겨워요',0,'지겨우면 얼굴이 안 밝아요. 두근두근하면 "설레요".'],['피곤해요',0,'피곤하면 얼굴이 안 밝아요. 두근두근하면 "설레요".']]},
  {w:'소문나다',by:'musicT',when:()=>!!f().deal,ask:'방송부 얘기, 벌써 교무실까지 ___.',opts:[['소문났어요',1],['소문했어요',0,'"소문하다"는 없어요. 이야기가 퍼지면 "소문났어요".'],['소리 났어요',0,'소리는 귀로 듣는 거예요. 이야기가 퍼지면 "소문났어요".']]},
 ];
 
@@ -324,7 +331,7 @@ const ZONES=SCHOOL({open:['class','cafe','bcast'],zones:{
    'W':['창밖에 운동장하고 느티나무가 보여요.','창밖에서 새가 짹짹 울어요.'],
    'm':'"2학년 3반" 팻말이에요. 문 옆에 있어요.',
    'q':()=>f().done?'"방송실" 팻말. "방송 중" 불이 깜빡여요!':'"방송실" 팻말이에요. "방송 중" 불은 꺼져 있어요.'},
-  npcs:['jung','mathT','musicT','principal','gureumH','chanH','mate2H','xHall1','xHall2','xNotice','xWin','xSenior','xBye','xClean']},
+  npcs:['jung','mathT','musicT','engT','sciT','principal','gureumH','chanH','mate2H','xHall1','xHall2','xNotice','xWin','xSenior','xBye','xClean']},
  class:{
   things:{'#':['교실 벽이에요. 반 사진이 붙어 있어요.','벽에 "2학년 3반"이라고 쓰여 있어요.'],
    'B':x=>x===4?'칠판에 오늘 날짜가 있어요.':x===12?'칠판 구석: "주번: 남궁찬"':['칠판에 "전학생 환영!"이라고 쓰여 있어요.','분필 글씨가 반쯤 지워졌어요.','칠판에 수학 문제가 남아 있어요. 어려워요.'][x%3],
@@ -361,6 +368,8 @@ const ZONES=SCHOOL({open:['class','cafe','bcast'],zones:{
 }});
 
 const LOOK={
+ engT:{hair:'#1E1A18',skin:'#D9A882',shirt:'#C9B48A',pants:'#4A4640',style:'short'},
+ sciT:{hair:'#4A3A30',skin:'#EEC6A6',shirt:'#F2F2EE',pants:'#4A4F5C',style:'bun',lashes:1,lips:'#B8606A',coat:1},
  mathT:{hair:'#2A2622',skin:'#E0B48E',shirt:'#7D8F63',pants:'#4A4A40',style:'short'},
  musicT:{hair:'#3A2420',skin:'#EEC6A6',shirt:'#C26A7A',pants:'#4A4450',style:'long',lashes:1,lips:'#C0606C'},
  player:{hair:'#2B2422',skin:'#E6BE9C',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'short'},
@@ -485,15 +494,23 @@ const NPC={
  mate2H:{name:'반 친구',zone:'hall',x:12,y:7,dir:'down',look:LOOK.mate2,banmal:1,
   hide:()=>!f().crew3,
   talk:()=>[{say:'방송부? 대박. 부럽다.'},{say:'축제 때 구경 갈게.'}]},
- /* the teachers of the day's classes at their desks (수학 after lunch, 음악 before it): the 교무실 isn't only 정 선생님's */
- mathT:{name:'수학 선생님',zone:'hall',x:3,y:4,dir:'left',look:LOOK.mathT,
+ /* the teachers of the day's classes at two desks, by the timetable: whoever teaches 3반 next (or is at lunch) is away and someone
+   else sits there — morning 수학 + 음악; before lunch 영어 (음악 teaches 3반); lunch 과학 (수학 is out); before 종례 영어 again
+   (음악 has a class; 정 선생님 is in 3반); after school 수학 + 음악 */
+ mathT:{name:'수학 선생님',zone:'hall',x:3,y:4,dir:'left',look:LOOK.mathT,hide:()=>!!f().lunch&&!f().deal,
   talk:()=>f().metTeacher?[{say:'3반 전학생이죠? 저는 수학 선생님이에요.'},{say:'시험지를 보고 있어요. 빨간 펜이 모자라요.'}]:[{say:'아, 전학생이에요? 저는 수학 선생님이에요.'},{say:'정 선생님 자리는 화분 옆이에요.'}],
   again:()=>{const F=f();return pick(F.done?['아까 복도 스피커에서 노래가 나왔어요. 저도 들었어요.','이제 집에 가요? 내일 봐요.']:F.deal?['아까 수학 시간에 다온이 많이 놀랐죠? 하하.','교장실에 갔다 왔어요? 용감하네요.']
-   :F.lunch?['점심 먹었어요? 저는 채점 때문에 아직이에요.','오후에 3반 수학 수업이 있어요.']:F.metTeacher?['시험지가 너무 많아요.','3반 교실은 복도 오른쪽 끝이에요.']:['정 선생님 자리는 화분 옆이에요.'])}},
- musicT:{name:'음악 선생님',zone:'hall',x:2,y:2,dir:'down',look:LOOK.musicT,
+   :F.metTeacher?['시험지가 너무 많아요.','3반 교실은 복도 오른쪽 끝이에요.']:['정 선생님 자리는 화분 옆이에요.'])}},
+ musicT:{name:'음악 선생님',zone:'hall',x:2,y:2,dir:'down',look:LOOK.musicT,hide:()=>{const F=f();return F.metTeacher&&!F.lunch||F.deal&&!F.crew3},
   talk:()=>[{say:'2학년 3반 전학생? 정 선생님 반이네요.',face:'happy'},{say:'저는 음악 선생님이에요. 음악실은 2층이에요.'}],
   again:()=>{const F=f();return pick(F.done?['아까 스피커에서 옛날 노래가 나왔죠? 저도 깜짝 놀랐어요.','그 스피커, 원래 아무 소리도 안 나요. 이상하네요.']:F.crew3?['첫날 어땠어요? 내일 봐요.','방송부 얘기, 교무실에서도 다들 해요.']
    :F.metChan?['방송실 귀신? 하하, 그런 거 없어요.','교무실에서는 조용히 해 주세요.']:F.lunch?['아까 음악 시간, 3반 노래 좋았어요.','교무실에서는 조용히 해 주세요.']:['교무실에서는 조용히 해 주세요.','첫날이라 힘들죠? 천천히 해요.'])}},
+ engT:{name:'영어 선생님',zone:'hall',x:2,y:2,dir:'down',look:LOOK.engT,hide:()=>{const F=f();return !(F.metTeacher&&!F.lunch||F.deal&&!F.crew3)},
+  talk:()=>{const F=f();return [{say:'3반 전학생이죠? 저는 영어 선생님이에요.'},{say:F.deal?'정 선생님은 지금 3반 교실에 있어요. 종례 시간이에요.':F.seated?'아까 단어 시험, 어땠어요? 하하.':'오늘 3반 영어 시간에 단어 시험이 있어요.'}]},
+  again:()=>{const F=f();return pick(F.deal?['정 선생님은 지금 3반 교실에 있어요. 종례 시간이에요.','교장실에 갔다 왔다면서요? 소문이 빨라요.']:F.seated?['아까 단어 시험, 어땠어요? 하하.','숙제는 다음 시간까지예요.']:['단어 시험, 준비했어요?','오늘 3반 영어 시간에 단어 시험이 있어요.'])}},
+ sciT:{name:'과학 선생님',zone:'hall',x:3,y:4,dir:'left',look:LOOK.sciT,hide:()=>!(f().lunch&&!f().deal),
+  talk:()=>[{say:'3반 전학생? 아까 과학 시간에 봤어요.'},{say:'저는 과학 선생님이에요. 실험 영상, 재밌었어요?'}],
+  again:()=>pick(f().metChan?['방송실 귀신? 과학적으로 말이 안 돼요. 하하.','점심 먹었어요? 저는 이따 먹어요.']:['점심 먹었어요? 저는 이따 먹어요.','다음 시간에는 영상 말고 진짜 실험을 해요.'])},
  jung:{name:'정 선생님',zone:'hall',x:6,y:2,dir:'down',look:LOOK.jung,badge:['반장','교장','동갑','평범하다','종례'],
   hide:()=>!!f().deal&&!f().crew3,
   get after(){return f().done?pick([['아까 복도 스피커 소리 들었어요? 신기하네요.'],['아직 안 갔어요? 내일은 늦지 마요.']])

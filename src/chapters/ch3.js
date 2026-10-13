@@ -12,6 +12,7 @@ CHAPTERS.push({id:'ch3',n:'3교시',title:'비밀 사연',place:'방송실 · �
    ===================================================================== */
 const WORDS=['비밀','엿듣다','오해하다','사과하다','독후감','맞춤법','제출하다','댓글','눈치','고민하다','답답하다','창피하다','무시하다','끼어들다','향기','복숭아','가입하다','감동','붙다','뽑다'];
 const DICT={
+ '학부모회':{k:'학생 부모님들의 모임.',e:"parents' committee (PTA)"},  // the principal's meeting (as in 4교시)
  '비밀':{k:'다른 사람한테 말하지 않는 이야기. "쉿!"',e:'secret',ex:'이건 우리 둘만의 비밀이야.',hj:'祕密 · 비밀번호의 비밀'},
  '엿듣다':{k:'남의 이야기를 몰래 들어요. 문 뒤에서, 벽 뒤에서. (엿들어요, 엿들었어요)',e:'to eavesdrop',ex:'문 뒤에서 이야기를 엿들었어요.'},
  '오해하다':{k:'말이나 일을 잘못 알아요. 사실과 다르게 생각해요.',e:'to misunderstand',ex:'내 말을 오해하지 마.',hj:'誤解 · 解 = 풀다 · 이해(理解)의 해'},
@@ -317,6 +318,9 @@ const REVIEW=[
  {w:'얼다',by:'xN3',ask:'나는 사연 읽으라고 하면 몸이 ___ 버릴걸.',opts:[['얼어',1],['열어',0,'열다는 문을 여는 거야. 몸이 딱 굳으면 "얼어".'],['알아',0,'알다는 무엇을 아는 거야. 몸이 딱 굳으면 "얼어".']]},
  {w:'놓치다',by:'xN4',ask:'점심 방송은 안 ___. 그때만 쉬어.',opts:[['놓쳐',1],['놓아',0,'놓다는 물건을 어디에 두는 거야. 못 듣고 지나가면 "놓쳐".'],['고쳐',0,'고치다는 고장 난 걸 낫게 하는 거야. 못 듣고 지나가면 "놓쳐".']]},
  {w:'긴장하다',by:'xN4',ask:'논술 생각만 하면 ___ 잠이 안 와.',opts:[['긴장해서',1],['건강해서',0,'건강하다는 몸이 튼튼한 거야. 떨려서 못 자면 "긴장해서".'],['즐겨서',0,'즐기다는 재밌게 하는 거야. 떨려서 못 자면 "긴장해서".']]},
+ // the principal in the 교장실
+ {w:'제출하다',by:'principal',when:()=>!f().submitted,ask:'등록 신청서는 정 선생님한테 ___ 돼요.',opts:[['제출하면',1],['출제하면',0,'출제는 선생님이 문제를 만드는 거예요. 학생이 서류를 내면 "제출하면".'],['가입하면',0,'가입은 동아리에 들어가는 거예요. 서류를 내면 "제출하면".']]},
+ {w:'가입하다',by:'principal',when:()=>!!f().submitted,ask:'방송부에 새로 ___ 학생이 있다고요?',opts:[['가입한',1],['제출한',0,'제출하다는 서류를 내는 거예요. 동아리에 들어가면 "가입한".'],['감동한',0,'감동하다는 마음이 크게 움직이는 거예요. 동아리에 들어가면 "가입한".']]},
 ];
 
 /* class time between the bells (classTime in the engine): day one's afternoon (국어, 영어) between lunch and 방과 후, in 다온's talk in
@@ -384,7 +388,7 @@ const ZONES={...SCHOOL({open:['cafe','hall2','music','library','bcast'],gate:{to
    's':['신발장이에요. 실내화가 줄줄이 있어요.','신발장 하나에 "남궁찬" 이름표. 냄새가… 좀.'],
    'W':['창밖에 운동장하고 느티나무가 보여요.','창밖에서 새가 짹짹 울어요.'],
    'q':()=>f().done?'"방송실" 팻말이에요. "방송 중" 불이 꺼졌어요.':f().aired?'"방송실" 팻말. "방송 중" 불이 깜빡여요!':'"방송실" 팻말이에요. "방송 중" 불은 꺼져 있어요.'},
-  npcs:['jung','kimT','hanT','daonBoard','box','hariBox','chanBox','chanRumor','kid','xB1','xB2','xW','xN2','xN3','xN4']},
+  npcs:['jung','kimT','hanT','principal','daonBoard','box','hariBox','chanBox','chanRumor','kid','xB1','xB2','xW','xN2','xN3','xN4']},
  cafe:{
   things:{'h':['과자하고 빵이 가득해요.','복숭아 주스가 한 줄 있어요. 분홍색이에요.','바나나우유는 벌써 다 팔렸어요.'],
    'm':'매점 계산대예요. "외상 안 돼요!"라고 쓰여 있어요.',
@@ -461,6 +465,7 @@ const ZONES={...SCHOOL({open:['cafe','hall2','music','library','bcast'],gate:{to
   npcs:['chanNR','daonNR','gureumNR','hariNR']}};
 
 const LOOK={
+ principal:{hair:'#3A3436',hairHi:'#A9A5A8',skin:'#E3B898',shirt:'#7A3E54',pants:'#3A3340',style:'bun',coat:1,lashes:1,lips:'#A8505E'},
  player:{hair:'#2B2422',skin:'#E6BE9C',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'short'},
  gureum:{hair:'#3B2E2A',skin:'#E2B794',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'bob'},
  daon:{hair:'#2A2024',skin:'#EBC3A2',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'bun',lashes:1,lips:'#C9707A'},
@@ -608,6 +613,15 @@ look:LOOK.hanT,
   script:()=>react('hanT',[{say:'사연 정말 좋았어요. 그런데 교장 선생님 방송은…',face:'sad'},{say:'방송실 기계에서 연기도 났다면서요? 큰일이네요.'}]),
   talk:()=>[{say:'방송부? 지난주 점심 방송 잘 들었어요.',face:'happy'},{say:'교무실에서는 조용히 해 주세요.'}]},
 
+ /* the principal at her desk in the 교장실 (as in 1교시 and 4교시): formal and a little stern; her announcement after the
+    사연 comes from the 교무실 mic; no hint of 복숭아 before 4교시 */
+ principal:{name:'한복순 교장 선생님',zone:'hall',x:12,y:1,dir:'down',look:LOOK.principal,
+  talk:()=>[{say:'방송부 학생이군요.'},{say:'요즘 방송부 소문이 많네요. 좋은 소문이면 좋겠어요.'}],
+  again:()=>{const F=f();if(F.done)return [{say:'방송 들었죠? 축제가 끝나면 방송실은 심화반 교실이 돼요.'},{say:'…학교가 정한 일이에요.',face:'sad'}];
+   if(F.aired)return [{say:'점심 방송, 교장실에서도 들렸어요.'},{say:'방송실로 돌아가요. 구름 학생이 기다려요.'}];
+   if(F.secret)return [{say:'오늘 오후에 {학부모회|학부모회} 회의가 있어요.'},{say:'바빠요. 복도에서 뛰지 마요.'}];
+   if(F.submitted)return [{say:'정 선생님한테 신청서를 냈다고 들었어요.'},{say:'축제까지 방송 한 번. 잊지 마세요.'}];
+   return [{say:'동아리 등록 신청서요? 그건 정 선생님한테 내요.'},{say:'다섯 명 이름, 다 있어야 돼요.'}]}},
  jung:{name:'정 선생님',zone:'hall',x:6,y:2,dir:'down',look:LOOK.jung,badge:['가입하다','제출하다','독후감','맞춤법'],
   get after(){const F=f();   // the review line follows the two days: club form, rumor, the morning after, the 사연
    if(F.done)return ['교장 선생님 방송, 선생님도 처음 들었어요.','방송부 편이에요. 같이 방법을 찾아요.'];

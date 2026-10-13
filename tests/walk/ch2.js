@@ -16,6 +16,8 @@
  {check:()=>state.f.metHari&&state.items.includes('명찰'),msg:'name tag dropped'},
  {talk:'mathT'},{talk:'musicT'},  // the other teachers at their desks (수학 선생님 sends the 명찰 to 정 선생님)
  {talk:'jung',wrong:true,shotBefore:'04-teachers-office',shotTap:'04b-tap-word'},
+ {talk:'principal'},  // the principal at her desk in the 교장실 (2교시 and 3교시 too, not only 1교시 and 4교시)
+ {talk:'sciT'},  // after the 명찰: the 과학 선생님 at the 수학 선생님's desk (the timetable)
  {check:()=>state.f.knowHari,msg:'teacher names her'},
  {greet:'chanG',wrong:true,shotBefore:'05-gym'},  // walking into the gym, 찬 talks first
  {talk:'teaser2'},
@@ -25,6 +27,7 @@
  {check:()=>state.f.stoodUp,msg:'stood up for her'},
  {talk:'hariG',shotSay:{text:'긴장해서',name:'07-hari-gym'}},
  {check:()=>state.f.afterSchool&&!state.items.includes('명찰'),msg:'tag returned, after school'},
+ {talk:'engT',shotBefore:'08b-office-after-school'},  // after school: the 영어 선생님 at the 음악 선생님's desk
  {walkTo:['street',12,3],then:'08-street'},
  {inspect:['street',10,2]},
  {talk:'chanB'},
@@ -37,6 +40,7 @@
  {walkTo:['hall',18,7],then:'12b-hall-doors'},
  {talk:'gureumL',wrong:true,shotBefore:'13-broadcast-evening',shotSay:{text:'오전 수업이 시작됐어요',name:'13a-morning-classes'}},
  {check:()=>state.f.nextDay&&!state.f.ready&&ZID==='class'&&player.x===11&&player.y===11&&!$('fade').classList.contains('on'),msg:'the lunch bell leaves you at your desk in 2학년 3반, the room in view'},
+ {talk:'sciT'},  // the next morning: the 과학 선생님 is back at the desk after 3반's experiment
  {pause:0,shot:'13b-classroom-lunch'},
  {check:()=>state.items.includes('생수')&&!state.items.includes('하리 연락처'),msg:'water still in the bag; the contact went to 구름'},
  {greet:'gureumL',wrong:true,shotBefore:'13c-broadcast-crowd'},  // walking into the 방송실 starts the crowded run-through

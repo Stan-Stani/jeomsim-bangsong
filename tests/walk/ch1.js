@@ -7,6 +7,7 @@
  {bump:['hall','R']},
  {talk:'mathT'},{talk:'musicT'},  // the other teachers at their desks (수학 선생님 points to 정 선생님's seat)
  {talk:'jung',wrong:true,shotBefore:'03-teachers-office',shotChoice:'03a-teacher-question',shotTap:'03b-tap-word'},
+ {talk:'engT'},  // after 정 선생님: the 영어 선생님 has the desk until lunch (the timetable)
  {talk:'principal',shotBefore:'04-principal-office'},
  {talk:'daon',wrong:true,shotBefore:'05-classroom-daon',shotSay:{text:'넷째 줄',name:'05-daon-last-line'}},
  {check:()=>state.f.paidFine,msg:'fine paid'},
@@ -45,6 +46,7 @@
  {shot:'06c-cafe-door-right'},
  {shot:'06d-cafeteria-from-right-door'},
  {check:()=>ZID==='cafe'&&player.x===11&&player.y===1&&player.dir==='down',msg:'the right cafeteria door tile opens too; you arrive at the top, facing down'},
+ {talk:'sciT',shotBefore:'06c-office-lunch'},  // lunch: the 과학 선생님 at the 수학 선생님's desk
  {talk:'chan',wrong:true,shotBefore:'07-cafeteria',shotBuild:'07b-sentence-build'},
  {check:()=>cultureSeen.includes('teok'),msg:'찬\'s 생일턱 line adds the 생일 턱 문화 노트'},
  // the new note waits as a tappable chip until it's read; tapping it opens the 일지 on that note

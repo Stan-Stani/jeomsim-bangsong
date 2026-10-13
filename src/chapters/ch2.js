@@ -297,16 +297,26 @@ const REVIEW=[
  {w:'지우개',by:'daonL',when:()=>!!f().done,pre:['복숭아 쪽지 또 왔다며?'],ask:'혹시 몰라서 내 ___ 커버부터 봤어.',opts:[['지우개',1],['지우기',0,'지우기는 지우는 일이야. 커버 있는 물건은 "지우개".'],['지붕',0,'지붕은 집 위에 있잖아. 쪽지 나온 건 "지우개".']]},
  {w:'걷다',by:'daonL',when:()=>!!f().done,ask:'방송부 간식 값은 내가 ___ 거야. 한 명에 천 원.',opts:[['걷을',1],['걸을',0,'"걸을"은 발로 가는 거야. 돈을 모으면 "걷을".'],['걸릴',0,'걸리다는 시간이나 감기야. 돈을 모으면 "걷을".']]},
  {w:'쏘다',by:'daonL',when:()=>!!f().done,ask:'방송 성공 기념! 떡볶이는 찬이 ___. 내가 정했어.',opts:[['쏜다',1],['쓴다',0,'쓴다? 글씨 써? 사 주는 건 "쏜다".'],['싼다',0,'싼다? 가방 싸? 사 주는 건 "쏜다".']]},
- // the 수학 선생님 and the 음악 선생님 at their desks in the 교무실
+ // the teachers at their desks in the 교무실 (who is there follows the timetable: see mathT)
  {w:'명찰',by:'mathT',ask:'___ 안 단 학생은 벌점이에요. 조심해요.',opts:[['명찰',1],['명함',0,'명함은 회사 사람이 주는 작은 종이예요. 교복에 다는 이름표는 "명찰".'],['경찰',0,'하하, 경찰은 도둑을 잡는 사람이에요. 이름표는 "명찰".']]},
  {w:'놓치다',by:'mathT',ask:'아침 버스를 ___ 또 뛰어왔어요? 하하.',opts:[['놓쳐서',1],['놓아서',0,'놓다는 일부러 어디에 두는 거예요. 버스를 못 타면 "놓쳐서".'],['놀려서',0,'놀리다는 남을 웃음거리로 만드는 거예요. 버스를 못 타면 "놓쳐서".']]},
  {w:'효과',by:'mathT',when:()=>!!f().done,ask:'점심 방송 ___가 대단해요. 복도가 조용해졌어요.',opts:[['효과',1],['효도',0,'효도는 부모님을 잘 모시는 거예요. 방송으로 생긴 변화는 "효과".'],['과자',0,'하하, 과자는 간식이에요. 방송으로 생긴 변화는 "효과".']]},
  {w:'즐기다',by:'mathT',when:()=>!!f().done,ask:'채점하면서 방송 ___ 들었어요. 좋던데요.',opts:[['즐겨',1],['즐거워',0,'즐겁다는 기분이에요. "들었어요" 앞에서는 "즐겨".'],['놀려',0,'하하, 방송을 놀려요? 재밌게 들으면 "즐겨".']]},
  {w:'분위기',by:'mathT',when:()=>!!f().done,ask:'방송 덕분에 교무실 ___도 좋아졌어요.',opts:[['분위기',1],['날씨',0,'날씨는 하늘이 맑거나 비가 오는 거예요. 그곳의 느낌은 "분위기".'],['분식집',0,'분식집은 떡볶이 먹는 곳이에요. 느낌은 "분위기".']]},
+ {w:'곡',by:'engT',ask:'팝송 한 ___, 찬이 끝까지 읽었어요. 하하.',opts:[['곡',1],['권',0,'권은 책을 셀 때예요. 노래는 "곡".'],['장',0,'장은 종이를 셀 때예요. 노래는 "곡".']]},
+ {w:'장난',by:'engT',ask:'찬은 수업 시간에 ___이 많아요. 하하.',opts:[['장난',1],['장남',0,'장남은 첫째 아들이에요. 재미로 하는 일은 "장난".'],['잔반',0,'잔반은 먹고 남은 음식이에요. 재미로 하는 일은 "장난".']]},
+ {w:'어색하다',by:'engT',ask:'찬 발음이 좀 ___. 그래도 용감했어요.',opts:[['어색했어요',1],['색달랐어요',0,'색다르다는 보통과 달라서 새로운 거예요. 자연스럽지 않으면 "어색했어요".'],['어떡했어요',0,'"어떡해요"는 걱정할 때 하는 말이에요. 자연스럽지 않으면 "어색했어요".']]},
+ {w:'긴장하다',by:'sciT',when:()=>!f().nextDay,ask:'실험할 때 너무 ___ 마요. 천천히 하면 돼요.',opts:[['긴장하지',1],['장난하지',0,'장난하면 실험이 위험해요. 떨리는 건 "긴장하지" 마요.'],['포기하지',0,'포기하면 실험을 못 해요. 떨리는 건 "긴장하지" 마요.']]},
+ {w:'얼다',by:'sciT',when:()=>!!f().nextDay,ask:'아까 실험에서 물이 진짜 ___?',opts:[['얼었죠',1],['열었죠',0,'열다는 문을 여는 거예요. 물이 굳으면 "얼었죠".'],['놀렸죠',0,'놀리다는 남을 웃음거리로 만드는 거예요. 물이 굳으면 "얼었죠".']]},
+ {w:'효과',by:'sciT',when:()=>!!f().nextDay,ask:'소금을 넣으면 물이 잘 안 얼어요. 그게 소금의 ___예요.',opts:[['효과',1],['기회',0,'기회는 좋은 때예요. 무엇을 해서 생기는 변화는 "효과".'],['분위기',0,'분위기는 어떤 곳의 느낌이에요. 무엇을 해서 생기는 변화는 "효과".']]},
  {w:'긴장하다',by:'musicT',ask:'저도 첫 수업 때 많이 ___. 지금도 조금요.',opts:[['긴장했어요',1],['건강했어요',0,'건강하다는 몸이 튼튼한 거예요. 떨리면 "긴장했어요".'],['장난했어요',0,'장난은 재미로 하는 거예요. 떨리면 "긴장했어요".']]},
  {w:'기회',by:'musicT',when:()=>!!f().poster,ask:'방송부 부원 모집? 1학년들한테 좋은 ___예요.',opts:[['기회',1],['기억',0,'기억은 머릿속에 남은 거예요. 딱 좋은 때는 "기회".'],['기분',0,'기분은 마음 상태예요. 딱 좋은 때는 "기회".']]},
  {w:'곡',by:'musicT',when:()=>!!f().done,ask:'방송 노래, 한 ___ 더 듣고 싶어요.',opts:[['곡',1],['국',0,'하하, 국은 먹는 거예요. 노래는 한 "곡", 두 "곡".'],['권',0,'권은 책을 셀 때예요. 노래는 한 "곡", 두 "곡".']]},
  {w:'챙기다',by:'musicT',when:()=>!!f().done,ask:'노래한 친구, 물은 잘 ___ 줬어요? 목 아팠을 거예요.',opts:[['챙겨',1],['생겨',0,'생기다는 없던 게 새로 나타나는 거예요. 물을 가져다주면 "챙겨".'],['재촉해',0,'재촉하다는 빨리 하라고 하는 거예요. 물을 가져다주면 "챙겨".']]},
+ // the principal in the 교장실
+ {w:'놓치다',by:'principal',ask:'이번 기회를 ___ 방송실은 없어요.',opts:[['놓치면',1],['놓으면',0,'놓다는 일부러 어디에 두는 거예요. 기회를 잡지 못하면 "놓치면".'],['놀리면',0,'놀리다는 남을 웃음거리로 만드는 거예요. 기회를 잡지 못하면 "놓치면".']]},
+ {w:'기회',by:'principal',ask:'축제까지 ___는 한 번이에요.',opts:[['기회',1],['기억',0,'기억은 머릿속에 남은 거예요. 다시 안 올 수도 있는 좋은 때는 "기회".'],['기분',0,'기분은 마음 상태예요. 다시 안 올 수도 있는 좋은 때는 "기회".']]},
+ {w:'효과',by:'principal',when:()=>!!f().done,ask:'점심 방송 ___는 있었어요. 그래도 다섯 명이에요.',opts:[['효과',1],['효도',0,'효도는 부모님을 잘 모시는 거예요. 방송으로 생긴 변화는 "효과".'],['과자',0,'하하, 과자는 간식이에요. 방송으로 생긴 변화는 "효과".']]},
 ];
 
 const ITEMS={'모집 포스터':'"방송부 부원 모집! 목소리만 있으면 돼요."','명찰':'초록색 명찰. "1학년 2반 유하리"','하리 연락처':'다온이 보내 준 하리 번호. 이름 옆에 마이크 그림.','생수':'분식집 아저씨가 준 차가운 물.'};
@@ -346,7 +356,7 @@ const ZONES={...SCHOOL({open:['hall2','music','gym','bcast','class'],gate:{to:'s
    'k':['선생님 책상이에요. 시험지가 높이 쌓였어요.','커피 컵에 "국어"라고 쓰여 있어요.','책상 위에 독후감 종이가 한 무더기 있어요.'],
    's':['신발장이에요. 실내화가 줄줄이 있어요.','신발장 하나에 초록색 운동화. 1학년 거예요.'],
    'W':['창밖에 운동장하고 느티나무가 보여요.','창밖에서 새가 짹짹 울어요.']},
-  npcs:['jung','mathT','musicT','student','xA','xB','xSenior','xWin','xClean','xBye','xF','xG','xH','xI','xJ']},
+  npcs:['jung','mathT','musicT','engT','sciT','principal','student','xA','xB','xSenior','xWin','xClean','xBye','xF','xG','xH','xI','xJ']},
  hall2:{locks:{music:()=>!f().poster&&'음악실이에요. 지금은 들어갈 일이 없어요.'},
   things:{'V':x=>x>4?(x>=20?'도서관 창문이에요. 책장이 보여요.':'3학년 교실이에요. 다들 문제집만 봐요.'):(()=>!f().poster?'음악실 창문이에요. 안이 조용해요.':!f().metHari?'창문 너머로 노랫소리가 들려요!':'음악실 안에 피아노가 보여요.')()}},
  yard:{locks:{gym:()=>!f().knowHari&&'체육관이에요. 점심시간이라 문이 잠겨 있어요.'},
@@ -455,6 +465,9 @@ const seatPulled=(x,y)=>{try{if(player.sit&&player.dir==='up'&&player.x===x&&pla
 const seatPulledN=(x,y)=>{try{return live().some(n=>n.x===x&&n.y===y-1&&n.dir==='down'&&!n.walk&&sitting(n))}catch(e){return false}};
 
 const LOOK={
+ principal:{hair:'#3A3436',hairHi:'#A9A5A8',skin:'#E3B898',shirt:'#7A3E54',pants:'#3A3340',style:'bun',coat:1,lashes:1,lips:'#A8505E'},
+ engT:{hair:'#1E1A18',skin:'#D9A882',shirt:'#C9B48A',pants:'#4A4640',style:'short'},
+ sciT:{hair:'#4A3A30',skin:'#EEC6A6',shirt:'#F2F2EE',pants:'#4A4F5C',style:'bun',lashes:1,lips:'#B8606A',coat:1},
  mathT:{hair:'#2A2622',skin:'#E0B48E',shirt:'#7D8F63',pants:'#4A4A40',style:'short'},
  musicT:{hair:'#3A2420',skin:'#EEC6A6',shirt:'#C26A7A',pants:'#4A4450',style:'long',lashes:1,lips:'#C0606C'},
  player:{hair:'#2B2422',skin:'#E6BE9C',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'short'},
@@ -551,14 +564,28 @@ const NPC={
   hide:()=>!f().metHari||hasItem(NOTAG)||has('명찰'),
   talk:()=>[{who:'…',say:'초록색 명찰이에요.'}]},
 
- /* the 수학 선생님 and the 음악 선생님 at their desks, as in 1교시: the 교무실 isn't only 정 선생님's */
- mathT:{name:'수학 선생님',zone:'hall',x:3,y:4,dir:'left',look:LOOK.mathT,
+ /* the teachers at two desks, by the timetable as in 1교시: until the 명찰 수학 + 음악; then 과학 (수학 teaches); after school 영어
+   (after 3반's 영어; 음악 has gone home); the next morning 과학 again (after the experiment); after the broadcast 수학 + 음악 */
+ mathT:{name:'수학 선생님',zone:'hall',x:3,y:4,dir:'left',look:LOOK.mathT,hide:()=>{const F=f();return F.knowHari&&!F.afterSchool||F.nextDay&&!F.done},
   talk:()=>hasItem(NOTAG)&&!f().knowHari?[{say:'명찰이요? 1학년 거네요.'},{say:'정 선생님한테 보여 드려요. 자리는 화분 옆이에요.'}]:[{say:'시험지를 보고 있어요. 빨간 펜이 모자라요.'},{say:'정 선생님 자리는 화분 옆이에요.'}],
   again:()=>{const F=f();return hasItem(NOTAG)&&!F.knowHari?'명찰은 정 선생님한테 보여 드려요.':pick(F.done?['점심 방송 들었어요. 복도가 갑자기 조용해졌어요.','채점하다가 방송 듣고 손을 멈췄어요.']
    :F.afterSchool&&!F.nextDay?['아직 학교에 있어요? 일찍 들어가요.','오늘 수학 시간에 다온이 한숨을 쉬었어요. 하하.']:['채점이 끝이 안 나요.','빨간 펜을 새로 샀어요. 하하.'])}},
- musicT:{name:'음악 선생님',zone:'hall',x:2,y:2,dir:'down',look:LOOK.musicT,
+ musicT:{name:'음악 선생님',zone:'hall',x:2,y:2,dir:'down',look:LOOK.musicT,hide:()=>!!f().afterSchool&&!f().nextDay,
   talk:()=>f().done?[{say:'점심 방송 노래, 잘 들었어요.',face:'happy'},{say:'음악실에서 노래하던 그 목소리죠? 음악실에 또 오라고 해요.'}]:[{say:'점심시간에 음악실에서 노래가 들렸대요.'},{say:'저는 그때 없었어요. 누굴까요?',face:'surprised'}],
   again:()=>pick(f().done?['노래 정말 잘했어요. 음악실에 또 오라고 해요.','교무실에서는 조용히 해 주세요.']:['음악실 귀신? 하하, 그런 거 없어요.','교무실에서는 조용히 해 주세요.'])},
+ engT:{name:'영어 선생님',zone:'hall',x:2,y:2,dir:'down',look:LOOK.engT,hide:()=>!(f().afterSchool&&!f().nextDay),
+  talk:()=>[{say:'오늘 영어 시간에 찬이 노래 가사를 읽었어요.'},{say:'발음이… 하하. 노력은 좋았어요.',face:'happy'}],
+  again:()=>pick(['해가 지고 있어요. 조심히 들어가요.','찬 발음, 다음에는 더 좋아질 거예요. 하하.'])},
+ sciT:{name:'과학 선생님',zone:'hall',x:3,y:4,dir:'left',look:LOOK.sciT,hide:()=>{const F=f();return !(F.knowHari&&!F.afterSchool||F.nextDay&&!F.done)},
+  talk:()=>f().nextDay?[{say:'아까 3반 실험, 재밌었죠?'},{say:'저는 과학 선생님이에요. 소금물은 잘 안 얼어요.'}]:[{say:'저는 과학 선생님이에요.'},{say:'내일 3반 실험이 있어요. 소금하고 얼음 실험이에요.'}],
+  again:()=>pick(f().nextDay?['소금을 넣으면 물이 잘 안 얼어요. 신기하죠?','점심시간에 방송실이 바쁘네요.']:['내일 실험 날이에요. 3반한테 말해 줘요.','음악실 노래 귀신? 과학적으로 말이 안 돼요. 하하.'])},
+ /* the principal at her desk in the 교장실 (as in 1교시 and 4교시): formal and a little stern; no hint of 복숭아 before 4교시 */
+ principal:{name:'한복순 교장 선생님',zone:'hall',x:12,y:1,dir:'down',look:LOOK.principal,
+  talk:()=>[{say:'방송부 학생이군요. 부원은 몇 명이에요?'},{say:'축제까지 다섯 명이에요. 잊지 마세요.'}],
+  again:()=>{const F=f();if(F.done)return [{say:'점심 방송, 들었어요.'},{say:'복도가 아주 조용했어요. 다들 듣고 있었어요.'},{say:'그래도 부원은 아직 네 명이에요. 다섯 명, 잊지 마세요.'}];
+   if(F.nextDay)return [{say:'점심시간에 방송실이 바쁘다고 들었어요.'},{say:'방송 기계는 오래됐어요. 조심해서 써요.'}];
+   if(F.afterSchool)return [{say:'아직 학교에 있어요? 하교 시간이 지났어요.'},{say:'조심히 들어가요.'}];
+   return pick([[{say:'부원 모집 포스터, 봤어요.'},{say:'다섯 명이에요. 네 명은 안 돼요.'}],[{say:'복도에서 뛰지 마요.'},{say:'부원은 찾았어요? 축제가 얼마 안 남았어요.'}]])}},
  jung:{name:'정 선생님',zone:'hall',x:6,y:2,dir:'down',look:LOOK.jung,badge:['명찰'],
   get after(){return pick([['점심 방송 잘 들었어요. 교무실이 다 조용했어요.'],['하리 학생 목소리, 정말 좋았어요.','근데 명찰은 늘 달고 다녀요. {벌점|벌점} 무서우니까요.']])},  // only after the finale; before it the script has a line for every phase
   status:()=>{if(!has('명찰'))return hasItem(NOTAG)?'todo':null},

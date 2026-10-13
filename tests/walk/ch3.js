@@ -6,6 +6,7 @@
  {bump:['yard','G']},
  {talk:'daonBoard',shotBefore:'03-board-rule'},
  {talk:'imo'},
+ {talk:'principal'},  // the principal at her desk in the 교장실 (the form goes to 정 선생님)
  {talk:'jung',wrong:true,shotBefore:'04-teachers-office',shotChoice:'04a-teacher-question'},
  {check:()=>state.f.formGot&&state.items.includes('동아리 등록 신청서'),msg:'form with four names'},
  {talk:'lib'},
