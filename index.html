@@ -449,8 +449,9 @@ const TILES={
   cabinet:(X,Y,x,y)=>{r(X+1,Y+1,14,15,'#9AA3AD');r(X+1,Y+1,14,1,'#B9C1C9');[5,10].forEach(b=>r(X+2,Y+b,12,1,'#7A838D'));[3,8,13].forEach(b=>r(X+7,Y+b,2,1,'#5A626B'))},
   water:(X,Y,x,y)=>{r(X+4,Y+4,8,12,'#F2F0EA');r(X+4,Y+15,8,1,'#C9C6BC');r(X+5,Y,6,5,'#8FC8E8');r(X+6,Y+1,1,3,'#C4E6F6');r(X+6,Y+8,1,2,'#D2533F');r(X+9,Y+8,1,2,'#3A86C8');r(X+5,Y+11,6,1,'#9A968C')},
   plant:(X,Y,x,y)=>{r(X+5,Y+10,6,6,'#B5653A');r(X+5,Y+10,6,1,'#D07E52');r(X+3,Y+3,10,7,'#3F8F4A');r(X+5,Y+1,6,3,'#3F8F4A');r(X+5,Y+3,2,2,'#6CC07A');r(X+10,Y+6,2,2,'#6CC07A')},
+  /* the 교무실's desks stand in back-to-back pairs: the north desk's teacher sits above it, so its monitor shows its back */
   odesk:(X,Y,x,y)=>{r(X,Y+4,16,10,'#8C96A0');r(X,Y+4,16,3,'#B9C2CA');r(X,Y+13,16,1,'#6A737C');const h=hash(x,y);
-  if(h%2){r(X+4,Y,8,6,'#2B3238');r(X+5,Y+1,6,4,'#69CFD8');r(X+7,Y+6,2,1,'#2B3238')}else{r(X+2,Y+3,6,4,'#F4F1E6');r(X+3,Y+2,6,4,'#FFFFFF');r(X+11,Y+2,3,4,'#C8443A')}},
+  if(h%2){r(X+4,Y,8,6,'#2B3238');if(at(x,y+1)==='k'){r(X+5,Y,6,1,'#69CFD8');r(X+5,Y+1,6,4,'#4A525C');r(X+5,Y+1,6,1,'#5E6772');r(X+6,Y+2,4,2,'#3E454E')}else r(X+5,Y+1,6,4,'#69CFD8');r(X+7,Y+6,2,1,'#2B3238')}else{r(X+2,Y+3,6,4,'#F4F1E6');r(X+3,Y+2,6,4,'#FFFFFF');r(X+11,Y+2,3,4,'#C8443A')}},
   trophy:(X,Y,x,y)=>{r(X+1,Y,14,16,'#7A5230');r(X+2,Y+1,12,6,'#5A3A20');r(X+2,Y+8,12,6,'#5A3A20');r(X+4,Y+2,4,2,'#E8B93A');r(X+3,Y+2,1,2,'#C9982A');r(X+8,Y+2,1,2,'#C9982A');r(X+5,Y+4,2,1,'#E8B93A');r(X+5,Y+5,2,1,'#C9982A');r(X+4,Y+6,4,1,'#B88A2A');r(X+4,Y+2,1,1,'#F7D98C');r(X+10,Y+3,3,2,'#C9C6C2');r(X+11,Y+5,1,1,'#A8A6A2');r(X+10,Y+6,3,1,'#8E8C88');r(X+10,Y+3,1,1,'#ECEAE6');r(X+13,Y+1,1,3,'#8FA6B4');
   r(X+3,Y+10,2,4,'#3E5E8C');r(X+5,Y+10,2,4,'#B8433A');r(X+7,Y+11,2,3,'#7CB46A');r(X+10,Y+9,3,5,'#F4F1E6')},
   pdesk:(X,Y,x,y)=>{r(X,Y+2,16,12,'#5E3A22');r(X,Y+2,16,3,'#7A4E2E');r(X,Y+2,16,1,'#93623C');r(X,Y+13,16,1,'#432817');
@@ -590,7 +591,11 @@ const TILES={
   libDesk:(X,Y,x,y)=>{r(X,Y+3,16,11,'#8A5E36');r(X,Y+3,16,3,'#B9844F');r(X,Y+3,16,1,'#CF9E66');r(X,Y+13,16,1,'#5A3E26');const L=at(x-1,y)!=='K',R=at(x+1,y)!=='K';
   if(!L&&!R){r(X+3,Y-2,10,7,'#2B3238');r(X+4,Y-1,8,5,'#69CFD8');r(X+5,Y,4,1,'#F2F2F2');r(X+7,Y+5,2,1,'#2B3238')}else if(L){r(X+3,Y+1,8,2,'#3E5E8C');r(X+4,Y-1,7,2,'#B8433A');r(X+12,Y+2,2,2,'#C8443A')}else{r(X+3,Y+1,9,4,'#5A3E26');r(X+4,Y+2,7,1,'#1B1E2B')}},
   magRack:(X,Y,x,y)=>{r(X+1,Y+2,14,13,'#7A5230');r(X+1,Y+2,14,1,'#93623C');const h=hash(x,y),C=['#E07A5A','#F2C46B','#5A8FB0','#7CB46A','#F2A3B8'];for(let i=0;i<3;i++){r(X+2+i*4,Y+4,3,5,C[(h+i)%5]);r(X+2+i*4,Y+10,3,4,C[(h+i+2)%5])}},
-  pc:(X,Y,x,y,t)=>{r(X,Y+6,16,8,'#B9C2CA');r(X,Y+6,16,2,'#D3D8DB');r(X,Y+13,16,1,'#8C96A0');r(X+3,Y,10,8,'#2B3238');const on=Math.floor(t/900+x)%5!==0;r(X+4,Y+1,8,5,on?'#69CFD8':'#4FB0BA');r(X+5,Y+2,5,1,'#F2F2F2');r(X+5,Y+4,3,1,'#F7C6D2');r(X+4,Y+10,8,2,'#6A737C')},
+  /* the computers stand against the 도서관's south wall, so their screens face the students at them (the row above) and the
+     room sees the monitors' backs: casing, vent and stand, the screen's light just showing over the top edge */
+  pc:(X,Y,x,y,t)=>{r(X,Y+6,16,8,'#B9C2CA');r(X,Y+6,16,2,'#D3D8DB');r(X,Y+13,16,1,'#8C96A0');const on=Math.floor(t/900+x)%5!==0;
+   r(X+4,Y,8,1,on?'#69CFD8':'#4FB0BA');r(X+3,Y+1,10,9,'#2B3238');r(X+4,Y+2,8,7,'#4A525C');r(X+4,Y+2,8,1,'#5E6772');r(X+6,Y+4,4,4,'#3E454E');
+   r(X+6,Y+5,4,1,'#2B3238');r(X+6,Y+7,4,1,'#2B3238');r(X+7,Y+10,2,2,'#2B3238');r(X+5,Y+11,6,1,'#3A4048');r(X+13,Y+6,2,2,'#EEF1F3')},
   bookCart:(X,Y,x,y)=>{r(X+1,Y+4,14,9,'#8C96A0');r(X+1,Y+4,14,1,'#B9C2CA');const C=['#B8433A','#3E5E8C','#3F7D5A','#C9A13A'];for(let i=0;i<6;i++)r(X+2+i*2,Y+1+(i%2),2,4-(i%2),C[i%4]);r(X+2,Y+13,3,3,'#1B1E2B');r(X+11,Y+13,3,3,'#1B1E2B')},
   carpet:(X,Y,x,y)=>carpetF(X,Y,x,y),
  sidewalk:(X,Y,x,y)=>walkF(X,Y,x,y),
@@ -3945,7 +3950,7 @@ const VARIANTS={
   r(X+2,Y+1,12,9,'#8A8E96');r(X+3,Y+2,10,7,'#F4F1E6');r(X+4,Y+3,8,2,on?'#FF6A5A':'#A8443C');r(X+5,Y+3,6,1,on?'#FFD0C8':'#C45A50');
   r(X+4,Y+6,3,1,'#3E4350');r(X+8,Y+6,4,1,'#3E4350');r(X+7,Y+10,2,1,'#8A8E96')},
  odesk:(X,Y,x,y)=>{checkF(X,Y,x,y);r(X,Y+4,16,10,'#8C96A0');r(X,Y+4,16,3,'#B9C2CA');r(X,Y+13,16,1,'#6A737C');const h=hash(x,y);
-  if(h%2){r(X+4,Y,8,6,'#2B3238');r(X+5,Y+1,6,4,'#69CFD8');r(X+7,Y+6,2,1,'#2B3238')}else{r(X+2,Y+3,6,4,'#F4F1E6');r(X+3,Y+1,6,5,'#FFFFFF');r(X+3,Y+2,4,1,'#C8443A');r(X+11,Y+2,3,4,'#C8443A')}},  // 독후감 piles
+  if(h%2){r(X+4,Y,8,6,'#2B3238');if(at(x,y+1)==='k'){r(X+5,Y,6,1,'#69CFD8');r(X+5,Y+1,6,4,'#4A525C');r(X+5,Y+1,6,1,'#5E6772');r(X+6,Y+2,4,2,'#3E454E')}else r(X+5,Y+1,6,4,'#69CFD8');r(X+7,Y+6,2,1,'#2B3238')}else{r(X+2,Y+3,6,4,'#F4F1E6');r(X+3,Y+1,6,5,'#FFFFFF');r(X+3,Y+2,4,1,'#C8443A');r(X+11,Y+2,3,4,'#C8443A')}},  // 독후감 piles
  shoes:(X,Y,x,y)=>{face(X,Y);r(X,Y,16,16,'#B9905E');r(X,Y,16,1,'#D2A970');const h=hash(x,y);
   for(let i=0;i<3;i++)for(let j=0;j<2;j++){r(X+1+j*8,Y+1+i*5,6,4,'#7E5A34');if((h+i+j)%4)r(X+2+j*8,Y+3+i*5,4,2,(h+i)%3?'#F2F0EA':'#5A8FB0')}},  // 찬's shoes
 };
