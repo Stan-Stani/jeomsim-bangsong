@@ -12,6 +12,7 @@ CHAPTERS.push({id:'ch3',n:'3교시',title:'비밀 사연',place:'방송실 · �
    ===================================================================== */
 const WORDS=['비밀','엿듣다','오해하다','사과하다','독후감','맞춤법','제출하다','댓글','눈치','고민하다','답답하다','창피하다','무시하다','끼어들다','향기','복숭아','가입하다','감동','붙다','뽑다'];
 const DICT={
+ '학생증':{k:'그 학교 학생이라는 것을 보여 주는 카드.',e:'student ID card'},  // 찬: the app checks it, and a transfer student's isn't out yet
   '나(저는)':{k:'자기 자신을 편하게 부르는 말이에요.',e:'I (plain)'},
   '주다(도움)':{k:'다른 사람을 위해 해요.',e:'to do for someone'},
   '-(으)ㄹ게':{k:'내가 하겠다고 약속할 때 써요. (갈게, 할게)',e:'I will (promise)'},
@@ -566,6 +567,7 @@ const NPC={
    {who:'…',say:'사연 코너가 끝났어요. 구름 핸드폰이 계속 울려요.'},
    {say:'톡이 엄청 왔어. "울었어요." "최고예요."',face:'surprised'},
    Q.gureumF[0],
+   {who:'오다온',say:'나 원래 이런 거 안 보는데… 어제 깔았어.',face:'think'},  // she said she never reads the anonymous board
    {who:'오다온',say:'학교 앱 댓글도 다 바뀌었어. 봐.',face:'happy',phone:{time:'12:50',battery:81,app:'느티고 앱 · 익명 게시판',post:'방송부 끝났데?',by:'익명',when:'어제',count:51,
     comments:[['익명31','방송부 최고'],['익명32','사연 듣고 울었어요 ㅠㅠ'],['익명33','하리 목소리 진짜 좋다'],['익명34','끝났데 아니고 안 끝났대 ㅋㅋ'],['익명35','다음 사연은 언제 해요?'],['익명36','점심 노래 계속 해 주세요!']]}},
    {who:'남궁찬',say:'"방송부 최고" 댓글, 그거 내가 썼어.',face:'happy'},
@@ -709,7 +711,7 @@ look:LOOK.hanT,
   script:()=>{const F=f();
    if(!F.plan)return [{say:'구름이가 아침부터 방송실에서 너 기다려. 가 봐.'}];
    if(!F.submitted)return [{say:'신청서는 아침에 정 선생님한테 맡겼어. 그것부터 내.'},{say:'{정식|정식} 동아리만 게시판에 포스터를 붙일 수 있어. 규칙이야.',face:'angry'}];  // nobody has said 게시판 yet
-   if(F.rumor)return [{say:'거짓 소문이야. 근데 다들 믿네.',face:'angry'},{say:'댓글? 도서관 서지민한테 물어봐. 도서부야.'}];
+   if(F.rumor)return [{say:'거짓 소문이야. 근데 다들 믿네.',face:'angry'},{say:'나는 익명 게시판 안 봐. 다 소문이야.'},{say:'댓글? 도서관 서지민한테 물어봐. 걔는 매일 봐.'}];
    if(F.posted)return [{say:'포스터 예쁘지? 내가 만들었어.',face:'happy'}];
    return null},
   talk:()=>[
@@ -743,7 +745,10 @@ look:LOOK.hanT,
    Q.chanR[2],
    {say:'오해? 아니야. 벌써 {학교 앱|학교 앱}에도 글이 올라왔어.'},
    {say:'누가 "방송부 {끝났대|-대}?" 이렇게 썼어.',grammar:'dae'},
-   {say:'근데 댓글이 막… 도서관 서지민한테 물어봐.',face:'sad',award:['엿듣다','오해하다'],set:()=>{f().rumor=1}}]},
+   {who:'나',say:'어디? 보여 줘.'},
+   {say:'내 폰? …배터리 없어. 진짜야.',face:'think'},  // he wrote the post (서지민 works it out from the spelling)
+   {say:'너는 아직 {학생증|학생증} 안 나왔지? 그 앱은 학생증이 있어야 돼.'},  // the anonymous app checks your student ID (문화 노트 board)
+   {say:'근데 댓글이 막… 도서관 서지민한테 물어봐. 걔는 그 앱 매일 봐.',face:'sad',award:['엿듣다','오해하다'],set:()=>{f().rumor=1}}]},
 
  hariBox:{name:'유하리',zone:'bcast',x:13,y:1,dir:'down',look:LOOK.hari,badge:['향기'],
   hide:()=>!f().secret||!!f().letter,

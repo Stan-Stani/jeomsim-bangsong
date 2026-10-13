@@ -2655,7 +2655,6 @@
 "신청서는 아침에 정 선생님한테 맡겼어. 그것부터 내.": "[I] left the application form with Ms. Jung this morning. Hand that in first.",
 "정식 동아리만 게시판에 포스터를 붙일 수 있어. 규칙이야.": "Only official clubs can put posters on the bulletin board. It's a rule.",
 "거짓 소문이야. 근데 다들 믿네.": "[It]'s a false rumor. But everyone believes [it].",
-"댓글? 도서관 서지민한테 물어봐. 도서부야.": "The comments? Ask Seo Jimin in the library. [She]'s in the library club.",
 "포스터 예쁘지? 내가 만들었어.": "The poster's pretty, right? I made [it].",
 "왔어? 신청서 제출했지?": "[You]'re here? [You] submitted the application form, right?",
 "좋아. 이제 정식 동아리네. 축하해.": "Good. [We]'re an official club now. Congratulations.",
@@ -2679,7 +2678,6 @@
 "정말 방송부 얘기였을까요? 좀 이상해요.": "Was [it] really about the broadcast club? [It]'s a bit strange.",
 "오해? 아니야. 벌써 학교 앱에도 글이 올라왔어.": "A misunderstanding? No. A post has already gone up on the school app too.",
 "누가 \"방송부 끝났대?\" 이렇게 썼어.": "Someone wrote \"They say the broadcast club is over?\" like that.",
-"근데 댓글이 막… 도서관 서지민한테 물어봐.": "But the comments are just… Ask Seo Jimin in the library.",
 "선배, 이 편지 냄새 진짜 좋아요.": "Sunbae, this letter smells really nice.",
 "선배! 사연함에 편지가 네 통 왔어요!": "Sunbae! Four letters came to the listener story box!",
 "하나는 \"급식에 떡볶이 넣어 주세요.\"": "One is \"Please add tteokbokki to school lunch.\"",
@@ -4183,5 +4181,12 @@
 "지난주에 여기서 1994년 카세트가 나왔어요.": "Last week, the 1994 cassette turned up here.",
 "사연함에 편지가 왔대. 하리가 방송실에서 기다려.": "Letters came to the listener story box, [they] say. Hari's waiting in the broadcast room.",
 "포스터에 화살표도 그렸어요. \"사연함은 방송실 문 옆!\"": "[We] also drew an arrow on the poster: \"The listener story box is by the broadcast room door!\"",
-"방송실 · 사연함 열기": "Broadcast room · Open the listener story box"
+"방송실 · 사연함 열기": "Broadcast room · Open the listener story box",
+"어디? 보여 줘.": "Where? Show me.",
+"내 폰? …배터리 없어. 진짜야.": "My phone? …The battery's dead. For real.",
+"너는 아직 학생증 안 나왔지? 그 앱은 학생증이 있어야 돼.": "Your student ID isn't out yet, right? You need a student ID for that app.",
+"근데 댓글이 막… 도서관 서지민한테 물어봐. 걔는 그 앱 매일 봐.": "But the comments are just… Ask Seo Jimin in the library. [She] checks that app every day.",
+"나는 익명 게시판 안 봐. 다 소문이야.": "I don't read anonymous boards. [It]'s all rumors.",
+"댓글? 도서관 서지민한테 물어봐. 걔는 매일 봐.": "The comments? Ask Seo Jimin in the library. [She] looks every day.",
+"나 원래 이런 거 안 보는데… 어제 깔았어.": "I don't usually look at this stuff… [I] installed [it] yesterday."
 }
