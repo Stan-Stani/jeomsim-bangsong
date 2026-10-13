@@ -21,6 +21,7 @@ Never edit `index.html` by hand. Each chapter (교시) is a cartridge with its o
 - `python3 lexicon/extract.py .` must report `0 without a definition` (add to lexicon/defs.json; analyzer misreads → lexicon/fixes.json).
 - `node tests/coverage.mjs chN`: every object tile says something when inspected; keep it at 100%.
 - `node tests/play.mjs chN` plays `tests/walk/chN.js` with real key presses (400px phone viewport) and must end with `ERRORS: none`.
+  `--fast` (`node tests/play.mjs chN --fast`) plays the same at 3× with only the end screenshot: the quick check after an engine change; the full-speed run (screenshots) is for chapter work.
   One playtest at a time (machine-wide lock); never more than 2 agents playtesting in parallel (this 7 GB machine froze once).
 - `python3 tests/sheet.py chN`, then LOOK at every contact sheet.
 - Art changes (sprites, tiles, chairs): check them at 8× with `node ../walk-engine/tools/zoom.mjs spec.json out/` (see walk-engine README), not

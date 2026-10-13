@@ -17,6 +17,7 @@ window.__play=async function(steps){
   let ok=await step1(d);if(!ok){const [dx,dy]=D[d];if(petOn()&&pet.x===player.x+dx&&pet.y===player.y+dy)ok=await step1(d)}return ok;
  }
  async function step1(d){
+  await until(()=>!player.moving&&!warping,1500);  // a door still fading in ignores keys, as it does for a player (the screenshots used to hide this wait)
   const x=player.x,y=player.y,z=ZID;
   dispatchEvent(new KeyboardEvent('keydown',{key:ARROW[d],bubbles:true}));
   const moved=await until(()=>player.moving||warping||player.x!==x||player.y!==y,400);

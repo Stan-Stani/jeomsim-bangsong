@@ -1,7 +1,11 @@
 import {execFileSync} from 'node:child_process';
 // Usage: node tests/play.mjs ch1   → builds, plays the chapter by keyboard in headless Chrome, saves screenshots to tests/shots/ch1/
+//        node tests/play.mjs ch1 --fast   → the same play as a quick check (after an engine change): the page's clock runs 3× (timers,
+//        animation frames, performance.now and Date, so the review schedule keeps pace too and it plays out like the full run; the game
+//        loop takes at most 50 ms a frame, so more would only skip frames) and only the end screenshot is kept. The full speed run stays
+//        the one for chapter work.
 import {spawn} from 'node:child_process';import fs from 'node:fs';import path from 'node:path';
-const ch=process.argv[2]||'ch1';const root=path.resolve(path.dirname(new URL(import.meta.url).pathname),'..');
+const FAST=process.argv.includes('--fast'),argv=process.argv.slice(2).filter(a=>a!=='--fast');const ch=argv[0]||'ch1';const root=path.resolve(path.dirname(new URL(import.meta.url).pathname),'..');
 const out=path.join(root,'tests/shots',ch);fs.rmSync(out,{recursive:true,force:true});fs.mkdirSync(out,{recursive:true});
 // One Chrome at a time on this machine (7 GB RAM froze when several ran at once): take a lock, wait for it.
 const LOCK='/tmp/seongsilho-play.lock';
@@ -17,8 +21,11 @@ const tmp=fs.mkdtempSync('/tmp/play-');
 execFileSync('python3',[path.join(root,'build.py'),'--out',path.join(tmp,'built.html')]); // own build: safe when several chapters are tested at once
 const html=fs.readFileSync(path.join(tmp,'built.html'),'utf8');
 const driver=fs.readFileSync(path.join(root,'tests/driver.js'),'utf8');
-const walk=fs.readFileSync(path.join(root,'tests/walk',(process.argv[3]||ch)+'.js'),'utf8');
-fs.writeFileSync(path.join(tmp,'play.html'),html.replace('</body></html>',`<script>${driver}\ntry{localStorage.clear()}catch(e){}\nsetTimeout(()=>__play(${walk}),900);</script>\n</body></html>`));
+const walk=fs.readFileSync(path.join(root,'tests/walk',(argv[1]||ch)+'.js'),'utf8');
+const WARP=`(()=>{const K=3,pn=performance.now.bind(performance),t0=pn(),st=setTimeout,si=setInterval,raf=requestAnimationFrame;performance.now=()=>t0+(pn()-t0)*K;
+ window.setTimeout=(f,ms,...a)=>st(f,(+ms||0)/K,...a);window.setInterval=(f,ms,...a)=>si(f,(+ms||0)/K,...a);window.requestAnimationFrame=f=>raf(t=>f(t0+(t-t0)*K));
+ const D=Date,dn=D.now.bind(D),d0=dn(),now=()=>d0+(dn()-d0)*K;window.Date=class extends D{constructor(...a){a.length?super(...a):super(now())}static now(){return now()}}})();`;
+fs.writeFileSync(path.join(tmp,'play.html'),(FAST?html.replace('<head>',`<head><script>${WARP}</script>`):html).replace('</body></html>',`<script>${driver}\ntry{localStorage.clear()}catch(e){}\nsetTimeout(()=>__play(${walk}),900);</script>\n</body></html>`));
 const port=9300+Math.floor(Math.random()*500);
 const chrome=spawn('flatpak',['run',`--filesystem=${tmp}`,'com.google.Chrome','--headless=new','--mute-audio','--disable-gpu','--hide-scrollbars',`--remote-debugging-port=${port}`,
  '--window-size=420,860',`--user-data-dir=${tmp}/prof`,'--autoplay-policy=no-user-gesture-required',`file://${tmp}/play.html?ch=${ch}`],{stdio:'ignore'});
@@ -35,7 +42,7 @@ await new Promise(r=>sock.onopen=r);await send('Runtime.enable');await send('Pag
 await send('Emulation.setDeviceMetricsOverride',{width:400,height:820,deviceScaleFactor:1,mobile:true});
 const t0=Date.now();
 while(!done&&Date.now()-t0<600000){
- while(queue.length){const name=queue.shift();await sleep(300);const s=await send('Page.captureScreenshot',{format:'png'});fs.writeFileSync(path.join(out,name+'.png'),Buffer.from(s.data,'base64'));await send('Runtime.evaluate',{expression:'window.__shotDone=true'})}
+ while(queue.length){const name=queue.shift();if(FAST){await send('Runtime.evaluate',{expression:'window.__shotDone=true'});continue}await sleep(300);const s=await send('Page.captureScreenshot',{format:'png'});fs.writeFileSync(path.join(out,name+'.png'),Buffer.from(s.data,'base64'));await send('Runtime.evaluate',{expression:'window.__shotDone=true'})}
  await sleep(100);
 }
 const res=await send('Runtime.evaluate',{expression:'JSON.stringify({err:window.__err||["no run"],log:window.__log||[]})',returnByValue:true});

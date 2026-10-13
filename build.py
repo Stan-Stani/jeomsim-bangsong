@@ -23,6 +23,17 @@ parts.append(f'<script>\n{(root/"src/culture.js").read_text(encoding="utf-8")}</
 parts.append(f'<script>\n{(root/"src/grammar.js").read_text(encoding="utf-8")}</script>')  # 문법 노트 (window.GRAMMAR_NOTES)
 parts.append(f'<script>\n{(root/"src/engine.js").read_text(encoding="utf-8")}</script>')
 out=pathlib.Path(sys.argv[sys.argv.index('--out')+1]) if '--out' in sys.argv else root/'index.html'
+# The version: a hash of everything built, and when that version first appeared. version.json keeps the time, so a rebuild with
+# no change keeps it (and index.html stays the same); the engine shows it in START, puts it in reports, and an open game reads
+# version.json to update itself. A build elsewhere (--out: the playtests) only reads it.
+import hashlib,datetime,json
+ver=hashlib.sha256(shell.replace('<!--SCRIPTS-->','\n'.join(parts)).encode('utf-8')).hexdigest()[:8]
+vp=root/'version.json'
+try: old=json.loads(vp.read_text(encoding='utf-8'))
+except Exception: old={}
+stamp={'v':ver,'t':old['t'] if old.get('v')==ver and old.get('t') else datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%MZ')}
+if '--out' not in sys.argv and old!=stamp: vp.write_text(json.dumps(stamp)+'\n',encoding='utf-8')
+parts.insert(len(parts)-1,'<script>\n/* This build (version.json): v = a hash of the game, t = when this version first appeared. */\nglobalThis.BUILD='+json.dumps(stamp)+';\n</script>')  # just before the engine
 out.write_text(shell.replace('<!--SCRIPTS-->','\n'.join(parts)),encoding='utf-8')
 print('built',out.name,'with',len(chs),'chapter(s)')
 # Each line's English is keyed by its Korean, so editing a line drops its English silently: report it on every build.
