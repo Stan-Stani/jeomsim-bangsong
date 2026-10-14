@@ -536,7 +536,7 @@ const NPC={
   script:()=>{const F=f();
    if(F.done)return null;
    if(has('감동'))return FINALE();
-   if(!F.letter)return [{say:'사연함에 편지가 왔대. 하리가 방송실에서 기다려.'}];
+   if(!F.letter)return [{say:'사연함에 편지가 왔대. 하리가 열쇠 갖고 기다려.'}];  // said in the 방송실, 하리 by the 사연함 (hariBox)
    if(!F.aired)return [{say:'오늘 사연은 내가 뽑았어. 하리가 읽어.'},{say:'주스? 좋지. 매점 거?',face:'happy'}];
    return null},
   talk:()=>[
