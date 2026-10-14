@@ -588,8 +588,9 @@ const TILES={
   readTable:(X,Y,x,y)=>{const L=at(x-1,y)!=='t',R=at(x+1,y)!=='t';r(X,Y+3,16,9,'#D9B07A');r(X,Y+3,16,1,'#EBC995');r(X,Y+11,16,1,'#A67E4A');
   if(L)r(X+1,Y+12,2,4,'#8A6040');if(R)r(X+13,Y+12,2,4,'#8A6040');const h=hash(x,y);if(h%3===0){r(X+3,Y+5,10,5,'#F7F3E8');r(X+8,Y+5,1,5,'#C9BFA8');r(X+4,Y+6,3,1,'#9AA3B5');r(X+9,Y+7,3,1,'#9AA3B5')}else if(h%3===1)r(X+4,Y+5,6,4,['#3E5E8C','#B8433A','#3F7D5A'][h%3]);
    if(live().some(n=>n.x===x&&n.y===y+1&&sitting(n))){r(X+4,Y+6,8,4,'#F7F3EA');r(X+7,Y+6,2,4,'#C9BFA8');r(X+5,Y+7,2,1,'#9AA3B5');r(X+10,Y+8,1,1,'#9AA3B5')}  /* someone sitting here: an open book */},
+  /* the librarian sits behind the 대출 desk (north of it), so its monitor shows the room its back, the screen's light over the top edge */
   libDesk:(X,Y,x,y)=>{r(X,Y+3,16,11,'#8A5E36');r(X,Y+3,16,3,'#B9844F');r(X,Y+3,16,1,'#CF9E66');r(X,Y+13,16,1,'#5A3E26');const L=at(x-1,y)!=='K',R=at(x+1,y)!=='K';
-  if(!L&&!R){r(X+3,Y-2,10,7,'#2B3238');r(X+4,Y-1,8,5,'#69CFD8');r(X+5,Y,4,1,'#F2F2F2');r(X+7,Y+5,2,1,'#2B3238')}else if(L){r(X+3,Y+1,8,2,'#3E5E8C');r(X+4,Y-1,7,2,'#B8433A');r(X+12,Y+2,2,2,'#C8443A')}else{r(X+3,Y+1,9,4,'#5A3E26');r(X+4,Y+2,7,1,'#1B1E2B')}},
+  if(!L&&!R){r(X+3,Y-2,10,7,'#2B3238');r(X+4,Y-2,8,1,'#69CFD8');r(X+4,Y-1,8,5,'#4A525C');r(X+4,Y-1,8,1,'#5E6772');r(X+6,Y,4,2,'#3E454E');r(X+7,Y+5,2,1,'#2B3238')}else if(L){r(X+3,Y+1,8,2,'#3E5E8C');r(X+4,Y-1,7,2,'#B8433A');r(X+12,Y+2,2,2,'#C8443A')}else{r(X+3,Y+1,9,4,'#5A3E26');r(X+4,Y+2,7,1,'#1B1E2B')}},
   magRack:(X,Y,x,y)=>{r(X+1,Y+2,14,13,'#7A5230');r(X+1,Y+2,14,1,'#93623C');const h=hash(x,y),C=['#E07A5A','#F2C46B','#5A8FB0','#7CB46A','#F2A3B8'];for(let i=0;i<3;i++){r(X+2+i*4,Y+4,3,5,C[(h+i)%5]);r(X+2+i*4,Y+10,3,4,C[(h+i+2)%5])}},
   /* the computers stand against the 도서관's south wall, so their screens face the students at them (the row above) and the
      room sees the monitors' backs: casing, vent and stand, the screen's light just showing over the top edge */
@@ -5722,7 +5723,7 @@ globalThis.GRAMMAR_NOTES={
 </script>
 <script>
 /* This build (version.json): v = a hash of the game, t = when this version first appeared. */
-globalThis.BUILD={"v": "0d3d713d", "t": "2026-10-13T20:50Z"};
+globalThis.BUILD={"v": "2982b2d8", "t": "2026-10-14T01:34Z"};
 </script>
 <script>
 /* GENERATED from walk-engine/engine.js (71fbc5e) — do not edit here; edit walk-engine and run its sync.sh. */
