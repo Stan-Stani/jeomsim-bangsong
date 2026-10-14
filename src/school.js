@@ -1,6 +1,7 @@
 /* 느티고, one school for every 교시. SCHOOL(spec) gives a 교시 fresh copies of the school's zones — yard (운동장, with the 체육관
    building), hall (1층: 교무실, 교장실, 2학년 3반, 급식실, 방송실, 신발장, stairs up), hall2 (2층: 음악실, 도서관, 3학년 교실, stairs
-   down), class (2학년 3반), cafe (급식실 + 매점), bcast (방송실), music (음악실), gym (체육관), library (도서관) — with their maps,
+   down), class (2학년 3반), cafe (급식실 + 매점), bcast (방송실), music (음악실), gym (체육관), library (도서관), street (학교 앞, outside the
+   정문: 문구점, 분식집, 편의점, 코인 노래방, 학원) — with their maps,
    doors and default inspect lines. The 교시 opens the rooms it uses (others stay locked), adds its people, spots, locks (by the
    room a door leads to) and lines, and may paint a few squares for an event (4교시's festival stage) — but never moves a wall or
    a door: tests/validate.mjs checks every 교시's school against this one. SCHOOL_TILES draws it (a 교시's own tile of the same
