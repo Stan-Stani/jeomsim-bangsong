@@ -619,9 +619,9 @@ const NPC={
    return [
    {who:'…',say:'내 자리. 다온 옆, 넷째 줄이에요.'},
    {who:'…',say:'의자에 앉았어요. 가방을 내려놓아요.',sit:{npc:'seat'}},
-   {who:'…',sfx:'bell',say:'수업이 시작됐어요.'},
+   {who:'…',sfx:'bell',say:'수업이 시작됐어요.',black:1},  // the lessons are a time cut, over black
    {expand:()=>classTime(CLASS,['국어','영어'])},
-   {who:'학교 종',say:'딩동댕동… 쉬는 시간이에요.'},
+   {who:'학교 종',say:'딩동댕동… 쉬는 시간이에요.',black:0},
    {who:'오다온',say:'아, 떨어졌다! 하필 지금…'},
    {who:'…',say:'다온의 지우개가 내 의자 옆으로 굴러왔어요.',set:()=>{f().seated=1}}]}},
 
@@ -658,9 +658,9 @@ const NPC={
    {say:'진짜야. 믿어 줘.'},
    Q.daonS[0],
    Q.daonS[1],
-   {who:'…',sfx:'bell',say:'다시 수업이에요.',sit:{npc:'seat'}},
+   {who:'…',sfx:'bell',say:'다시 수업이에요.',sit:{npc:'seat'},black:1},  // over black, like the first lessons
    {expand:()=>classTime(CLASS,['과학','음악'])},
-   {who:'학교 종',say:'딩동댕동… 점심시간이에요!'},
+   {who:'학교 종',say:'딩동댕동… 점심시간이에요!',black:0},
    {say:'점심시간이네. 밥부터 먹어. 급식실은 복도 가운데야.',grammar:'buteo'},
    {say:'방송실은 복도 오른쪽 끝이야. 나는 안 가.'},
    {say:'…재밌는 일이면 나중에 얘기해 줘.',award:['일부러','하필'],set:()=>{f().lunch=1}}]},

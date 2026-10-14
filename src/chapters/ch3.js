@@ -349,7 +349,7 @@ const CLASS={
   {w:'사과하다',who:'남궁찬',ask:'병 깬 거, 선생님한테 바로 ___. 잘했지?',opts:[['사과했어',1],['감사했어',0,'감사는 고마울 때야. 잘못했으면 "사과했어".'],['사귀었어',0,'사귀다는 친구나 애인이 되는 거야. 미안하다고 했으면 "사과했어".']]}]},
 };
 
-const ITEMS={'찬 독후감':'찬이 쓴 독후감. 두 장이어야 하는데… 세 줄이에요.','동아리 등록 신청서':'방송부 동아리 등록 신청서. 부원 이름 칸이 다섯 개예요.','복숭아 편지':'분홍 편지. 복숭아 향기가 나요. "…잘 들었읍니다."','복숭아 주스':'매점 이모가 쏜 복숭아 주스 다섯 개. 시원해요.'};
+const ITEMS={'찬 독후감':'찬이 쓴 두 장짜리 독후감이에요. 맞춤법을 같이 고쳤어요.','동아리 등록 신청서':'방송부 동아리 등록 신청서. 부원 이름 칸이 다섯 개예요.','복숭아 편지':'분홍 편지. 복숭아 향기가 나요. "…잘 들었읍니다."','복숭아 주스':'매점 이모가 쏜 복숭아 주스 다섯 개. 시원해요.'};
 /* a library chair (as 2학년 3반's), for the first-year asleep at the reading table */
 const CHAIR_N={art:{pal:{O:'#1B1E2B',h:'#6C8DAD',w:'#4F6F8F',m:'#6F757C'},back:4,lift:5,  /* pulled up to the table's edge */
  down:['.OOOOOOOO.','.OhhhhhhO.','.OwwwwwwO.','.OwwwwwwO.','OOOOOOOOOO','OhhhhhhhhO','OOOOOOOOOO','.m......m.']}};
@@ -366,9 +366,9 @@ const has=w=>state.badges.includes(w);
 
 /* ---------- zones ---------- */
 /* 느티고 (src/school.js): the 방송실, the 매점 (in the 급식실) and the 2층 (도서관, 음악실) are open; the 정문 leads to 학교 앞 once school's out. */
-const ZONES={...SCHOOL({open:['cafe','hall2','music','library','bcast','nr'],gate:{to:'street',x:10,y:8,dir:'up',lock:()=>!f().toNR&&'학교가 끝나야 밖에 나갈 수 있어요.'},zones:{
- street:{things:{'B':'버스 정류장이에요. "다음 버스: 15분 후"'},  // 학교 앞 (src/school.js): the 노래방 door is open, but shut in the morning
-  locks:{nr:()=>f().secret&&'아침이라 노래방 문이 닫혀 있어요.'},npcs:['guard','xT1','xT2','xT3','xT4']},
+const ZONES={...SCHOOL({open:['cafe','hall2','music','library','bcast','nr'],gate:{to:'street',x:10,y:8,dir:'up',lock:()=>(!f().toNR||(f().secret&&!f().done))&&'학교가 끝나야 밖에 나갈 수 있어요.'},zones:{
+ street:{things:{'B':'버스 정류장이에요. "다음 버스: 15분 후"'},  // 학교 앞 (src/school.js): the gate opens after school on day one (and after the ending); the 노래방 door is shut on day two
+  locks:{nr:()=>f().secret&&'지금은 노래방 문이 닫혀 있어요.'},npcs:['guard','xT1','xT2','xT3','xT4']},
  class:{things:{'J':'시간표예요. 오늘 오후는 국어하고 영어예요.'}},  // only after school (the bell leaves you here)
  bcast:{paint:[[13,0,'b'],[7,2,'T']],  // the 방송실's 사연함 (as in 2교시 and 4교시): the poster points to its slot by the door
   things:{'#':['벽에 하리 첫 방송 사진이 붙어 있어요.','벽에 "방송 중 조용히!" 종이가 있어요.','먼지를 닦아서 벽이 깨끗해졌어요.'],
@@ -677,7 +677,7 @@ look:LOOK.hanT,
    {say:'주스는 점심 방송 전에 하리 학생 줘요. 방송 잘 들을게요!',face:'happy'},
    {who:'…',sfx:'bell',say:'수업 종이 울려요. 다들 교실로 뛰어가요.',black:1},  // class time is a time cut: over black, not over the 매점
    {expand:()=>classTime(CLASS,['과학'])},
-   {who:'학교 종',say:'딩동댕동… 점심시간이에요.',black:0},
+   {who:'학교 종',say:'딩동댕동… 점심시간이에요.',black:0,go:['class',11,11,'up']},  // the bell leaves you at your desk, not at the 매점
    {who:'…',say:'찬이 먼저 방송실로 뛰어갔어요.',award:['복숭아'],set:()=>{f().juice=1}}]},
 
  daonBoard:{name:'오다온',zone:'hall',x:18,y:2,dir:'up',look:LOOK.daon,banmal:1,badge:['붙다'],
@@ -780,8 +780,8 @@ look:LOOK.hanT,
    Q.chanL[2],
    Q.chanL[3],
    {say:'오, 빨간 펜 없이 다 고쳤다! 너 천재야?',face:'surprised'},
-   {who:'…',say:'찬이 책을 다시 펴요. 한 시간 동안 열심히 썼어요.'},
-   {say:'다 썼다! 두 장! 맞춤법도 다 맞아.',face:'happy'},
+   {who:'…',say:'찬이 책을 다시 펴요. 한 시간 동안 열심히 썼어요.',black:1},  // an hour: a time cut over black
+   {say:'다 썼다! 두 장! 맞춤법도 다 맞아.',face:'happy',black:0},
    {who:'나',say:'찬아, 여기 이름 좀 써 줘. 방송부 신청서.'},
    {say:'당연하지! 이름 크게 쓸게.',face:'happy'},
    {who:'…',say:'신청서에 다섯 번째 이름이 생겼어요.'},
@@ -820,7 +820,7 @@ look:LOOK.hanT,
   talk:()=>[
    ...(met('lib')?[{say:'선배, 방송부죠? 이거 봤어요?',face:'surprised'}]
     :[{say:'선배, 혹시 방송부예요? 저는 도서부 서지민이에요.',face:'surprised'},{say:'1학년이에요. 이거 봤어요?'}]),
-   {who:'…',say:'서지민이 핸드폰을 보여 줘요. 학교 앱 익명 게시판이에요.',phone:{culture:'board',time:'13:20',battery:34,app:'느티고 앱 · 익명 게시판',post:'방송부 끝났데?',by:'익명',when:'1시간 전',count:30,
+   {who:'…',say:'서지민이 핸드폰을 보여 줘요. 학교 앱 익명 게시판이에요.',phone:{culture:'board',time:'12:40',battery:34,app:'느티고 앱 · 익명 게시판',post:'방송부 끝났데?',by:'익명',when:'1시간 전',count:30,
     comments:[['익명1','헐, 진짜?'],['익명2','부원 없대. 다섯 명도 없대.'],['익명3','끝났데가 뭐야 ㅋㅋ 끝났대겠지'],['익명4','구름 선배 운대… ㅠㅠ'],
      ['익명5','점심 노래 이제 없어?'],['익명6','우리 반 애가 그러는데 진짜래.'],['익명7','거짓말 아니야? 누가 확인했어?'],['익명8','방송실 귀신 때문이래 ㅋㅋ']]}},
    {who:'…',say:'"방송부 끝났데?" 밑에 댓글이 서른 개!'},
@@ -1031,7 +1031,7 @@ const VARIANTS={
  poster:(X,Y,x,y)=>{face(X,Y);const L=at(x-1,y)!=='O';r(X+(L?1:0),Y+1,L?15:14,12,'#6B4A2E');r(X+(L?2:0),Y+2,L?14:13,10,'#F2BFA0');r(X+(L?2:0),Y+2,L?14:13,1,'#F7D6C0');
   if(L){r(X+7,Y+3,4,5,'#5A5F6E');r(X+8,Y+4,2,3,'#8E94A0');r(X+8,Y+8,2,3,'#5A5F6E')}else{r(X+1,Y+3,9,1,'#C49A6C');r(X+1,Y+5,7,1,'#C49A6C');r(X+8,Y+8,3,3,'#F2A3B8');r(X+9,Y+7,1,1,'#3F8F4A')}},  // a small peach drawn in the corner
  mixer:(X,Y,x,y,t)=>{oldF(X,Y,x,y);r(X,Y+3,16,10,'#3A3E48');r(X,Y+3,16,2,'#535866');r(X,Y+12,16,1,'#22252C');
-  for(let i=0;i<4;i++){r(X+2+i*4,Y+6,1,5,'#1E2128');r(X+1+i*4,Y+7+(hash(x+i,y)%3),3,2,'#B9C1C9');const lit=Math.floor(t/300+i+x)%3!==0;r(X+2+i*4,Y+4,1,1,lit?'#7CF07A':'#2E5A2E')}r(X+3,Y+3,3,1,'#8A8E96');
+  for(let i=0;i<4;i++){r(X+2+i*4,Y+6,1,5,'#1E2128');r(X+1+i*4,Y+7+(hash(x+i,y)%3),3,2,'#B9C1C9');const lit=!state.f.smoke&&Math.floor(t/300+i+x)%3!==0;r(X+2+i*4,Y+4,1,1,lit?'#7CF07A':'#2E5A2E')}r(X+3,Y+3,3,1,'#8A8E96');
   if(state.f.smoke&&x===3){for(let n=0;n<4;n++){const p=(Math.floor(t/120)+n*5)%20,sz=3+(p>>2),c=p<8?'#E2DFD9':p<14?'#B9B6B0':'#8E8B86';r(X+6+((n*7+p)%7)-(sz>>1),Y+6-p,sz,sz,c)}}  /* 펑! smoke billowing off the mixer */},  // working again
  notebook:(X,Y,x,y,t)=>{oldF(X,Y,x,y);r(X,Y+6,16,8,'#6B4A2E');r(X,Y+6,16,2,'#8A6040');r(X,Y+13,16,1,'#4A3220');
   r(X+3,Y,10,8,'#2B2E36');r(X+4,Y+1,8,6,'#3E5E8C');r(X+5,Y+2,4,1,'#C9D6F0');r(X+5,Y+4,6,1,'#9AB0D8');r(X+5,Y+5,3,1,'#9AB0D8');r(X+2,Y+8,12,3,'#B9C1C9');r(X+2,Y+8,12,1,'#D3D8DB');r(X+4,Y+9,8,1,'#8A8E96');

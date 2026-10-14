@@ -2384,7 +2384,7 @@
 "병 깬 거, 선생님한테 바로 ___. 잘했지?": "About breaking the bottle, [I] apologized to the teacher right away. [I] did well, right?",
 "감사는 고마울 때야. 잘못했으면 \"사과했어\".": "감사 is when [you] are grateful. If [you] did something wrong, \"사과했어\".",
 "사귀다는 친구나 애인이 되는 거야. 미안하다고 했으면 \"사과했어\".": "사귀다 is becoming friends or partners. If [you] said [you] were sorry, \"사과했어\".",
-"찬이 쓴 독후감. 두 장이어야 하는데… 세 줄이에요.": "A book report Chan wrote. [It]'s supposed to be two pages… but [it]'s three lines.",
+"찬이 쓴 두 장짜리 독후감이에요. 맞춤법을 같이 고쳤어요.": "It's Chan's two-page book report. [We] fixed the spelling together.",
 "방송부 동아리 등록 신청서. 부원 이름 칸이 다섯 개예요.": "The broadcast club's club registration form. There are five spaces for club members' names.",
 "분홍 편지. 복숭아 향기가 나요. \"…잘 들었읍니다.\"": "A pink letter. [It] has a peach scent. \"…[I] enjoyed listening [to it].\"",
 "매점 이모가 쏜 복숭아 주스 다섯 개. 시원해요.": "Five peach juices the school store lady treated [us] to. [They]'re cool.",
@@ -2456,7 +2456,7 @@
 "컴퓨터 화면에 \"게임 금지\" 종이가 붙어 있어요.": "A \"No games\" paper is stuck on the computer screen.",
 "반납 수레예요. 책이 높이 쌓였어요.": "[It]'s a book return cart. Books are piled high.",
 "화분이에요. 도서부가 매일 물을 줘요.": "[It]'s a potted plant. The library club waters [it] every day.",
-"아침이라 노래방 문이 닫혀 있어요.": "[It]'s morning, so the karaoke room door is closed.",
+"지금은 노래방 문이 닫혀 있어요.": "The karaoke door is closed right now.",
 "\"코인 노래방\" 간판이 반짝반짝해요.": "The \"Coin karaoke room\" sign sparkles.",
 "창문에 별 스티커가 붙어 있어요.": "Star stickers are stuck on the window.",
 "버스 정류장이에요. \"다음 버스: 15분 후\"": "[It]'s a bus stop. \"Next bus: in fifteen minutes\"",
@@ -3019,7 +3019,7 @@
 "하면 돼서": "Because [I] just have to do [it]",
 "\"-면 되다\"는 그것만 하면 될 때야. 하다가 좋아졌으면 \"하다 보니까\".": "\"-면 되다\" is when doing just that will do. If [you] came to like [it] while doing [something], [it]'s \"하다 보니까\".",
 "\"-ㄹ게\"는 약속이야. 하다가 좋아진 건 \"하다 보니까\".": "\"-ㄹ게\" is a promise. What [you] came to like while doing [something] is \"하다 보니까\".",
-"학부모회는 이 방을 ___ 교실로 쓰고 싶어 해요. 어려운 문제를 푸는 반이에요.": "The parents' committee wants to use this room as the advanced class's classroom. [It]'s a class that solves difficult problems.",
+"학부모회는 방송실을 ___ 교실로 쓰고 싶어 해요. 어려운 문제를 푸는 반이에요.": "The parents' committee wants to use the broadcast room as the advanced class's classroom. [It]'s a class that solves difficult problems.",
 "기초반은 처음부터 쉽게 하는 반이에요. 더 어렵게 하면 \"심화반\".": "기초반 is a class where [you] do [things] easily from the beginning. If [you] make [it] harder, [it]'s \"심화반\".",
 "심판은 경기에서 규칙을 지키는지 보는 사람이에요. 어려운 반은 \"심화반\".": "심판 is a person who watches whether the rules are kept in a game. A difficult class is \"심화반\".",
 "교장 선생님 ___이 잠깐 슬퍼 보여요.": "The principal's expression looks sad for a moment.",
@@ -4175,5 +4175,6 @@
 "분식집이에요. 지금은 들어갈 일이 없어요.": "It's the snack bar. There's no reason to go in right now.",
 "코인 노래방이에요. 지금은 들어갈 일이 없어요.": "It's the coin karaoke. There's no reason to go in right now.",
 "학원 건물이에요. 지금은 들어갈 일이 없어요.": "It's the cram school building. There's no reason to go in right now.",
-"시간표예요. 오늘 오후는 국어하고 수학이에요.": "It's the timetable. This afternoon is Korean and math."
+"시간표예요. 오늘 오후는 국어하고 수학이에요.": "It's the timetable. This afternoon is Korean and math.",
+"방송이 끝났어요. 스피커가 조용해요.": "The broadcast is over. The speakers are quiet."
 }
