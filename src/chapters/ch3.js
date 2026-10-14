@@ -625,7 +625,7 @@ look:LOOK.hanT,
   again:()=>{const F=f();if(F.done)return [{say:'방송 들었죠? 축제가 끝나면 방송실은 심화반 교실이 돼요.'},{say:'…학교가 정한 일이에요.',face:'sad'}];
    if(F.aired)return [{say:'점심 방송, 교장실에서도 들렸어요.'},{say:'방송실로 돌아가요. 구름 학생이 기다려요.'}];
    if(F.secret)return [{say:'오늘 오후에 {학부모회|학부모회} 회의가 있어요.'},{say:'바빠요. 복도에서 뛰지 마요.'}];
-   if(F.submitted)return [{say:'정 선생님한테 신청서를 냈다고 들었어요.'},{say:'축제까지 방송 한 번. 잊지 마세요.'}];
+   if(F.submitted)return [{say:'정 선생님한테 신청서를 냈다고 들었어요.'},{say:'방송도 했고, 부원도 다섯 명이네요.'}]  // the 1교시 deal (one broadcast, five members) is met: 하리's song in 2교시, the five names now;
    return [{say:'동아리 등록 신청서요? 그건 정 선생님한테 내요.'},{say:'다섯 명 이름, 다 있어야 돼요.'}]}},
  jung:{name:'정 선생님',zone:'hall',x:6,y:2,dir:'down',look:LOOK.jung,badge:['가입하다','제출하다','독후감','맞춤법'],
   get after(){const F=f();   // the review line follows the two days: club form, rumor, the morning after, the 사연
