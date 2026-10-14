@@ -426,7 +426,7 @@ const ZONES={...SCHOOL({open:['cafe','hall2','music','library','bcast'],gate:{to
 "SSSSSSSSSSSSSSSSSSSSSSSS",
 "FFdFFFFFdFFFFFFOFFFFFdFF",
 "........................",
-"..t.....b.........t.....",
+"..t....bb.........t.....",
 "RRRRRRRRRRZZRRRRRRRRRRRR",
 "RRRRRRRRRRZZRRRRRRRRRRRR",
 "........................",
@@ -1112,7 +1112,9 @@ const TILES={...SCHOOL_TILES,...VARIANTS,
   car(X,Y,x,y,t)},
  crosswalk:(X,Y,x,y,t)=>{r(X,Y,16,16,'#4A4D55');for(let i=1;i<16;i+=4)r(X+i,Y+1,2,14,'#E6E2D6');if(at(x,y-1)!=='Z'&&at(x,y-1)!=='R')r(X,Y,16,1,'#8E9096');car(X,Y,x,y,t)},
  streetTree:(X,Y,x,y,t)=>{walkF(X,Y,x,y);r(X+3,Y+12,10,4,'#6E6A60');r(X+4,Y+13,8,2,'#4A463E');r(X+7,Y+7,2,7,'#6E4A2E');const s=Math.round(Math.sin(t/1300+x));disc(X+8+s,Y+5,6,'#2F7A4E');disc(X+6+s,Y+4,4,'#3F9460');disc(X+10+s,Y+3,2,'#5DB070')},
- busStop:(X,Y,x,y)=>{walkF(X,Y,x,y);r(X+7,Y+3,2,13,'#6E747E');r(X+3,Y,10,6,'#3A86C8');r(X+3,Y,10,1,'#7AB6E8');r(X+5,Y+2,6,1,'#F4F1E6');r(X+5,Y+4,3,1,'#F4F1E6');r(X+5,Y+15,6,1,'#4A4E56')},
+ /* the bus shelter, as in 2교시: roof, glass, bench, the route card on its left pane */
+ busStop:(X,Y,x,y)=>{walkF(X,Y,x,y);const L=at(x-1,y)!=='b';r(X,Y+1,16,3,'#3E5E8C');r(X,Y+1,16,1,'#5A7AAC');r(X+(L?1:0),Y+4,L?15:14,7,'#BFE3F0');r(X,Y+11,16,2,'#8A5E36');r(X+1,Y+13,1,3,'#3E4350');r(X+14,Y+13,1,3,'#3E4350');
+  if(L){r(X+1,Y+4,1,9,'#3E4350');r(X+3,Y+5,5,4,'#F2C46B')}else r(X+15,Y+4,1,9,'#3E4350')},
  planter:(X,Y,x,y,t)=>{walkF(X,Y,x,y);r(X+1,Y+7,14,8,'#9A968C');r(X+1,Y+7,14,1,'#B9B6AE');r(X+2,Y+4,12,4,'#3F8F4A');const h=hash(x,y);[[3,4],[7,3],[11,4]].forEach(([a,b],i)=>r(X+a,Y+b,2,2,(h+i)%2?'#E05A4A':'#F2C46B'));if(x>10&&Math.floor(t/2000)%3)r(X+3,Y+13,4,2,'#E8A04A')},
  /* 코인 노래방 */
  nrWall:(X,Y,x,y)=>{const L=Z.legend[at(x,y+1)];if(L&&L.walk)nrFace(X,Y);else{r(X,Y,16,16,'#2A1E3C');r(X,Y,16,1,'#3A2C50');r(X,Y+15,16,1,'#221830')}},
@@ -1126,9 +1128,7 @@ const TILES={...SCHOOL_TILES,...VARIANTS,
  coinBox:(X,Y,x,y,t)=>{nrF(X,Y,x,y,t);r(X+3,Y,10,16,'#C9A13A');r(X+3,Y,10,1,'#E8C66A');r(X+5,Y+2,6,4,'#1B1E2B');r(X+6,Y+3,4,2,Math.floor(t/700)%2?'#7CF07A':'#2E5A2E');r(X+7,Y+8,2,3,'#3E4350');r(X+5,Y+12,6,2,'#3E4350')},
  nrCounter:(X,Y,x,y,t)=>{nrF(X,Y,x,y,t);r(X,Y+3,16,11,'#6B4A8A');r(X,Y+3,16,3,'#8A6AAA');r(X,Y+13,16,1,'#3A2A52');if(x===14){r(X+4,Y,6,4,'#F4F1E6');r(X+5,Y+1,4,1,'#E86DD8')}if(x===15){disc(X+8,Y+3,3,'#F2D86F')}},
 };
-/* a car crossing the road (drawn per tile, clipped): lane 4 goes right, lane 5 goes left */
-function car(X,Y,x,y,t){if(y!==4&&y!==5)return;const W=MW*16+96,cx=y===4?((t/9)%W)-48:W-48-((t/12+400)%W),px=cx-x*16;if(px<=-32||px>=16)return;
- inTile(X,Y,()=>{const bx=X+px,c=y===4?'#D2533F':'#F2C46B';r(bx,Y+4,30,9,c);r(bx+6,Y+2,16,5,c);r(bx+8,Y+3,5,3,'#BFE3F0');r(bx+15,Y+3,5,3,'#BFE3F0');r(bx+3,Y+12,5,3,'#1B1E2B');r(bx+22,Y+12,5,3,'#1B1E2B');r(y===4?bx+28:bx,Y+6,2,2,'#FFF3C4')})}
+function car(X,Y,x,y,t){streetCar(X,Y,x,y,t,4)}  // the road's two lanes are rows 4 and 5 (streetCar in school.js)
 const PLAYER=LOOK.player;
 const term={name:'복습 노트북'};  // the 방송실 laptop (1교시 reviews in a paper 복습 노트)
 return {WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,term};

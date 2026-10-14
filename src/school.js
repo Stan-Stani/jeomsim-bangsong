@@ -537,6 +537,20 @@ const base=()=>({
    'p':'화분이에요. 도서부가 매일 물을 줘요.'}}
 });
 
+/* cars on the 학교 앞 road (2교시, 3교시; a chapter's road and crosswalk tiles call streetCar with the road's top row): two lanes,
+   the upper drives right and the lower left, one car each going round. While you stand on the crosswalk a car waits before it,
+   or behind you if it is already past its edge, then drives on when you step off. */
+const CARS={};
+globalThis.streetCar=function(X,Y,x,y,t,top){
+ const lane=y-top;if(lane!==0&&lane!==1)return;
+ const W=MW*16+96,k=ZID+lane,zw=i=>(Z.legend[at(i,y)]||{}).tile==='crosswalk';let c=CARS[k];
+ if(!c){let z0=1e9,z1=-1;for(let i=0;i<MW;i++)if(zw(i)){z0=Math.min(z0,i*16);z1=Math.max(z1,i*16+16)}c=CARS[k]={cx:(lane?W*.6:W*.1)-48,t,z0,z1}}
+ if(c.t!==t){const dt=Math.min(100,Math.max(0,t-c.t)),d=dt/(lane?12:9);c.t=t;
+  const on=(Z.legend[at(player.x,player.y)]||{}).tile==='crosswalk',pl=player.x*16;
+  if(!lane){const f=c.cx+30;let n=c.cx+d;if(on){const s=f<=c.z0-2?c.z0-2:f<=pl-2?pl-2:null;if(s!==null)n=Math.min(n,Math.max(c.cx,s-30))}c.cx=n>=W-48?n-W:n}
+  else{const f=c.cx;let n=c.cx-d;if(on){const s=f>=c.z1+2?c.z1+2:f>=pl+18?pl+18:null;if(s!==null)n=Math.max(n,Math.min(c.cx,s))}c.cx=n<-48?n+W:n}}
+ const px=c.cx-x*16;if(px<=-32||px>=16)return;
+ inTile(X,Y,()=>{const bx=X+px,col=lane?'#F2C46B':'#D2533F';r(bx,Y+4,30,9,col);r(bx+6,Y+2,16,5,col);r(bx+8,Y+3,5,3,'#BFE3F0');r(bx+15,Y+3,5,3,'#BFE3F0');r(bx+3,Y+12,5,3,'#1B1E2B');r(bx+22,Y+12,5,3,'#1B1E2B');r(lane?bx:bx+28,Y+6,2,2,'#FFF3C4')})};
 /* doors to rooms a 교시 hasn't opened */
 const CLOSED={hall:'학교 건물이에요.',hall2:'2층 계단이에요. 지금은 올라갈 일이 없어요.',class:'2학년 3반이에요. 지금은 들어갈 일이 없어요.',
  cafe:'급식실 문이 닫혔어요.',bcast:'"방송실". 문이 잠겨 있어요.',music:'음악실이에요. 문이 잠겨 있어요.',gym:'체육관이에요. 문이 잠겨 있어요.',
