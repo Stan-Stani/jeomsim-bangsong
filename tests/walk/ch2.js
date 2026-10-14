@@ -29,7 +29,7 @@
  {check:()=>state.f.afterSchool&&!state.items.includes('명찰'),msg:'tag returned, after school'},
  {talk:'engT',shotBefore:'08b-office-after-school'},  // after school: the 영어 선생님 at the 음악 선생님's desk
  {walkTo:['street',12,3],then:'08-street'},
- {inspect:['street',10,2]},
+ {inspect:['street',9,2]},
  {talk:'chanB'},
  {talk:'owner',wrong:true,shotBefore:'09-bunsik'},
  {talk:'hariB',wrong:true,shotSay:{text:'포기할까요',name:'10-hari-give-up'}},

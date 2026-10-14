@@ -67,8 +67,8 @@
  {walkTo:['hall',20,3],then:'23-board-poster'},
  {walkTo:['library',12,4],then:'24-library'},
  {walkTo:['cafe',19,4],then:'24b-shop-corner'},
- {walkTo:['street',5,6],then:'25-street-shops'},
- {bump:['street','O']},
+ {walkTo:['street',5,7],then:'25-street-shops'},
+ {bump:['street','N']},
  {walkTo:['bcast',10,4],then:'27-bcast-end'},
  // in-character review: with every word due, everyone who has a line asks it in their own voice, and it grades
  {reviewTour:Object.keys(C.ZONES),carry:1,shotChoice:'99-review-in-voice'},  // carry: earlier 교시' words too

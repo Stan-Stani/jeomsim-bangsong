@@ -18,7 +18,8 @@ for(const CH of ctx.CHAPTERS){
   const W=Z.map[0].length;Z.map.forEach((r,i)=>{if(r.length!==W)E(`${id} row ${i} len ${r.length}≠${W}`);[...r].forEach(c=>{if(!Z.legend[c])E(`${id} unknown tile char "${c}"`)})});
   if(Z.map.length<10||W<11)E(`${id} map smaller than the 11x10 view`);
   for(const L of Object.values(Z.legend))if(!(L.tile in (C.TILES||{}))&&!['hull','deck','grate','window','console','hydro','bunk','terminal','pipes','engine','airlock','ring','plate','planetWin','crate','stall','lift','tree','lawn','stone','dome','cable','police','cafe','flowers','pond','bench'].includes(L.tile))E(`${id} tile fn missing: ${L.tile}`);
-  for(const [k,w] of Object.entries(Z.warps||{})){const [x,y]=k.split(',').map(Number);if(!walk(Z,x,y))E(`${id} warp ${k} not walkable`);const T=C.ZONES[w.to];if(!T){E(`${id} warp to unknown ${w.to}`);continue}if(!walk(T,w.x,w.y)||(T.warps||{})[w.x+','+w.y])E(`${id} warp ${k} lands on bad tile ${w.to} ${w.x},${w.y}`)}
+  // a locked door may lead to a room this 교시 doesn't have (학교 앞's shops)
+  for(const [k,w] of Object.entries(Z.warps||{})){const [x,y]=k.split(',').map(Number);if(!walk(Z,x,y))E(`${id} warp ${k} not walkable`);const T=C.ZONES[w.to];if(!T){if(!w.lock)E(`${id} warp to unknown ${w.to}`);continue}if(!walk(T,w.x,w.y)||(T.warps||{})[w.x+','+w.y])E(`${id} warp ${k} lands on bad tile ${w.to} ${w.x},${w.y}`)}
   for(const [c,th] of Object.entries(Z.things||{})){ // a line for every tile of a kind
    if(!Z.legend[c])E(`${id} things key "${c}" is not a tile in its legend`);else if(Z.legend[c].walk)E(`${id} things "${c}" is a walkable tile`);
    if(!Z.map.some(r=>r.includes(c)))E(`${id} things "${c}" is not on the map`);

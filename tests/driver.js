@@ -36,7 +36,7 @@ window.__play=async function(steps){
  async function walk(path){for(const d of path){const z=ZID;const ok=await step(d);check(ok,`step ${d} failed at ${player.x},${player.y} in ${z}`);if(!ok)return;if(ZID!==z){await wait(250);return}}}
  function zoneRoute(target){ // BFS over the zone graph using warps
   const prev={[ZID]:null},q=[ZID];
-  while(q.length){const z=q.shift();if(z===target)break;for(const w of Object.values(C.ZONES[z].warps||{}))if(!(w.to in prev)){prev[w.to]=z;q.push(w.to)}}
+  while(q.length){const z=q.shift();if(z===target)break;for(const w of Object.values(C.ZONES[z].warps||{}))if(C.ZONES[w.to]&&!(w.to in prev)){prev[w.to]=z;q.push(w.to)}}
   if(!(target in prev))return null;const r=[];for(let z=target;z!==ZID;z=prev[z])r.unshift(z);return r;
  }
  async function goZone(target){
@@ -145,7 +145,7 @@ window.__play=async function(steps){
      if(s.carry){for(const ch of CHAPTERS){if(ch===CH)break;const ws=ch.make().WORDS;store.set(ch.save,JSON.stringify({badges:ws,lv:Object.fromEntries(ws.map(w=>[w,{b:1,due:0}]))}))}refreshCarry()}  // carry:1 — as if the earlier 교시 were played: their words come along
      skew+=40*24*3600e3;const zones=s.reviewTour===true?[ZID]:[].concat(s.reviewTour);let asked=null,n=0;
      const real=window.reviewPick;window.reviewPick=p=>(asked=real(p));
-     const open=new Set([ZID]),q0=[ZID];while(q0.length){const z=q0.shift();for(const w of Object.values(C.ZONES[z].warps||{}))if(!(w.lock&&w.lock())&&!open.has(w.to)){open.add(w.to);q0.push(w.to)}}  // zones you can walk to now
+     const open=new Set([ZID]),q0=[ZID];while(q0.length){const z=q0.shift();for(const w of Object.values(C.ZONES[z].warps||{}))if(C.ZONES[w.to]&&!(w.lock&&w.lock())&&!open.has(w.to)){open.add(w.to);q0.push(w.to)}}  // zones you can walk to now
      for(const z of zones)for(const [k,p] of Object.entries(C.NPC)){
       if(!open.has(z)||p.zone!==z||(p.hide&&p.hide())||!reviewLines(p).length)continue;
       const own=usual(p);if(!own||own.some(moves)||(p.script&&p.script()))continue;
@@ -160,7 +160,7 @@ window.__play=async function(steps){
    else if(s.hearTour){ // nothing due: people with a line you haven't heard say it as plain talk, the word filled in, ungraded
      for(const L of Object.values(state.lv)){L.due=Date.now()+1e12;L.beat=null}save();  // nothing due: plain talk, not reviews
      const zones=[].concat(s.hearTour);let n=0;
-     const open=new Set([ZID]),q0=[ZID];while(q0.length){const z=q0.shift();for(const w of Object.values(C.ZONES[z].warps||{}))if(!(w.lock&&w.lock())&&!open.has(w.to)){open.add(w.to);q0.push(w.to)}}
+     const open=new Set([ZID]),q0=[ZID];while(q0.length){const z=q0.shift();for(const w of Object.values(C.ZONES[z].warps||{}))if(C.ZONES[w.to]&&!(w.lock&&w.lock())&&!open.has(w.to)){open.add(w.to);q0.push(w.to)}}
      for(const z of zones)for(const [k,p] of Object.entries(C.NPC)){
       if(!open.has(z)||p.zone!==z||(p.hide&&p.hide())||reviewLines(p).length||!linesFor(p).some(unheard))continue;
       const own=usual(p);if(!own||own.some(moves)||(p.script&&p.script()))continue;

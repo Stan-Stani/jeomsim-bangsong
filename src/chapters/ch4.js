@@ -512,7 +512,17 @@ const kindTo=line=>({say:line,face:'happy',when:third});
 const ads=()=>shops()===3;
 
 /* 느티고 (src/school.js): the 방송실, the 2층 and the 운동장 (festival stage, tents) are open; the 정문 leads to the 동네 상가 after the 상담. */
-const ZONES={...SCHOOL({open:['bcast','hall2','music','library'],gate:{to:'town',x:10,y:8,dir:'down',lock:()=>!f().counsel&&'정문이에요. 아직 학교가 안 끝나서 못 나가요.'},zones:{
+const ZONES={...SCHOOL({open:['bcast','hall2','music','library','hagwon'],gate:{to:'street',x:10,y:8,dir:'down',lock:()=>!f().counsel&&'정문이에요. 아직 학교가 안 끝나서 못 나가요.'},zones:{
+ street:{things:{  // 학교 앞 (src/school.js) as 동네 상가: the 학원 door is open; ads in the windows, the evening
+   'O':x=>{const F=f(),i=x<7?0:x<14?1:x<21?2:3;if(i===3)return '창문에 별 스티커가 붙어 있어요.';
+    if(![F.shopM,F.shopB,F.shopP][i])return ['문구점 창문. 예쁜 공책하고 펜이 있어요.','창문 너머로 떡볶이가 보글보글.','편의점 창문. 컵라면이 줄줄이 있어요.'][i];
+    return F.promise?['문구점 창문에 방송부 광고가 아직 붙어 있어요.','분식집 창문에 방송부 광고가 아직 붙어 있어요.','편의점 창문에 방송부 광고가 아직 붙어 있어요.'][i]  // news only the evening they go up
+     :['문구점 창문에 방송부 광고가 붙었어요!','분식집 창문에 방송부 광고가 붙었어요!','편의점 창문에 방송부 광고가 붙었어요!'][i]},
+   'e':x=>x<7?'문구점 문이에요. 사장님이 밖에 나와 있어요.':'편의점 문이에요. "딩동" 소리가 나요.',
+   'A':x=>['학원 건물이에요. 층마다 학원 간판이 있어요.',evening()?'창문마다 불이 켜져 있어요. 다 공부 중이에요.':'창문마다 학생들이 보여요. 다 공부 중이에요.','"느티 수학 · 합격률 높은 학원"'][x%3],
+   'l':()=>evening()?'가로등이에요. 이제 막 불이 켜졌어요.':'가로등이에요. 낮이라서 불이 꺼져 있어요.',
+   'B':['버스 정류장이에요. "학원가 방향"','정류장 의자에 학원 가방이 하나 있어요.']},
+  npcs:['mun','bun','pyeon','chanT','hariT','xT1','xT2','xT3']},
  bcast:{paint:[[13,0,'b'],[7,2,'T']],
   things:{'#':['벽에 하리 첫 방송 사진이 붙어 있어요.','깨끗한 벽이에요. 다 같이 닦았어요.','벽에 지난 방송 순서표가 붙어 있어요.'],
    'r':['카세트테이프가 가득해요. 다 옛날 노래예요.','테이프 이름이 다 손글씨예요.','테이프 하나에 "1994 축제"라고 쓰여 있어요.'],
@@ -562,40 +572,6 @@ const ZONES={...SCHOOL({open:['bcast','hall2','music','library'],gate:{to:'town'
    'm':()=>f().clue?'무대용 기계예요. 선이 방송실까지 길게 가요.':'빈 탁자예요. "방송부 자리"라고 쓰여 있어요.',
    'k':x=>x<4?(f().clue?'1반 떡볶이 부스예요. "다 팔렸어요!" 종이가 붙어 있어요.':'부스를 세우는 중이에요. 천막이 노래요.'):(f().clue?'3반 복숭아 주스 부스예요. 매점 이모 작품이래요.':'부스예요. "2학년 3반"이라고 쓰여 있어요.')},
   npcs:['guard','setup','daonS','gureumS','hariS','chanS','taesikS','principalS','crowd1','crowd2','jungY','xY1','xPE','xY3','xY4','xY5','xY6','xY7','xPE2']}}}),
- town:{name:'동네 상가',reg:'LOCAL SHOPS',outdoor:1,
-  legend:{'R':{tile:'roof'},'K':{tile:'sign'},'O':{tile:'shopWin'},'e':{tile:'shopDoor'},'h':{tile:'brick'},'A':{tile:'acad'},'H':{tile:'acadDoor',walk:1},
-   ',':{tile:'pave',walk:1},'r':{tile:'road'},'z':{tile:'crosswalk',walk:1},'l':{tile:'lamp'},'t':{tile:'streetTree'},'B':{tile:'busStop'},
-   'f':{tile:'sfence'},'G':{tile:'sgate',walk:1}},
-  map:[
-"RRRRRRRhRRRRRRhRRRRRRhAAAAAA",
-"KKKKKKKhKKKKKKhKKKKKKhAAAAAA",
-"OOeOOOOhOOeOOOhOOOeOOhAAHHAA",
-",,,,,,,,,,,,,,,,,,,,,,,,,,,,",
-",t,,,,l,,,,,,,,,,,,,l,,,,,t,",
-"rrrrrrrrrrzzrrrrrrrrrrrrrrrr",
-"rrrrrrrrrrzzrrrrrrrrrrrrrrrr",
-",,,,,,,,,,,,,,,,,,BB,,,,,,,,",
-",t,,,,,,,,,,,,,,,,,,,,,,,t,,",
-"ffffffffffGGffffffffffffffff"],
-  rooms:[[0,3,27,4,'동네 상가'],[0,7,27,8,'학교 앞']],
-  warps:{'10,9':{to:'yard',x:11,y:12,dir:'up'},'11,9':{to:'yard',x:12,y:12,dir:'up'},
-   '24,2':{to:'hagwon',x:8,y:8,dir:'up'},'25,2':{to:'hagwon',x:9,y:8,dir:'up'}},
-  spots:{},
-  things:{'R':x=>x<7?'문구점 지붕이에요. 파란색이에요.':x<14?'분식집 지붕이에요. 빨간색이에요.':'편의점 지붕이에요. 초록색이에요.',
-   'K':x=>x<7?'간판: "느티 문구"':x<14?'간판: "엄마손 분식" 떡볶이 그림이 있어요.':'간판: "24시 편의점"',
-   'O':x=>{const F=f(),i=x<7?0:x<14?1:2;
-    if(![F.shopM,F.shopB,F.shopP][i])return ['문구점 창문. 예쁜 공책하고 펜이 있어요.','창문 너머로 떡볶이가 보글보글.','편의점 창문. 컵라면이 줄줄이 있어요.'][i];
-    return F.promise?['문구점 창문에 방송부 광고가 아직 붙어 있어요.','분식집 창문에 방송부 광고가 아직 붙어 있어요.','편의점 창문에 방송부 광고가 아직 붙어 있어요.'][i]  // news only the evening they go up
-     :['문구점 창문에 방송부 광고가 붙었어요!','분식집 창문에 방송부 광고가 붙었어요!','편의점 창문에 방송부 광고가 붙었어요!'][i]},
-   'e':x=>x<7?'문구점 문이에요. 사장님이 밖에 나와 있어요.':x<14?'분식집 문이에요. 떡볶이 냄새가 솔솔.':'편의점 문이에요. "딩동" 소리가 나요.',
-   'h':['빨간 벽돌 벽이에요.','벽돌 사이에 작은 풀이 자라요.'],
-   'A':x=>['학원 건물이에요. 층마다 학원 간판이 있어요.',evening()?'창문마다 불이 켜져 있어요. 다 공부 중이에요.':'창문마다 학생들이 보여요. 다 공부 중이에요.','"느티 수학 · 합격률 높은 학원"'][x%3],
-   'r':['차가 다니는 길이에요. 횡단보도로 건너요.','학원 버스가 쌩 지나가요.','길에 노란 줄이 있어요.'],
-   'l':()=>evening()?'가로등이에요. 이제 막 불이 켜졌어요.':'가로등이에요. 낮이라서 불이 꺼져 있어요.',
-   't':['가로수예요. 잎이 반짝여요.','나무 밑에 고양이가 자고 있어요.'],
-   'B':['버스 정류장이에요. "학원가 방향"','정류장 의자에 학원 가방이 하나 있어요.'],
-   'f':['학교 울타리예요. 안에 느티나무가 보여요.','울타리에 "학생 안전 구역" 표지판.']},
-  npcs:['mun','bun','pyeon','chanT','hariT','xT1','xT2','xT3']},
  hagwon:{name:'느티 수학 학원',reg:'CRAM SCHOOL',
   legend:{'#':{tile:'hagwonWall'},'.':{tile:'hFloor',walk:1},'D':{tile:'hagwonExitDoor',walk:1},'W':{tile:'hagwonHallWin'},'R':{tile:'hDoor'},'P':{tile:'adPoster'},
    'J':{tile:'hBoard'},'v':{tile:'hagwonVending'},'m':{tile:'hCounter',over:1},'b':{tile:'hBench'},'w':{tile:'hagwonWater'},'p':{tile:'hagwonPlant'}},
@@ -611,7 +587,7 @@ const ZONES={...SCHOOL({open:['bcast','hall2','music','library'],gate:{to:'town'
 "#................#",
 "########DD########"],
   rooms:[[1,1,16,8,'학원 · 복도']],
-  warps:{'8,9':{to:'town',x:24,y:3,dir:'down'},'9,9':{to:'town',x:25,y:3,dir:'down'}},
+  warps:{'8,9':{to:'street',x:31,y:3,dir:'down'},'9,9':{to:'street',x:32,y:3,dir:'down'}},
   spots:{},
   things:{'#':['하얀 벽이에요. 형광등이 너무 밝아요.','벽에 "조용히! 자습 중"이라고 쓰여 있어요.'],
    'W':()=>['창밖에 동네 상가가 보여요.',evening()?'창밖이 벌써 어두워요.':'창밖이 환해요. 햇빛이 좋아요.'],
@@ -807,7 +783,7 @@ const NPC={
    {who:'…',say:'시간이 금방 가요. 곧 두 시, 생방송이에요.',set:()=>{f().clue=1}}]},
 
  /* ---------- 동네 상가 ---------- */
- chanT:{name:'남궁찬',zone:'town',x:8,y:8,dir:'right',look:LOOK.chan,banmal:1,
+ chanT:{name:'남궁찬',zone:'street',x:8,y:8,dir:'right',look:LOOK.chan,banmal:1,
   hide:()=>!f().counsel||!!f().promise,
   status:()=>!f().gotPosters?'todo':null,
   script:()=>{
@@ -824,7 +800,7 @@ const NPC={
    {say:'그러니까 너도 같이 해. 이거 들어.',give:POS},
    {say:'문구점, 분식집, 편의점! 세 곳이야.',set:()=>{f().gotPosters=1}}]},
 
- hariT:{name:'유하리',zone:'town',x:13,y:8,dir:'left',look:LOOK.hari,
+ hariT:{name:'유하리',zone:'street',x:13,y:8,dir:'left',look:LOOK.hari,
   hide:()=>!f().counsel||!!f().promise,
   script:()=>{
    if(!f().gotPosters)return [{say:'선배, 저 진짜 못 하겠어요…',face:'sad'},{say:'…포스터는 찬 선배가 가지고 있어요.'}];
@@ -834,7 +810,7 @@ const NPC={
    return [{say:'다 붙였어요? 보다 보니까 저도 할 수 있을 것 같아요.',face:'happy'}]},
   talk:()=>[]},
 
- mun:{name:'문구점 사장님',zone:'town',x:3,y:3,dir:'down',look:LOOK.mun,badge:['광고'],
+ mun:{name:'문구점 사장님',zone:'street',x:3,y:3,dir:'down',look:LOOK.mun,badge:['광고'],
   get after(){const F=f();
    if(F.live)return pick([['방송 잘 들었어요. 가게 문을 열어 놓고요.'],['우리 딸이 방송부에 들어가고 싶대요.']]);  // the 분식집 and 편의점 heard it too
    if(F.promise)return ['오늘 축제죠? 이따 딸이랑 보러 갈 거예요.'];
@@ -854,7 +830,7 @@ const NPC={
    {who:'…',say:'세 곳 다 붙였어요! 포스터가 이제 없어요.',take:[POS],when:()=>shops()===2},
    {say:'축제 날 우리 딸도 보러 갈 거예요.',face:'happy',award:['광고']}]},
 
- bun:{name:'분식집 아저씨',zone:'town',x:11,y:3,dir:'down',look:LOOK.owner,badge:['동네'],
+ bun:{name:'분식집 아저씨',zone:'street',x:11,y:3,dir:'down',look:LOOK.owner,badge:['동네'],
   after:'떡볶이 먹고 가요. 동네 학생 할인!',
   status:()=>!f().shopB?(hasItem(POS)?'todo':null):undefined,
   script:()=>!f().shopB&&!hasItem(POS)?[{say:'어, 떡볶이 학생! 오늘도 왔어요?',face:'happy'},{say:'오늘은 바빠 보이네. 다음에 와요.'}]:null,
@@ -870,7 +846,7 @@ const NPC={
    {who:'…',say:'세 곳 다 붙였어요! 포스터가 이제 없어요.',take:[POS],when:()=>shops()===2},
    {say:'축제 날 떡볶이 들고 구경 갈게요!',face:'happy',award:['동네']}]},
 
- pyeon:{name:'편의점 사장님',zone:'town',x:18,y:3,dir:'down',look:LOOK.pyeon,
+ pyeon:{name:'편의점 사장님',zone:'street',x:18,y:3,dir:'down',look:LOOK.pyeon,
   status:()=>!f().shopP&&hasItem(POS)?'todo':null,
   script:()=>{
    if(f().live)return [{say:'방송, 여기서도 다 들렸어요!',face:'happy'},{say:'저도 라디오 듣는 거 무척 좋아해요.'}];
@@ -1189,14 +1165,14 @@ const NPC={
   talk:()=>f().done?[{say:'축제 끝! 다들 수고했어요.',face:'happy'},{say:'정리 끝나면 조심히 집에 가요.'}]
    :[{say:'학생들, 무대 앞에서 밀지 마요!'},{say:'뒤에서도 잘 들려요. 스피커가 커요.'}]},
 
- xT1:{name:'2학년 학생',zone:'town',x:21,y:8,dir:'up',  // past the bus stop: under it the pair sealed off the sidewalk's right end
+ xT1:{name:'2학년 학생',zone:'street',x:21,y:8,dir:'up',  // past the bus stop: under it the pair sealed off the sidewalk's right end
 look:LOOK.xT1,banmal:1,
   hide:()=>!f().counsel||!!f().promise,
   talk:()=>[{say:'버스 언제 와? 학원 늦겠다.'}]},
- xT2:{chat:'xT1',name:'2학년 학생',zone:'town',x:22,y:8,dir:'up',look:LOOK.xT2,banmal:1,
+ xT2:{chat:'xT1',name:'2학년 학생',zone:'street',x:22,y:8,dir:'up',look:LOOK.xT2,banmal:1,
   hide:()=>!f().counsel||!!f().promise,
   talk:()=>[{say:'이 동네 버스는 원래 느려.'},{say:'그냥 걸어갈까?',face:'think'}]},
- xT3:{name:'3학년 선배',zone:'town',x:22,y:3,dir:'right',look:LOOK.xT3,banmal:1,
+ xT3:{name:'3학년 선배',zone:'street',x:22,y:3,dir:'right',look:LOOK.xT3,banmal:1,
   hide:()=>!f().counsel||!!f().promise,
   talk:()=>[{say:'학원 가는 길이야. 오늘은 열 시까지.'},{say:'고3은 시간표가 너무 빡빡해.',face:'sad'}]},
 };
@@ -1243,8 +1219,6 @@ function checkF(X,Y,x,y){r(X,Y,16,16,'#D8D2C2');r(X,Y,8,8,'#CBC4B2');r(X+8,Y+8,8
 function oldF(X,Y,x,y){r(X,Y,16,16,'#8E6E4E');for(let j=3;j<16;j+=5){r(X,Y+j,16,1,'#7A5C40');r(X,Y+j+1,16,1,'#997858')}const h=hash(x,y);r(X+h%12,Y+((h>>2)%3)*5+1,4,1,'#85664A')}  // swept since 3교시: plank seams with a little sheen and a dark grain line, no dust
 function hF(X,Y,x,y){r(X,Y,16,16,'#D9DCE0');r(X,Y,16,1,'#C6CAD0');r(X,Y,1,16,'#C6CAD0');const h=hash(x,y);if(h<35)r(X+h%13+1,Y+(h>>2)%13+1,2,1,'#E8EAEE')}
 function sandF(X,Y,x,y){r(X,Y,16,16,'#D9BC8C');const h=hash(x,y);r(X+h%14+1,Y+(h>>3)%14+1,1,1,'#C4A574');r(X+(h*3)%14+1,Y+(h*7)%14+1,1,1,'#E8D3AA');if(h<20)r(X+(h*11)%13+1,Y+(h*5)%13+1,2,1,'#BFA06E')}
-function paveF(X,Y,x,y){r(X,Y,16,16,'#C9C6BC');r(X,Y,16,1,'#B3B0A6');r(X,Y+8,16,1,'#B3B0A6');r(X+(y%2?4:12),Y,1,8,'#B3B0A6');r(X+(y%2?12:4),Y+8,1,8,'#B3B0A6');
- const h=hash(x,y);if(h<30)r(X+h%13+1,Y+(h>>2)%6+1,2,1,'#D8D5CC')}
 function bldg(X,Y,x,y){r(X,Y,16,16,'#E9E1D0');if(y===0){r(X,Y+6,16,10,'#E9E1D0');r(X,Y,16,6,'#7E8C8A');r(X,Y,16,1,'#9AA8A6');r(X,Y+6,16,1,'#5F6B6A')}
  else{r(X+3,Y+3,10,9,'#5E7F8E');r(X+4,Y+4,8,7,'#A9D8EC');r(X+8,Y+4,1,7,'#5E7F8E');r(X+5,Y+5,2,1,'#E6F6FC');if(y===3)r(X,Y+14,16,2,'#B9AE98');
   if(y===2&&state.f.clue&&x%3===0){r(X+4,Y+4,8,3,'#F2C46B');r(X+5,Y+5,6,1,'#C8443A')}}}
@@ -1252,12 +1226,13 @@ function blockOrigin(x,y,ch){let ox=x,oy=y;while(at(ox-1,y)===ch)ox--;while(at(x
 function inTile(X,Y,fn){g.save();g.beginPath();g.rect(X,Y,16,16);g.clip();fn();g.restore()}
 const disc=(cx,cy,rad,c)=>{g.fillStyle=c;g.beginPath();g.arc(cx,cy,rad,0,Math.PI*2);g.fill()};
 const floorOf=(X,Y,x,y)=>ZID==='bcast'?oldF(X,Y,x,y):ZID==='hagwon'?hF(X,Y,x,y):checkF(X,Y,x,y);
-const SHOP=x=>x===7||x===14||x>20?-1:x<7?0:x<14?1:2;  // three shops; brick between them; the 학원 from x 21
-const SHOPC=[['#4F7AA8','#6E96C2','#3A5E86'],['#C8443A','#E0655A','#9A3028'],['#3F8F5A','#5DB070','#2E6E44']];
 const BUNT=['#E8762A','#F2C46B','#5A8FB0','#E86D8A','#7CB46A'];
 
 /* 4교시's story variants of school tiles (src/school.js): same tile, this 교시's look */
 const VARIANTS={
+ /* 동네 상가 (학교 앞, src/school.js): the 방송부 ad in a window once a shop has said yes */
+ shopWin:(X,Y,x,y,t)=>{SCHOOL_TILES.shopWin(X,Y,x,y,t);const F=state.f;
+  if((F.shopM&&x===1)||(F.shopB&&x===9)||(F.shopP&&x===16)){r(X+4,Y+3,8,9,'#F7F3E8');r(X+5,Y+4,6,2,'#E0884A');r(X+6,Y+7,4,3,'#5A5F6E')}},
  onair:(X,Y,x,y,t)=>{face(X,Y);r(X+2,Y+3,12,6,'#2B2E36');const F=state.f,on=F.fixed&&(F.done?Math.floor(t/700)%3===0:Math.floor(t/900)%2===0);r(X+3,Y+4,10,4,on?'#E85A4A':'#5A2E2E');r(X+5,Y+5,6,1,on?'#FFD0C8':'#6E3A3A')},  // lit once the line is fixed
  sayeon:(X,Y,x,y)=>{face(X,Y);r(X+3,Y+1,10,10,'#C98F5A');r(X+3,Y+1,10,2,'#E3B07A');r(X+5,Y+4,6,1,'#3E2A1A');r(X+5,Y+6,6,3,'#F4F1E6');r(X+6,Y+7,4,1,'#E86D8A');
   if(state.f.done){r(X+9,Y+2,4,3,'#F7F3E8');r(X+10,Y+3,2,1,'#F2A38A')}},  // a new note after the festival
@@ -1333,40 +1308,6 @@ const TILES={...SCHOOL_TILES,...VARIANTS,
  tent:(X,Y,x,y)=>{sandF(X,Y,x,y);const L=at(x-1,y)!=='k';for(let i=0;i<16;i+=4)r(X+i,Y+1,4,6,(i/4+(L?0:1))%2?'#F4F1E6':(x<4?'#C8443A':'#E0884A'));r(X,Y+6,16,1,'#8A4A2A');
   r(L?X+1:X+14,Y+7,1,8,'#6E4A2E');r(X,Y+10,16,5,'#C99A62');r(X,Y+10,16,1,'#E3C08A');
   if(state.f.clue){if(x<4){r(X+3,Y+11,4,3,'#2B2E36');r(X+4,Y+11,2,1,'#D8442A')}else{r(X+3,Y+8,2,3,'#F2A38A');r(X+7,Y+8,2,3,'#F2A38A');r(X+3,Y+8,2,1,'#F7D6C0')}}},
- /* 동네 상가 */
- roof:(X,Y,x,y)=>{const s=SHOP(x);if(s<0)return TILES.brick(X,Y,x,y);const [c,l,d]=SHOPC[s];r(X,Y,16,16,c);for(let j=2;j<12;j+=4)r(X,Y+j,16,1,l);r(X,Y+12,16,4,d);
-  for(let i=0;i<16;i+=4)r(X+i,Y+12,2,4,'#F4F1E6')},
- sign:(X,Y,x,y)=>{const s=SHOP(x);if(s<0)return TILES.brick(X,Y,x,y);const [c,l,d]=SHOPC[s];r(X,Y,16,16,'#E9E1D0');r(X,Y+2,16,11,c);r(X,Y+2,16,1,l);r(X,Y+12,16,1,d);
-  if(SHOP(x-1)!==s)r(X,Y+2,1,11,d);if(SHOP(x+1)!==s)r(X+15,Y+2,1,11,d);let x0=x,x1=x;while(x0>0&&SHOP(x0-1)===s)x0--;while(x1<MW-1&&SHOP(x1+1)===s)x1++;  /* the shop's tiles (bounded by the map) */
-  if(x===x0+1){if(s===0){r(X+3,Y+6,9,3,'#F2C46B');r(X+12,Y+6,2,3,'#F2A38A');r(X+2,Y+7,1,1,'#2B2E36')}else if(s===1){r(X+3,Y+9,10,2,'#2B2E36');r(X+4,Y+5,8,4,'#E8762A');r(X+5,Y+6,3,1,'#F7F3E8');r(X+9,Y+7,2,1,'#F7F3E8')}else{r(X+3,Y+5,4,6,'#F7F3E8');r(X+9,Y+5,4,6,'#F7F3E8');r(X+4,Y+6,2,2,c);r(X+10,Y+8,2,2,c)}}
-  else if(x>=x0+2)SIGN_TEXT(X,Y,x,x0+2,x1,3,['느티 문구','엄마손 분식','24시 편의점'][s],'#F7F3E8')},  // the shop's name, in Hangul you can read
- shopWin:(X,Y,x,y,t)=>{const s=SHOP(x);r(X,Y,16,16,'#E9E1D0');r(X+1,Y+1,14,12,'#3E4350');r(X+2,Y+2,12,10,'#A9D8EC');r(X+3,Y+3,2,1,'#E6F6FC');const h=hash(x,y),F=state.f;
-  if(s===0){r(X+3,Y+7,3,4,'#E86D8A');r(X+7,Y+6,3,5,'#5A8FB0');r(X+11,Y+8,2,3,'#F2C46B')}
-  else if(s===1){r(X+3,Y+8,10,3,'#2B2E36');r(X+4,Y+7,8,2,'#D8442A');const w=Math.round(Math.sin(t/400+x)*1.5);g.fillStyle='rgba(255,255,255,.6)';g.fillRect(X+6+w,Y+3,2,3);g.fillRect(X+9-w,Y+4,2,2)}
-  else{for(let j=0;j<2;j++){r(X+2,Y+6+j*3,12,1,'#8A8E96');for(let i=0;i<4;i++)r(X+3+i*3,Y+4+j*3,2,2,['#E8762A','#F2C46B','#E86D8A','#7CB46A'][(h+i+j)%4])}}
-  if((s===0&&F.shopM&&x===1)||(s===1&&F.shopB&&x===9)||(s===2&&F.shopP&&x===16)){r(X+4,Y+3,8,9,'#F7F3E8');r(X+5,Y+4,6,2,'#E0884A');r(X+6,Y+7,4,3,'#5A5F6E')}
-  r(X,Y+13,16,3,'#B9AE98')},
- shopDoor:(X,Y,x,y)=>{r(X,Y,16,16,'#E9E1D0');r(X+2,Y+1,12,15,'#5A3E26');r(X+3,Y+2,10,14,'#BFE3F0');r(X+4,Y+4,2,6,'#E6F6FC');const [c,,d]=SHOPC[Math.max(0,SHOP(x))];r(X+2,Y+1,12,5,c);
-  for(let i=5;i<14;i+=3)r(X+i,Y+1,1,5,d);r(X+11,Y+9,1,3,'#2B2E36')},
- brick:(X,Y,x,y)=>{r(X,Y,16,16,'#A8644A');for(let j=3;j<16;j+=4){r(X,Y+j,16,1,'#8E5038');const o=(j>>2)%2?4:0;r(X+o,Y+j-3,1,3,'#8E5038');r(X+o+8,Y+j-3,1,3,'#8E5038')}},
- acad:(X,Y,x,y,t)=>{r(X,Y,16,16,'#B9BEC8');r(X,Y,16,1,'#D2D6DE');if(x===22)r(X,Y,1,16,'#8E94A0');if(x===27)r(X+15,Y,1,16,'#8E94A0');
-  if(y===0){r(X,Y+1,16,11,'#2E5A9A');r(X,Y+1,16,1,'#4A78B8');r(X,Y+11,16,1,'#1E3E6E');SIGN_TEXT(X,Y,x,22,27,2,'느티 수학 학원','#F7F3E8');r(X,Y+12,16,1,'#8E94A0')}  // the 학원's name, like the shops'
-  else{r(X+2,Y+2,12,9,'#3E4A6E');const on=(hash(x,y)+Math.floor(t/3000))%5,ev=evening();r(X+3,Y+3,10,7,ev?(on?'#F7E7B0':'#8E9AB8'):'#A9D8EC');if(!ev)r(X+4,Y+4,2,1,'#E6F6FC');  // lit windows in the evening, sky in the glass by day
-   r(X+8,Y+3,1,7,'#3E4A6E');r(X+3,Y+6,10,1,'#3E4A6E');
-   if(y===2)r(X,Y+13,16,3,'#8E94A0')}},
- acadDoor:(X,Y,x,y)=>{paveF(X,Y,x,y);r(X,Y,16,16,'#B9BEC8');r(X+1,Y+1,14,15,'#3E4A5E');r(X+2,Y+2,12,14,'#A9C8E0');r(X+3,Y+3,2,8,'#D8EAF6');const L=at(x-1,y)!=='H';r(L?X+15:X,Y+1,1,15,'#3E4A5E');r(L?X+12:X+3,Y+8,1,3,'#2B2E36')},
- pave:(X,Y,x,y)=>paveF(X,Y,x,y),
- road:(X,Y,x,y)=>{r(X,Y,16,16,'#4A4E56');const h=hash(x,y);if(h<40)r(X+h%13+1,Y+(h>>2)%12+2,1,1,'#5A5E66');
-  if(y===5){r(X,Y,16,2,'#9A968C');r(X,Y+15,16,1,'#E8B93A')}else{r(X,Y+14,16,2,'#9A968C');r(X,Y,16,1,'#E8B93A')}},
- crosswalk:(X,Y,x,y)=>{r(X,Y,16,16,'#4A4E56');for(let i=1;i<16;i+=5)r(X+i,Y,3,16,'#F4F1E6');if(y===5)r(X,Y,16,2,'#9A968C');else r(X,Y+14,16,2,'#9A968C')},
- lamp:(X,Y,x,y,t)=>{paveF(X,Y,x,y);r(X+7,Y+3,2,12,'#3E4350');r(X+5,Y+14,6,2,'#2B2E36');r(X+4,Y,8,3,'#2B2E36');
-  if(evening()){r(X+5,Y+2,6,1,'#FFE58A');g.fillStyle='rgba(255,229,138,.18)';g.fillRect(X+3,Y+3,10,6)}else r(X+5,Y+2,6,1,'#C9CED3')},  // lit only in the evening
- streetTree:(X,Y,x,y,t)=>{paveF(X,Y,x,y);r(X+2,Y+12,12,4,'#8E9286');r(X+3,Y+12,10,1,'#6E4A2E');r(X+7,Y+7,2,6,'#6E4A2E');const s=Math.round(Math.sin(t/1300+x)*1);
-  disc(X+8+s,Y+6,6,'#2F7A4E');disc(X+6+s,Y+4,4,'#3F9460');disc(X+10+s,Y+5,3,'#3F9460');disc(X+6+s,Y+3,2,'#5DB070')},
- busStop:(X,Y,x,y)=>{paveF(X,Y,x,y);const L=at(x-1,y)!=='B';r(X,Y+1,16,3,'#3E5E8C');r(X,Y+1,16,1,'#5A7AAC');r(X+(L?1:0),Y+4,L?15:14,7,'#BFE3F0');r(X,Y+11,16,2,'#8A5E36');r(X+1,Y+13,1,3,'#3E4350');r(X+14,Y+13,1,3,'#3E4350');
-  if(L){r(X+1,Y+4,1,9,'#3E4350');r(X+3,Y+5,5,4,'#F2C46B')}else r(X+15,Y+4,1,9,'#3E4350')},
- sfence:(X,Y,x,y)=>{paveF(X,Y,x,y);r(X,Y+6,16,2,'#3E5A46');r(X,Y+11,16,2,'#3E5A46');for(let i=1;i<16;i+=4){r(X+i,Y+2,2,13,'#4F7A5E');r(X+i,Y+2,2,1,'#6E9A7A')}},
- sgate:(X,Y,x,y)=>{paveF(X,Y,x,y);r(X,Y+3,16,2,'#2B2E36');r(X,Y+13,16,2,'#2B2E36');const L=at(x-1,y)!=='G';r(L?X:X+13,Y,3,16,'#9AA3AD');r(L?X:X+13,Y,3,1,'#C9D2DA')},
  /* 학원 */
  hDoor:(X,Y,x,y)=>{face(X,Y);r(X+2,Y+1,12,15,'#5A6688');r(X+2,Y+1,12,1,'#7A86A8');r(X+4,Y+3,8,4,'#BFD3E8');r(X+5,Y+4,2,1,'#E6F0FA');r(X+11,Y+10,1,3,'#2B2E36');r(X+5,Y+9,5,2,'#F4F1E6')},
  adPoster:(X,Y,x,y)=>{face(X,Y);const k=x%4,C=['#C8443A','#2E5A9A','#3F8F5A','#E0884A'][k];r(X+2,Y+1,12,10,'#F7F3E8');r(X+2,Y+1,12,3,C);r(X+3,Y+2,6,1,'#F7F3E8');

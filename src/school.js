@@ -41,6 +41,14 @@ function roomPlate(X,Y,x,y,text){face(X,Y);const c=at(x,y);let a=x,b=x;while(at(
  r(X+(L?2:0),Y+3,16-(L?2:0)-(R?2:0),12,'#8A8E96');r(X+(L?3:0),Y+4,16-(L?3:0)-(R?3:0),10,'#F4F1E6');SIGN_TEXT(X,Y,x,a,b,4,text,'#2F3A44')}
 const WALLISH=new Set(['sayeonSlot','wall','board','timetable','sideWin','streetWin','hallWin','classWin','notice','speaker','classDoor','exitDoor','cafDoor','bcDoor','bcSign','classSign','officePlate','princPlate','stairSign','menu','snacks','rack','onair','poster','lockers','shoes','stairs','musicDoor','libDoor','sayeon','staffBoard','portraits','gymWin','hoop','bookWall','libWin']);
 const wallish=(x,y)=>{const c=at(x,y);if(c==null)return true;const L=Z.legend[c];return !!L&&WALLISH.has(L.tile)};
+/* 학교 앞's shops by column: 문구점 0–6, 분식집 8–13, 편의점 15–20, 코인 노래방 22–27 (brick between; the 학원 from 29) */
+const SHOP=x=>x<7?0:x>7&&x<14?1:x>14&&x<21?2:x>21&&x<28?3:-1;
+const SHOPC=[['#4F7AA8','#6E96C2','#3A5E86'],['#C8443A','#E0655A','#9A3028'],['#3F8F5A','#5DB070','#2E6E44'],['#6B3FA0','#8A5EC0','#4A2A78']];
+const SHOPN=['느티 문구','엄마손 분식','24시 편의점','코인 노래방'];
+function paveF(X,Y,x,y){r(X,Y,16,16,'#C9C6BC');r(X,Y,16,1,'#B3B0A6');r(X,Y+8,16,1,'#B3B0A6');r(X+(y%2?4:12),Y,1,8,'#B3B0A6');r(X+(y%2?12:4),Y+8,1,8,'#B3B0A6');
+ const h=hash(x,y);if(h<30)r(X+h%13+1,Y+(h>>2)%6+1,2,1,'#D8D5CC')}
+/* evening by the 교시's clock (C.clock): street lamps and the 학원's windows light up */
+const evening=()=>{const [h]=C.clock?C.clock():[12,30];return h>=5&&h<8};
 const TILES={
  wall:(X,Y,x,y)=>{if(!wallish(x,y+1)||(y===MH-1&&!wallish(x,y-1)))face(X,Y);else cap(X,Y,x,y)},
   wood:(X,Y,x,y)=>woodF(X,Y,x,y),
@@ -271,6 +279,41 @@ const TILES={
    if(y===3&&x>=26&&x<=29){const L=x===26?3:0,R=x===29?3:0;r(X+L,Y+4,16-L-R,7,'#2E5E44');r(X+L+(L?2:0),Y+6,16-L-R-(L||R?2:0),3,'#F4F0E6')}  /* the 체육관 sign over the doors */if(y===4)r(X,Y+14,16,2,'#B9AE98')}},
  gymEntrance:(X,Y,x,y)=>{r(X,Y,16,16,'#E8E2D4');const L=at(x-1,y)!=='J';r(X+(L?2:0),Y+2,14,14,'#3E7A5A');r(X+(L?3:1),Y+3,12,6,'#BFE3F0');
   r(X+(L?14:1),Y+10,1,2,'#F2D27A');r(L?X+15:X,Y+2,1,14,'#2E5E44')},
+ /* 학교 앞 (the street outside the 정문, one for every 교시): 문구점, 분식집, 편의점, 코인 노래방, the 학원 building */
+ roof:(X,Y,x,y)=>{const s=SHOP(x);if(s<0)return TILES.brick(X,Y,x,y);const [c,l,d]=SHOPC[s];r(X,Y,16,16,c);for(let j=2;j<12;j+=4)r(X,Y+j,16,1,l);r(X,Y+12,16,4,d);
+  for(let i=0;i<16;i+=4)r(X+i,Y+12,2,4,'#F4F1E6')},
+ sign:(X,Y,x,y,t)=>{const s=SHOP(x);if(s<0)return TILES.brick(X,Y,x,y);const [c,l,d]=SHOPC[s];r(X,Y,16,16,'#E9E1D0');r(X,Y+2,16,11,c);r(X,Y+2,16,1,l);r(X,Y+12,16,1,d);
+  if(SHOP(x-1)!==s)r(X,Y+2,1,11,d);if(SHOP(x+1)!==s)r(X+15,Y+2,1,11,d);let x0=x,x1=x;while(x0>0&&SHOP(x0-1)===s)x0--;while(x1<MW-1&&SHOP(x1+1)===s)x1++;
+  if(x===x0+1){if(s===0){r(X+3,Y+6,9,3,'#F2C46B');r(X+12,Y+6,2,3,'#F2A38A');r(X+2,Y+7,1,1,'#2B2E36')}else if(s===1){r(X+3,Y+9,10,2,'#2B2E36');r(X+4,Y+5,8,4,'#E8762A');r(X+5,Y+6,3,1,'#F7F3E8');r(X+9,Y+7,2,1,'#F7F3E8')}
+   else if(s===2){r(X+3,Y+5,4,6,'#F7F3E8');r(X+9,Y+5,4,6,'#F7F3E8');r(X+4,Y+6,2,2,c);r(X+10,Y+8,2,2,c)}else{const on=Math.floor(t/400)%2;r(X+6,Y+4,4,5,on?'#FFE0FA':'#E86DD8');r(X+7,Y+9,2,3,'#F4F1E6')}}  // the shop's icon (the 노래방's mic blinks)
+  else if(x>=x0+2)SIGN_TEXT(X,Y,x,x0+2,x1,3,SHOPN[s],'#F7F3E8')},  // the shop's name, in Hangul you can read
+ shopWin:(X,Y,x,y,t)=>{const s=SHOP(x);r(X,Y,16,16,'#E9E1D0');r(X+1,Y+1,14,12,'#3E4350');r(X+2,Y+2,12,10,s===3?'#3A2A52':'#A9D8EC');if(s!==3)r(X+3,Y+3,2,1,'#E6F6FC');const h=hash(x,y);
+  if(s===0){r(X+3,Y+7,3,4,'#E86D8A');r(X+7,Y+6,3,5,'#5A8FB0');r(X+11,Y+8,2,3,'#F2C46B')}
+  else if(s===1){r(X+3,Y+8,10,3,'#2B2E36');r(X+4,Y+7,8,2,'#D8442A');const w=Math.round(Math.sin(t/400+x)*1.5);g.fillStyle='rgba(255,255,255,.6)';g.fillRect(X+6+w,Y+3,2,3);g.fillRect(X+9-w,Y+4,2,2)}
+  else if(s===2){for(let j=0;j<2;j++){r(X+2,Y+6+j*3,12,1,'#8A8E96');for(let i=0;i<4;i++)r(X+3+i*3,Y+4+j*3,2,2,['#E8762A','#F2C46B','#E86D8A','#7CB46A'][(h+i+j)%4])}}
+  else{const on=Math.floor(t/350+x)%3;r(X+7,Y+5,2,2,['#E86DD8','#6FE0F2','#F2D86F'][on]);r(X+4,Y+8,1,1,'#F2D86F');r(X+11,Y+4,1,1,'#6FE0F2')}  // neon through the 노래방's dark glass
+  r(X,Y+13,16,3,'#B9AE98')},
+ shopDoor:(X,Y,x,y)=>{r(X,Y,16,16,'#E9E1D0');r(X+2,Y+1,12,15,'#5A3E26');r(X+3,Y+2,10,14,'#BFE3F0');r(X+4,Y+4,2,6,'#E6F6FC');const [c,,d]=SHOPC[Math.max(0,SHOP(x))];r(X+2,Y+1,12,5,c);
+  for(let i=5;i<14;i+=3)r(X+i,Y+1,1,5,d);r(X+11,Y+9,1,3,'#2B2E36')},
+ nrDoor:(X,Y,x,y,t)=>{r(X,Y,16,16,'#E9E1D0');r(X+1,Y,14,16,'#2B1E3C');const on=Math.floor(t/300)%2;r(X+1,Y,14,1,on?'#E86DD8':'#6FE0F2');r(X+1,Y,1,16,on?'#6FE0F2':'#E86DD8');r(X+14,Y,1,16,on?'#6FE0F2':'#E86DD8');r(X+4,Y+4,8,8,'#3A2A52');r(X+7,Y+6,2,3,'#F2D86F')},
+ brick:(X,Y,x,y)=>{r(X,Y,16,16,'#A8644A');for(let j=3;j<16;j+=4){r(X,Y+j,16,1,'#8E5038');const o=(j>>2)%2?4:0;r(X+o,Y+j-3,1,3,'#8E5038');r(X+o+8,Y+j-3,1,3,'#8E5038')}},
+ acad:(X,Y,x,y,t)=>{const A=c=>c==='A'||c==='H';r(X,Y,16,16,'#B9BEC8');r(X,Y,16,1,'#D2D6DE');if(!A(at(x-1,y)))r(X,Y,1,16,'#8E94A0');if(!A(at(x+1,y)))r(X+15,Y,1,16,'#8E94A0');
+  if(y===0){let x0=x,x1=x;while(at(x0-1,0)==='A')x0--;while(at(x1+1,0)==='A')x1++;r(X,Y+1,16,11,'#2E5A9A');r(X,Y+1,16,1,'#4A78B8');r(X,Y+11,16,1,'#1E3E6E');SIGN_TEXT(X,Y,x,x0,x1,2,'느티 수학 학원','#F7F3E8');r(X,Y+12,16,1,'#8E94A0')}  // the 학원's name, like the shops'
+  else{r(X+2,Y+2,12,9,'#3E4A6E');const on=(hash(x,y)+Math.floor(t/3000))%5,ev=evening();r(X+3,Y+3,10,7,ev?(on?'#F7E7B0':'#8E9AB8'):'#A9D8EC');if(!ev)r(X+4,Y+4,2,1,'#E6F6FC');  // lit windows in the evening, sky in the glass by day
+   r(X+8,Y+3,1,7,'#3E4A6E');r(X+3,Y+6,10,1,'#3E4A6E');if(y===2)r(X,Y+13,16,3,'#8E94A0')}},
+ acadDoor:(X,Y,x,y)=>{r(X,Y,16,16,'#B9BEC8');r(X+1,Y+1,14,15,'#3E4A5E');r(X+2,Y+2,12,14,'#A9C8E0');r(X+3,Y+3,2,8,'#D8EAF6');const L=at(x-1,y)!=='H';r(L?X+15:X,Y+1,1,15,'#3E4A5E');r(L?X+12:X+3,Y+8,1,3,'#2B2E36')},
+ pave:(X,Y,x,y)=>paveF(X,Y,x,y),
+ road:(X,Y,x,y,t)=>{r(X,Y,16,16,'#4A4E56');const h=hash(x,y);if(h<40)r(X+h%13+1,Y+(h>>2)%12+2,1,1,'#5A5E66');
+  if(y===5){r(X,Y,16,2,'#9A968C');r(X,Y+15,16,1,'#E8B93A')}else{r(X,Y+14,16,2,'#9A968C');r(X,Y,16,1,'#E8B93A')}streetCar(X,Y,x,y,t,5)},
+ crosswalk:(X,Y,x,y,t)=>{r(X,Y,16,16,'#4A4E56');for(let i=1;i<16;i+=5)r(X+i,Y,3,16,'#F4F1E6');if(y===5)r(X,Y,16,2,'#9A968C');else r(X,Y+14,16,2,'#9A968C');streetCar(X,Y,x,y,t,5)},
+ lamp:(X,Y,x,y)=>{paveF(X,Y,x,y);r(X+7,Y+3,2,12,'#3E4350');r(X+5,Y+14,6,2,'#2B2E36');r(X+4,Y,8,3,'#2B2E36');
+  if(evening()){r(X+5,Y+2,6,1,'#FFE58A');g.fillStyle='rgba(255,229,138,.18)';g.fillRect(X+3,Y+3,10,6)}else r(X+5,Y+2,6,1,'#C9CED3')},  // lit only in the evening
+ streetTree:(X,Y,x,y,t)=>{paveF(X,Y,x,y);r(X+2,Y+12,12,4,'#8E9286');r(X+3,Y+12,10,1,'#6E4A2E');r(X+7,Y+7,2,6,'#6E4A2E');const s=Math.round(Math.sin(t/1300+x)*1);
+  disc(X+8+s,Y+6,6,'#2F7A4E');disc(X+6+s,Y+4,4,'#3F9460');disc(X+10+s,Y+5,3,'#3F9460');disc(X+6+s,Y+3,2,'#5DB070')},
+ busStop:(X,Y,x,y)=>{paveF(X,Y,x,y);const L=at(x-1,y)!=='B';r(X,Y+1,16,3,'#3E5E8C');r(X,Y+1,16,1,'#5A7AAC');r(X+(L?1:0),Y+4,L?15:14,7,'#BFE3F0');r(X,Y+11,16,2,'#8A5E36');r(X+1,Y+13,1,3,'#3E4350');r(X+14,Y+13,1,3,'#3E4350');
+  if(L){r(X+1,Y+4,1,9,'#3E4350');r(X+3,Y+5,5,4,'#F2C46B')}else r(X+15,Y+4,1,9,'#3E4350')},
+ sfence:(X,Y,x,y)=>{paveF(X,Y,x,y);r(X,Y+6,16,2,'#3E5A46');r(X,Y+11,16,2,'#3E5A46');for(let i=1;i<16;i+=4){r(X+i,Y+2,2,13,'#4F7A5E');r(X+i,Y+2,2,1,'#6E9A7A')}},
+ sgate:(X,Y,x,y)=>{paveF(X,Y,x,y);r(X,Y+3,16,2,'#2B2E36');r(X,Y+13,16,2,'#2B2E36');const L=at(x-1,y)!=='G';r(L?X:X+13,Y,3,16,'#9AA3AD');r(L?X:X+13,Y,3,1,'#C9D2DA')},
 };
 /* fresh copies every time: a 교시 may add to them */
 const base=()=>({
@@ -534,7 +577,38 @@ const base=()=>({
    'n':['잡지 꽂이예요. 패션 잡지, 게임 잡지.','학교 신문이에요. "느티나무, 올해도 건강해요."'],
    'c':['학생용 컴퓨터예요. 학교 앱 게시판이 떠 있어요.','컴퓨터 화면에 "게임 금지" 종이가 붙어 있어요.'],
    'r':'반납 수레예요. 책이 높이 쌓였어요.',
-   'p':'화분이에요. 도서부가 매일 물을 줘요.'}}
+   'p':'화분이에요. 도서부가 매일 물을 줘요.'}},
+ /* 학교 앞, outside the 정문 (2교시–4교시; the 정문 opens to it by spec.gate): the shops' doors lead to a 교시's own rooms
+    (분식집 bunsik, 코인 노래방 nr, 학원 hagwon), open when the 교시 lists them */
+ street:{name:'학교 앞',reg:'IN FRONT OF SCHOOL',outdoor:1,
+  legend:{'R':{tile:'roof'},'K':{tile:'sign'},'O':{tile:'shopWin'},'e':{tile:'shopDoor'},'E':{tile:'shopDoor',walk:1},'N':{tile:'nrDoor',walk:1},'h':{tile:'brick'},
+   'A':{tile:'acad'},'H':{tile:'acadDoor',walk:1},',':{tile:'pave',walk:1},'r':{tile:'road'},'z':{tile:'crosswalk',walk:1},'l':{tile:'lamp'},'t':{tile:'streetTree'},
+   'B':{tile:'busStop'},'f':{tile:'sfence'},'G':{tile:'sgate',walk:1}},
+  map:[
+"RRRRRRRhRRRRRRhRRRRRRhRRRRRRhAAAAAA",
+"KKKKKKKhKKKKKKhKKKKKKhKKKKKKhAAAAAA",
+"OOeOOOOhOOEOOOhOOOeOOhOOONOOhAAHHAA",
+",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
+",t,,,,l,,,,,,,,,,,,,l,,,,,,,,,,,,t,",
+"rrrrrrrrrrzzrrrrrrrrrrrrrrrrrrrrrrr",
+"rrrrrrrrrrzzrrrrrrrrrrrrrrrrrrrrrrr",
+",,,,,,,,,,,,,,,,,,BB,,,,,,,,,,,,,,,",
+",t,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,t,",
+"ffffffffffGGfffffffffffffffffffffff"],
+  rooms:[[0,3,34,4,'동네 상가'],[0,7,34,8,'학교 앞']],
+  warps:{'10,9':{to:'yard',x:11,y:12,dir:'up'},'11,9':{to:'yard',x:12,y:12,dir:'up'},'10,2':{to:'bunsik',x:7,y:9,dir:'up'},'25,2':{to:'nr',x:15,y:8,dir:'up'},
+   '31,2':{to:'hagwon',x:8,y:8,dir:'up'},'32,2':{to:'hagwon',x:9,y:8,dir:'up'}},
+  things:{'R':x=>x<7?'문구점 지붕이에요. 파란색이에요.':x<14?'분식집 지붕이에요. 빨간색이에요.':x<21?'편의점 지붕이에요. 초록색이에요.':'코인 노래방 지붕이에요. 보라색이에요.',
+   'K':x=>x<7?'간판: "느티 문구"':x<14?'간판: "엄마손 분식" 떡볶이 그림이 있어요.':x<21?'간판: "24시 편의점"':'"코인 노래방" 간판이 반짝반짝해요.',
+   'O':x=>x<7?'문구점 창문. 예쁜 공책하고 펜이 있어요.':x<14?['창문 너머로 떡볶이가 보글보글.','창문에 "떡볶이 삼천 원" 종이.'][x%2]:x<21?'편의점 창문. 컵라면이 줄줄이 있어요.':'창문에 별 스티커가 붙어 있어요.',
+   'e':x=>x<7?'문구점 문이에요. "잠깐 은행 다녀올게요"':'편의점 문이에요. 사람이 너무 많아요.',
+   'h':['빨간 벽돌 벽이에요.','벽돌 사이에 작은 풀이 자라요.'],
+   'A':x=>['학원 건물이에요. 층마다 학원 간판이 있어요.','창문마다 학생들이 보여요. 다 공부 중이에요.','"느티 수학 · 합격률 높은 학원"'][x%3],
+   'r':['차가 다니는 길이에요. 횡단보도로 건너요.','학원 버스가 쌩 지나가요.','길에 노란 줄이 있어요.'],
+   'l':'가로등이에요. 아직 불이 꺼져 있어요.',
+   't':['가로수예요. 잎이 반짝여요.','나무 밑에 고양이가 자고 있어요.'],
+   'B':['버스 정류장이에요. "학원가 방향"','정류장 의자예요. 아무도 안 앉아 있어요.'],
+   'f':['학교 울타리예요. 안에 느티나무가 보여요.','울타리에 "학생 안전 구역" 표지판.']}}
 });
 
 /* cars on the 학교 앞 road (2교시, 3교시; a chapter's road and crosswalk tiles call streetCar with the road's top row): two lanes,
@@ -554,7 +628,8 @@ globalThis.streetCar=function(X,Y,x,y,t,top){
 /* doors to rooms a 교시 hasn't opened */
 const CLOSED={hall:'학교 건물이에요.',hall2:'2층 계단이에요. 지금은 올라갈 일이 없어요.',class:'2학년 3반이에요. 지금은 들어갈 일이 없어요.',
  cafe:'급식실 문이 닫혔어요.',bcast:'"방송실". 문이 잠겨 있어요.',music:'음악실이에요. 문이 잠겨 있어요.',gym:'체육관이에요. 문이 잠겨 있어요.',
- library:'도서관이에요. 문이 잠겨 있어요.',yard:'운동장이에요.'};
+ library:'도서관이에요. 문이 잠겨 있어요.',yard:'운동장이에요.',
+ street:'학교 앞이에요.',bunsik:'분식집이에요. 지금은 들어갈 일이 없어요.',nr:'코인 노래방이에요. 지금은 들어갈 일이 없어요.',hagwon:'학원 건물이에요. 지금은 들어갈 일이 없어요.'};
 /* spec: {open:[zone ids the 교시 uses; yard and hall are always open], gate:{to,x,y,dir,lock} (the 정문 leads out),
    zones:{id:{things,spots,npcs,locks:{toZone:fn},legend,paint:[[x,y,'chars']],rooms,dark,slow}}} */
 globalThis.SCHOOL=function(spec){

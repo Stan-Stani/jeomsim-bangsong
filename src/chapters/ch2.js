@@ -332,7 +332,8 @@ const has=w=>state.badges.includes(w);
 /* school exit: closed in class time and during the next day's lunch until the broadcast is done */
 const outLock=()=>!f().afterSchool?'아직 하교 시간이 아니에요. 밖에 못 나가요.':f().nextDay&&!f().done?'점심시간이에요. 학교 밖에 나가면 안 돼요.':false;
 /* 느티고 (src/school.js): the 방송실, the 2층 음악실 and the 체육관 across the 운동장 are open; the 정문 leads to 학교 앞. */
-const ZONES={...SCHOOL({open:['hall2','music','gym','bcast','class'],gate:{to:'street',x:10,y:8,dir:'up',lock:outLock},zones:{
+const ZONES={...SCHOOL({open:['hall2','music','gym','bcast','class','bunsik'],gate:{to:'street',x:10,y:8,dir:'up',lock:outLock},zones:{
+ street:{npcs:['xS1','xS2','xS3','xS4']},  // 학교 앞 (src/school.js): the 분식집 door is open
  bcast:{paint:[[13,0,'b'],[7,2,'T']],greet:()=>f().nextDay&&!f().ready&&'gureumL',  // day two, lunch: walking in starts the crowded run-through
   things:{'#':['벽에 먼지가 많아요.','벽에 오래된 사진 자국이 있어요.','구름이 벽을 조금 닦았어요. 거기만 하얘요.'],
    'r':['카세트테이프가 가득해요. 다 옛날 노래예요.','테이프 이름이 다 손글씨예요.','테이프 하나에 "점심 방송 1"이라고 쓰여 있어요.'],
@@ -385,35 +386,6 @@ const ZONES={...SCHOOL({open:['hall2','music','gym','bcast','class'],gate:{to:'s
    'o':()=>f().stoodUp?['공 수레예요. 거의 비었어요.','남은 공 하나는 바람이 빠졌어요.']:['공 수레예요. 농구공하고 배구공이 가득해요.','공 하나가 바람이 빠졌어요.'],
    'b':['나무 관람석이에요. 계단처럼 높아져요.','관람석에 누가 물병을 두고 갔어요.','관람석 밑에 배드민턴 공이 숨어 있어요.']},
   npcs:['chanG','chanG2','teaser','teaser2','hariG','xPE','xBall1','xBall2']}}}),
- street:{name:'학교 앞',reg:'IN FRONT OF SCHOOL',outdoor:1,
-  legend:{'R':{tile:'roof'},'K':{tile:'sign'},'O':{tile:'shopWin'},'e':{tile:'closedDoor'},'E':{tile:'shopDoor',walk:1},'h':{tile:'brick'},
-   ',':{tile:'pave',walk:1},'r':{tile:'road'},'z':{tile:'crosswalk',walk:1},'l':{tile:'lamp'},'t':{tile:'streetTree'},'B':{tile:'busStop'},
-   'f':{tile:'sfence'},'G':{tile:'sgate',walk:1}},
-  map:[
-"RRRRRRRhRRRRRRRRhRRRRRRR",
-"KKKKKKKhKKKKKKKKhKKKKKKK",
-"OOeOOOOhOOOEOOOOhOOeOOOO",
-",,,,,,,,,,,,,,,,,,,,,,,,",
-",t,,,,l,,,,,,,,,,,l,,,t,",
-"rrrrrrrrrrzzrrrrrrrrrrrr",
-"rrrrrrrrrrzzrrrrrrrrrrrr",
-",,,,,,,,,,,,,,,,,,BB,,,,",
-",t,,,,,,,,,,,,,,,,,,,,t,",
-"ffffffffffGGffffffffffff"],
-  rooms:[[0,3,23,4,'학교 앞 · 가게'],[0,7,23,8,'학교 앞']],
-  warps:{'11,2':{to:'bunsik',x:7,y:9,dir:'up'},'10,9':{to:'yard',x:11,y:12,dir:'up'},'11,9':{to:'yard',x:12,y:12,dir:'up'}},
-  spots:{},
-  things:{'R':x=>x<7?'문구점 지붕이에요. 파란색이에요.':x<16?'분식집 지붕이에요. 빨간색이에요.':'편의점 지붕이에요. 초록색이에요.',
-   'K':x=>x<7?'간판: "느티 문구"':x<16?'간판: "엄마손 분식" 떡볶이 그림이 있어요.':'간판: "24시 편의점"',
-   'O':x=>x<7?'문구점 창문. 예쁜 공책하고 펜이 있어요.':x<16?['창문 너머로 떡볶이가 보글보글.','창문에 "떡볶이 삼천 원" 종이.'][x%2]:'편의점 창문. 컵라면이 줄줄이 있어요.',
-   'e':x=>x<7?'문구점 문이에요. "잠깐 은행 다녀올게요"':'편의점 문이에요. 사람이 너무 많아요.',
-   'h':['빨간 벽돌 벽이에요.','벽돌 사이에 작은 풀이 자라요.'],
-   'r':['차가 다니는 길이에요. 횡단보도로 건너요.','학원 버스가 쌩 지나가요.','길에 노란 줄이 있어요.'],
-   'l':'가로등이에요. 아직 불이 꺼져 있어요.',
-   't':['가로수예요. 잎이 반짝여요.','나무 밑에 고양이가 자고 있어요.'],
-   'B':['버스 정류장이에요. "학원가 방향"','정류장 의자예요. 아무도 안 앉아 있어요.'],
-   'f':['학교 울타리예요. 안에 느티나무가 보여요.','울타리에 "학생 안전 구역" 표지판.']},
-  npcs:['xS1','xS2','xS3','xS4']},
  bunsik:{name:'엄마손 분식',reg:'SNACK BAR',floor:'tileFloor',
   legend:{'#':{tile:'bWall'},'.':{tile:'tileFloor',walk:1},'D':{tile:'exitDoor',walk:1},'M':{tile:'bMenu'},'W':{tile:'bWin'},
    'k':{tile:'pan'},'=':{tile:'bcounter',over:1},'t':{tile:'btable'},'j':{tile:'water'},'p':{tile:'bPlant'},'u':{tile:'fridge'}},  // tables aren't counters (no over): A on the upper one reached 하리 behind it
@@ -430,7 +402,7 @@ const ZONES={...SCHOOL({open:['hall2','music','gym','bcast','class'],gate:{to:'s
 "#..............#",
 "#######DD#######"],
   rooms:[[1,1,14,9,'엄마손 분식']],
-  warps:{'7,10':{to:'street',x:11,y:3,dir:'down'},'8,10':{to:'street',x:11,y:3,dir:'down'}},
+  warps:{'7,10':{to:'street',x:10,y:3,dir:'down'},'8,10':{to:'street',x:10,y:3,dir:'down'}},
   spots:{},
   things:{'#':['벽에 연예인 사인이 가득해요.','벽에 "학생 할인" 종이가 붙어 있어요.'],
    'M':['메뉴: 떡볶이, 순대, 튀김, 김밥.','"떡볶이 삼천 원. 학생은 많이 줘요."','메뉴판 구석: "외상 안 돼요!"'],
@@ -976,8 +948,6 @@ function hallF(X,Y,x,y){r(X,Y,16,16,'#C9CCC0');r(X,Y,16,1,'#B9BCB0');r(X,Y,1,16,
 function checkF(X,Y,x,y){r(X,Y,16,16,'#D8D2C2');r(X,Y,8,8,'#CBC4B2');r(X+8,Y+8,8,8,'#CBC4B2')}
 function oldF(X,Y,x,y){r(X,Y,16,16,'#8E6E4E');for(let j=3;j<16;j+=5)r(X,Y+j,16,1,'#7A5C40');const h=hash(x,y);r(X+h%14,Y+(h>>2)%14,2,1,'#A58A6C');if(h<30)r(X+(h*5)%13,Y+(h*3)%13,1,1,'#B9A488')}
 function tileF(X,Y){r(X,Y,16,16,'#ECE2D0');r(X,Y,8,8,'#DFD0B8');r(X+8,Y+8,8,8,'#DFD0B8');r(X,Y,16,1,'#F6EEE0')}
-function paveF(X,Y,x,y){r(X,Y,16,16,'#C9C6BC');r(X,Y,16,1,'#B3B0A6');r(X,Y+8,16,1,'#B3B0A6');r(X+(y%2?4:12),Y,1,8,'#B3B0A6');r(X+(y%2?12:4),Y+8,1,8,'#B3B0A6');
- const h=hash(x,y);if(h<30)r(X+h%13+1,Y+(h>>2)%6+1,2,1,'#D8D5CC')}
 function courtF(X,Y,x,y){r(X,Y,16,16,'#D6A466');for(let j=3;j<16;j+=4)r(X,Y+j,16,1,'#C99556');const h=hash(x,y);r(X+(h%12)+2,Y+(h%4)*4+1,3,1,'#E2B477');
  if(x>=2&&x<=21&&y>=2&&y<=9){const L='#F4F1E6';
   if(y===2)r(X,Y,16,1,L);if(y===9)r(X,Y+15,16,1,L);if(x===2)r(X,Y,1,16,L);if(x===21)r(X+15,Y,1,16,L);if(x===11)r(X+15,Y,1,16,L);if(x===12)r(X,Y,1,16,L);
@@ -985,8 +955,6 @@ function courtF(X,Y,x,y){r(X,Y,16,16,'#D6A466');for(let j=3;j<16;j+=4)r(X,Y+j,16
 function inTile(X,Y,fn){g.save();g.beginPath();g.rect(X,Y,16,16);g.clip();fn();g.restore()}
 const disc=(cx,cy,rad,c)=>{g.fillStyle=c;g.beginPath();g.arc(cx,cy,rad,0,Math.PI*2);g.fill()};
 const floorOf=(X,Y,x,y)=>ZID==='bcast'?oldF(X,Y,x,y):ZID==='music'?woodF(X,Y,x,y):ZID==='gym'?courtF(X,Y,x,y):ZID==='bunsik'?tileF(X,Y):checkF(X,Y,x,y);
-const SHOP=x=>x===7||x===16?-1:x<7?0:x<16?1:2;
-const SHOPC=[['#4F7AA8','#6E96C2','#3A5E86'],['#C8443A','#E0655A','#9A3028'],['#3F8F5A','#5DB070','#2E6E44']];
 
 /* 2교시's story variants of school tiles (src/school.js): same tile, this 교시's look */
 const VARIANTS={
@@ -1014,33 +982,6 @@ const TILES={...SCHOOL_TILES,...VARIANTS,
   r(L?X+14:X+1,Y+9,1,3,'#2B3A30');if(L)r(X+10,Y,6,2,'#E8962A');else r(X,Y,6,2,'#E8962A')},
  shelf:(X,Y,x,y)=>{woodF(X,Y,x,y);r(X,Y+1,16,14,'#8A5E36');r(X+1,Y+2,14,5,'#5A3A20');r(X+1,Y+8,14,6,'#5A3A20');for(let i=0;i<4;i++)r(X+2+i*3,Y+2,1,5,i%2?'#F4F1E6':'#E8D9A8');
   if(at(x-1,y)!=='x'){disc(X+8,Y+11,3,'#E0A060');r(X+8,Y+8,1,3,'#7A5230')}else{disc(X+7,Y+11,3,'#C9A13A');disc(X+7,Y+11,2,'#5A3A20')}},
- /* 학교 앞 */
- roof:(X,Y,x,y)=>{const s=SHOP(x);if(s<0)return TILES.brick(X,Y,x,y);const [c,l,d]=SHOPC[s];r(X,Y,16,16,c);for(let j=2;j<12;j+=4)r(X,Y+j,16,1,l);r(X,Y+12,16,4,d);
-  for(let i=0;i<16;i+=4)r(X+i,Y+12,2,4,'#F4F1E6')},
- sign:(X,Y,x,y)=>{const s=SHOP(x);if(s<0)return TILES.brick(X,Y,x,y);const [c,l,d]=SHOPC[s];r(X,Y,16,16,'#E9E1D0');r(X,Y+2,16,11,c);r(X,Y+2,16,1,l);r(X,Y+12,16,1,d);
-  if(SHOP(x-1)!==s)r(X,Y+2,1,11,d);if(SHOP(x+1)!==s)r(X+15,Y+2,1,11,d);let x0=x,x1=x;while(x0>0&&SHOP(x0-1)===s)x0--;while(x1<MW-1&&SHOP(x1+1)===s)x1++;  /* the shop's tiles (bounded by the map) */
-  if(x===x0+1){if(s===0){r(X+3,Y+6,9,3,'#F2C46B');r(X+12,Y+6,2,3,'#F2A38A');r(X+2,Y+7,1,1,'#2B2E36')}else if(s===1){r(X+3,Y+9,10,2,'#2B2E36');r(X+4,Y+5,8,4,'#E8762A');r(X+5,Y+6,3,1,'#F7F3E8');r(X+9,Y+7,2,1,'#F7F3E8')}else{r(X+3,Y+5,4,6,'#F7F3E8');r(X+9,Y+5,4,6,'#F7F3E8');r(X+4,Y+6,2,2,c);r(X+10,Y+8,2,2,c)}}
-  else if(x>=x0+2)SIGN_TEXT(X,Y,x,x0+2,x1,3,['느티 문구','엄마손 분식','24시 편의점'][s],'#F7F3E8')},  // the shop's name, in Hangul you can read
- shopWin:(X,Y,x,y,t)=>{const s=SHOP(x);r(X,Y,16,16,'#E9E1D0');r(X+1,Y+1,14,12,'#3E4350');r(X+2,Y+2,12,10,'#A9D8EC');r(X+3,Y+3,2,1,'#E6F6FC');const h=hash(x,y);
-  if(s===0){r(X+3,Y+7,3,4,'#E86D8A');r(X+7,Y+6,3,5,'#5A8FB0');r(X+11,Y+8,2,3,'#F2C46B')}
-  else if(s===1){r(X+3,Y+8,10,3,'#2B2E36');r(X+4,Y+7,8,2,'#D8442A');const w=Math.round(Math.sin(t/400+x)*1.5);g.fillStyle='rgba(255,255,255,.6)';g.fillRect(X+6+w,Y+3,2,3);g.fillRect(X+9-w,Y+4,2,2)}
-  else{for(let j=0;j<2;j++){r(X+2,Y+6+j*3,12,1,'#8A8E96');for(let i=0;i<4;i++)r(X+3+i*3,Y+4+j*3,2,2,['#E8762A','#F2C46B','#E86D8A','#7CB46A'][(h+i+j)%4])}}
-  r(X,Y+13,16,3,'#B9AE98')},
- closedDoor:(X,Y,x,y)=>{r(X,Y,16,16,'#E9E1D0');r(X+2,Y+1,12,15,'#6E7B88');r(X+3,Y+2,10,10,'#8FA8B8');r(X+5,Y+5,6,3,'#F4F1E6');r(X+6,Y+6,4,1,'#C8443A');r(X+11,Y+10,1,2,'#2B2E36')},
- shopDoor:(X,Y,x,y)=>{paveF(X,Y,x,y);r(X,Y,16,16,'#E9E1D0');r(X+2,Y+1,12,15,'#5A3E26');r(X+3,Y+2,10,14,'#BFE3F0');r(X+4,Y+4,2,6,'#E6F6FC');r(X+2,Y+1,12,5,'#C8443A');
-  for(let i=5;i<14;i+=3)r(X+i,Y+1,1,5,'#9A3028');r(X+11,Y+9,1,3,'#2B2E36')},
- brick:(X,Y,x,y)=>{r(X,Y,16,16,'#A8644A');for(let j=3;j<16;j+=4){r(X,Y+j,16,1,'#8E5038');const o=(j>>2)%2?4:0;r(X+o,Y+j-3,1,3,'#8E5038');r(X+o+8,Y+j-3,1,3,'#8E5038')}},
- pave:(X,Y,x,y)=>paveF(X,Y,x,y),
- road:(X,Y,x,y,t)=>{r(X,Y,16,16,'#4A4E56');const h=hash(x,y);if(h<40)r(X+h%13+1,Y+(h>>2)%12+2,1,1,'#5A5E66');
-  if(y===5){r(X,Y,16,2,'#9A968C');r(X,Y+15,16,1,'#E8B93A')}else{r(X,Y+14,16,2,'#9A968C');r(X,Y,16,1,'#E8B93A')}streetCar(X,Y,x,y,t,5)},  // cars, as in 3교시 (school.js)
- crosswalk:(X,Y,x,y,t)=>{r(X,Y,16,16,'#4A4E56');for(let i=1;i<16;i+=5)r(X+i,Y,3,16,'#F4F1E6');if(y===5)r(X,Y,16,2,'#9A968C');else r(X,Y+14,16,2,'#9A968C');streetCar(X,Y,x,y,t,5)},
- lamp:(X,Y,x,y)=>{paveF(X,Y,x,y);r(X+7,Y+3,2,12,'#3E4350');r(X+5,Y+14,6,2,'#2B2E36');r(X+4,Y,8,3,'#2B2E36');r(X+5,Y+2,6,1,'#F7E7B0')},
- streetTree:(X,Y,x,y,t)=>{paveF(X,Y,x,y);r(X+2,Y+12,12,4,'#8E9286');r(X+3,Y+12,10,1,'#6E4A2E');r(X+7,Y+7,2,6,'#6E4A2E');const s=Math.round(Math.sin(t/1300+x)*1);
-  disc(X+8+s,Y+6,6,'#2F7A4E');disc(X+6+s,Y+4,4,'#3F9460');disc(X+10+s,Y+5,3,'#3F9460');disc(X+6+s,Y+3,2,'#5DB070')},
- busStop:(X,Y,x,y)=>{paveF(X,Y,x,y);const L=at(x-1,y)!=='B';r(X,Y+1,16,3,'#3E5E8C');r(X,Y+1,16,1,'#5A7AAC');r(X+(L?1:0),Y+4,L?15:14,7,'#BFE3F0');r(X,Y+11,16,2,'#8A5E36');r(X+1,Y+13,1,3,'#3E4350');r(X+14,Y+13,1,3,'#3E4350');
-  if(L){r(X+1,Y+4,1,9,'#3E4350');r(X+3,Y+5,5,4,'#F2C46B')}else r(X+15,Y+4,1,9,'#3E4350')},
- sfence:(X,Y,x,y)=>{paveF(X,Y,x,y);r(X,Y+6,16,2,'#3E5A46');r(X,Y+11,16,2,'#3E5A46');for(let i=1;i<16;i+=4){r(X+i,Y+2,2,13,'#4F7A5E');r(X+i,Y+2,2,1,'#6E9A7A')}},
- sgate:(X,Y,x,y)=>{paveF(X,Y,x,y);r(X,Y+3,16,2,'#2B2E36');r(X,Y+13,16,2,'#2B2E36');const L=at(x-1,y)!=='G';r(L?X:X+13,Y,3,16,'#9AA3AD');r(L?X:X+13,Y,3,1,'#C9D2DA')},
  pan:(X,Y,x,y,t)=>{r(X,Y,16,16,'#AEB4B8');r(X,Y,16,2,'#D3D8DB');r(X+1,Y+4,14,10,'#2B2E36');const k=x%3;
   if(k===1){r(X+2,Y+5,12,8,'#D8442A');[[3,6],[8,7],[5,10],[10,10]].forEach(([a,b])=>r(X+a,Y+b,3,1,'#F4E9D8'));r(X+11,Y+6,2,2,'#E8B87A')}
   else if(k===2){r(X+2,Y+5,12,8,'#6A4A5A');for(let i=0;i<3;i++)r(X+3+i*4,Y+6,3,6,'#4A2E3E')}
