@@ -561,7 +561,8 @@ const NPC={
     {who:'…',say:'교장 선생님이 살짝 웃은 것 같아요.'},
     {who:'…',sfx:'bell',say:'점심시간 끝. 오후 수업이 시작됐어요.',black:1},  // the afternoon is a time cut: over black, not over the 교장실
     {expand:()=>classTime(CLASS,['수학'])},
-    {who:'학교 종',say:'딩동댕동… 오후 수업이 다 끝났어요.',black:0}];
+    {who:'학교 종',say:'딩동댕동… 오후 수업이 다 끝났어요.',go:['class',11,11,'up']},  // still over black: the bell leaves you at your desk,
+    {expand:()=>{const J=JONGNYE();J[0]={...J[0],black:0};return J}}];  // and 종례 follows the last class (you sit, the room comes back)
    if(!F.metPr)return null;   // the welcome (talk) comes once
    if(!F.metTeacher)return [{say:'담임 선생님은 만났어요? 교무실은 바로 옆이에요.'}];
    if(F.metChan)return [{say:'점심 먹었어요? 오늘 급식, 맛있었죠?'},{say:'운동장 느티나무 밑도 가 봐요. 시원해요.'}];  // 찬's table is where you eat

@@ -1640,7 +1640,8 @@ const NPC={
     {who:'…',say:'교장 선생님이 살짝 웃은 것 같아요.'},
     {who:'…',sfx:'bell',say:'점심시간 끝. 오후 수업이 시작됐어요.',black:1},  // the afternoon is a time cut: over black, not over the 교장실
     {expand:()=>classTime(CLASS,['수학'])},
-    {who:'학교 종',say:'딩동댕동… 오후 수업이 다 끝났어요.',black:0}];
+    {who:'학교 종',say:'딩동댕동… 오후 수업이 다 끝났어요.',go:['class',11,11,'up']},  // still over black: the bell leaves you at your desk,
+    {expand:()=>{const J=JONGNYE();J[0]={...J[0],black:0};return J}}];  // and 종례 follows the last class (you sit, the room comes back)
    if(!F.metPr)return null;   // the welcome (talk) comes once
    if(!F.metTeacher)return [{say:'담임 선생님은 만났어요? 교무실은 바로 옆이에요.'}];
    if(F.metChan)return [{say:'점심 먹었어요? 오늘 급식, 맛있었죠?'},{say:'운동장 느티나무 밑도 가 봐요. 시원해요.'}];  // 찬's table is where you eat
@@ -2643,7 +2644,7 @@ const NPC={
    {say:'…네. 갈게요.',face:'happy',award:['긴장하다']},
    {who:'…',say:'오후 수업이 시작됐어요.',black:1},  // class time is a time cut: over black, not over the gym
    {expand:()=>classTime(CLASS,['수학','영어'])},
-   {who:'학교 종',say:'딩동댕동… 오후 수업이 다 끝났어요.',black:0,set:()=>{f().afterSchool=1}}]},
+   {who:'학교 종',say:'딩동댕동… 오후 수업이 다 끝났어요.',black:0,set:()=>{f().afterSchool=1},go:['class',11,11,'up']}]},  // the bell leaves you at your desk, not in the 체육관
 
  /* the 분식집 table: one ! in its middle (markDx: between its two tiles), and A at the table, even from your seat, talks to
     whoever's turn it is (proxy); their own markers are off (nomark) */
@@ -5659,7 +5660,7 @@ globalThis.GRAMMAR_NOTES={
 </script>
 <script>
 /* This build (version.json): v = a hash of the game, t = when this version first appeared. */
-globalThis.BUILD={"v": "9f0e5133", "t": "2026-10-14T04:18Z"};
+globalThis.BUILD={"v": "147275b7", "t": "2026-10-14T10:43Z"};
 </script>
 <script>
 /* GENERATED from walk-engine/engine.js (d91750f) — do not edit here; edit walk-engine and run its sync.sh. */

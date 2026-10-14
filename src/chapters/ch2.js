@@ -666,7 +666,7 @@ const NPC={
    {say:'…네. 갈게요.',face:'happy',award:['긴장하다']},
    {who:'…',say:'오후 수업이 시작됐어요.',black:1},  // class time is a time cut: over black, not over the gym
    {expand:()=>classTime(CLASS,['수학','영어'])},
-   {who:'학교 종',say:'딩동댕동… 오후 수업이 다 끝났어요.',black:0,set:()=>{f().afterSchool=1}}]},
+   {who:'학교 종',say:'딩동댕동… 오후 수업이 다 끝났어요.',black:0,set:()=>{f().afterSchool=1},go:['class',11,11,'up']}]},  // the bell leaves you at your desk, not in the 체육관
 
  /* the 분식집 table: one ! in its middle (markDx: between its two tiles), and A at the table, even from your seat, talks to
     whoever's turn it is (proxy); their own markers are off (nomark) */
