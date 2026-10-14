@@ -194,8 +194,12 @@ body.talkopen .gloss{position:fixed;top:calc(env(safe-area-inset-top,0px) + 14px
 #phonePanel{position:absolute;inset:0;z-index:4;display:flex;line-height:1.3}
 .screen:has(#phonePanel:not([hidden])) .gloss{z-index:6}
 .phone{flex:1;display:flex;min-width:0}
-.pscr{flex:1;min-width:0;background:#F4F5F7;color:#1D2227;overflow:hidden;display:flex;flex-direction:column;font-family:var(--body)}
-.pstat{display:flex;justify-content:space-between;align-items:center;background:#2F6149;color:#E8F2EC;font-family:var(--mono);font-size:.66rem;padding:3px 12px 1px;letter-spacing:.04em}
+/* the phone's own colors: light, or dark when the page is (the same device / theme switch as the chrome above) */
+.pscr{--p-bg:#F4F5F7;--p-ink:#1D2227;--p-card:#fff;--p-line:#DDE1E6;--p-meta:#7A828C;--p-acc:#3E7A5A;--p-stat:#2F6149;--p-bar:#3E7A5A;--p-photo:#E9E4D8;--p-cap:#3B3428}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pscr{--p-bg:#14181C;--p-ink:#E3E7E0;--p-card:#21272D;--p-line:#2E363D;--p-meta:#8E979F;--p-acc:#7CC49A;--p-stat:#1C3A2C;--p-bar:#28513D;--p-photo:#1E2226;--p-cap:#D8D2C4}}
+:root[data-theme="dark"] .pscr{--p-bg:#14181C;--p-ink:#E3E7E0;--p-card:#21272D;--p-line:#2E363D;--p-meta:#8E979F;--p-acc:#7CC49A;--p-stat:#1C3A2C;--p-bar:#28513D;--p-photo:#1E2226;--p-cap:#D8D2C4}
+.pscr{flex:1;min-width:0;background:var(--p-bg);color:var(--p-ink);overflow:hidden;display:flex;flex-direction:column;font-family:var(--body)}
+.pstat{display:flex;justify-content:space-between;align-items:center;background:var(--p-stat);color:#E8F2EC;font-family:var(--mono);font-size:.66rem;padding:3px 12px 1px;letter-spacing:.04em}
 .pst{display:inline-flex;align-items:center;gap:4px}
 .sig{display:inline-flex;align-items:flex-end;gap:1px;height:9px}
 .sig b{width:3px;background:#E8F2EC;border-radius:1px}
@@ -204,21 +208,26 @@ body.talkopen .gloss{position:fixed;top:calc(env(safe-area-inset-top,0px) + 14px
 .bat{display:inline-block;position:relative;width:15px;height:8px;border:1px solid #E8F2EC;border-radius:2px;box-sizing:border-box;padding:1px}
 .bat::after{content:"";position:absolute;right:-3px;top:2px;width:2px;height:3px;background:#E8F2EC;border-radius:0 1px 1px 0}
 .bat i{display:block;height:100%;background:#E8F2EC;border-radius:1px}
-.pbar{background:#3E7A5A;color:#fff;font-weight:700;font-size:.82rem;padding:6px 12px 7px;display:flex;justify-content:space-between}
-.ppost{background:#fff;padding:9px 12px;border-bottom:1px solid #DDE1E6;display:flex;flex-direction:column;gap:3px}
+.pbar{background:var(--p-bar);color:#fff;font-weight:700;font-size:.82rem;padding:6px 12px 7px;display:flex;justify-content:space-between}
+.ppost{background:var(--p-card);padding:9px 12px;border-bottom:1px solid var(--p-line);display:flex;flex-direction:column;gap:3px}
 .ppost b{font-size:1.12rem}
-.pmeta{font-size:.72rem;color:#7A828C;font-family:var(--mono)}
-.pcount{font-size:.78rem;color:#3E7A5A;font-weight:700;padding:7px 12px 4px}
+.pmeta{font-size:.72rem;color:var(--p-meta);font-family:var(--mono)}
+.pcount{font-size:.78rem;color:var(--p-acc);font-weight:700;padding:7px 12px 4px}
 .plist{flex:1;overflow:auto;padding:0 9px 9px;display:flex;flex-direction:column;gap:5px}
-.pc{background:#fff;border-radius:9px;padding:6px 10px;display:flex;flex-direction:column;gap:1px;line-height:1.35}
-.pc .pn{font-size:.7rem;color:#7A828C;font-family:var(--mono)}
+.pc{background:var(--p-card);border-radius:9px;padding:6px 10px;display:flex;flex-direction:column;gap:1px;line-height:1.35}
+.pc .pn{font-size:.7rem;color:var(--p-meta);font-family:var(--mono)}
 .pc .pt{font-size:1rem;font-weight:600;word-break:keep-all}
-.pmore{font-size:.78rem;color:#7A828C;text-align:center;padding:4px}
+.pmore{font-size:.78rem;color:var(--p-meta);text-align:center;padding:4px}
 /* an album photo on the phone screen (phone photo:): the pixel picture, faded when old, and its caption */
-.pphoto{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:12px;background:#E9E4D8}
+.pphoto{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:12px;background:var(--p-photo)}
 .pphoto canvas{width:min(62%,200px);height:auto;image-rendering:pixelated;image-rendering:crisp-edges;border:6px solid #FBF8F0;box-shadow:0 2px 6px rgba(0,0,0,.25);background:#C9D6E3}
 .pphoto.old canvas{filter:sepia(.55) contrast(.95) brightness(1.03)}
-.pcap{font-family:var(--body);font-weight:700;font-size:.95rem;color:#3B3428;text-align:center;word-break:keep-all}
+.pscr .tq{margin-left:6px;padding:0 5px;font:700 .68rem/1.35 var(--body);color:var(--p-meta);background:none;border:1px solid currentColor;border-radius:4px;cursor:pointer;vertical-align:1px}
+.pscr .tq.on{color:var(--p-acc)}
+/* a line's English, under it on the phone: smaller and quieter than the Korean */
+.pscr .ten{display:block;font-family:var(--body);font-weight:400;font-size:.8rem;line-height:1.35;color:var(--p-meta);word-break:normal}
+.pcapen{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
+.pcap{font-family:var(--body);font-weight:700;font-size:.95rem;color:var(--p-cap);text-align:center;word-break:keep-all}
 .items li[data-k]{cursor:pointer}.items li.sel{outline:2px solid var(--ink)}
 /* 문화 노트 and 문법 노트 in the journal: one look for both cards; a 문법 노트 lists its examples (예문) under its lines; both show
    each line's source numbers and the sources (출처) as links */
