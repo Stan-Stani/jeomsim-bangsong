@@ -513,6 +513,7 @@ const ads=()=>shops()===3;
 
 /* 느티고 (src/school.js): the 방송실, the 2층 and the 운동장 (festival stage, tents) are open; the 정문 leads to the 동네 상가 after the 상담. */
 const ZONES={...SCHOOL({open:['bcast','hall2','music','library','hagwon'],gate:{to:'street',x:10,y:8,dir:'down',lock:()=>!f().counsel&&'정문이에요. 아직 학교가 안 끝나서 못 나가요.'},zones:{
+ class:{things:{'J':'시간표예요. 오늘 오후는 국어하고 수학이에요.'}},  // only after school (the bell leaves you here)
  street:{things:{  // 학교 앞 (src/school.js) as 동네 상가: the 학원 door is open; ads in the windows, the evening
    'O':x=>{const F=f(),i=x<7?0:x<14?1:x<21?2:3;if(i===3)return '창문에 별 스티커가 붙어 있어요.';
     if(![F.shopM,F.shopB,F.shopP][i])return ['문구점 창문. 예쁜 공책하고 펜이 있어요.','창문 너머로 떡볶이가 보글보글.','편의점 창문. 컵라면이 줄줄이 있어요.'][i];
@@ -730,7 +731,7 @@ const NPC={
    {say:'수업 끝나고 가 봐요. 무리하지 말고요.',award:['상담','대학','목표','평가','빡빡하다']},
    {who:'…',sfx:'bell',say:'오후 수업이 시작됐어요.',black:1},  // class time is a time cut: over black, not over the 교무실
    {expand:()=>classTime(CLASS,['국어','수학'])},
-   {who:'학교 종',say:'딩동댕동… 오후 수업이 다 끝났어요.',black:0,set:()=>{f().counsel=1}},
+   {who:'학교 종',say:'딩동댕동… 오후 수업이 다 끝났어요.',black:0,set:()=>{f().counsel=1},go:['class',11,11,'up']},  // the bell leaves you at your desk (as in 2교시 and 3교시; the room's door out works)
     {who:'…',say:'찬한테 문자가 왔어요. "포스터 들고 동네 상가 왔어! 하리도 있어. 빨리 와!"'}]},
 
  kid:{name:'1학년 학생',zone:'hall',x:20,y:7,dir:'up',look:LOOK.kid,
@@ -780,7 +781,7 @@ const NPC={
    {say:'매점 이모 아니었어? 내 추리가 틀렸어?',face:'sad'},
    {say:'잠깐, 사진 찍자. 찰칵.',give:PHOTO},
    {say:'방송 끝나고 이거 교장 선생님한테 보여 드려.',face:'happy'},
-   {who:'…',say:'시간이 금방 가요. 곧 두 시, 생방송이에요.',set:()=>{f().clue=1}}]},
+   {who:'…',say:'시간이 금방 가요. 곧 두 시, 생방송이에요.',black:1,set:()=>{f().clue=1}}]},  // a time cut over black; the end of the talk brings the hall back
 
  /* ---------- 동네 상가 ---------- */
  chanT:{name:'남궁찬',zone:'street',x:8,y:8,dir:'right',look:LOOK.chan,banmal:1,
