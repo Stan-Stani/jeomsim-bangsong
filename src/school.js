@@ -162,11 +162,8 @@ const TILES={
   if(hash(x,y)%2){r(X+3,Y,10,6,'#A67E4A');r(X+3,Y,10,1,'#C49A6C');r(X+5,Y+2,5,1,'#4A3424');r(X+5,Y+4,3,1,'#4A3424')}},  // marker writing, not a white label (it read as a second 사연함)
   building:(X,Y,x,y)=>bldg(X,Y,x,y),
  clock:(X,Y,x,y)=>{bldg(X,Y,x,y);r(X,Y,16,16,'#E9E1D0');const cx=at(x-1,y)==='C'?X:X+16,cy=Y+8;inTile(X,Y,()=>{disc(cx,cy,8,'#3E4C5A');disc(cx,cy,7,'#F7F3E8');
-  g.fillStyle='#2B2E36';const F=state.f,hr=F.done?4:F.lunch?12.5:9.25,mn=F.done?0:F.lunch?30:15;
-  const hand=(a,len,w)=>{g.save();g.translate(cx,cy);g.rotate(a);g.fillRect(-w/2,-len,w,len);g.restore()};hand(hr/12*Math.PI*2,4,2);hand(mn/60*Math.PI*2,6,1)})},
-  clock:(X,Y,x,y)=>{bldg(X,Y,x,y);r(X,Y,16,16,'#E9E1D0');const cx=at(x-1,y)==='C'?X:X+16,cy=Y+8;inTile(X,Y,()=>{disc(cx,cy,8,'#3E4C5A');disc(cx,cy,7,'#F7F3E8');
-  g.fillStyle='#2B2E36';const F=state.f,hr=F.done?4:F.lunch?12.5:9.25,mn=F.done?0:F.lunch?30:15;
-  const hand=(a,len,w)=>{g.save();g.translate(cx,cy);g.rotate(a);g.fillRect(-w/2,-len,w,len);g.restore()};hand(hr/12*Math.PI*2,4,2);hand(mn/60*Math.PI*2,6,1)})},
+  g.fillStyle='#2B2E36';const [h,m]=C.clock?C.clock():[12,30],hr=h+m/60;  /* each 교시 says what time it is now (C.clock: [hour, minute]) */
+  const hand=(a,len,w)=>{g.save();g.translate(cx,cy);g.rotate(a);g.fillRect(-w/2,-len,w,len);g.restore()};hand(hr/12*Math.PI*2,4,2);hand(m/60*Math.PI*2,6,1)})},
   entrance:(X,Y,x,y)=>{r(X,Y,16,16,'#E9E1D0');r(X,Y+1,16,13,'#3E5E6E');r(X+1,Y+2,14,11,'#A9D8EC');r(X+2,Y+3,2,1,'#E6F6FC');const L=at(x-1,y)!=='E';r(L?X+15:X,Y+1,1,13,'#3E5E6E');r(L?X+12:X+3,Y+7,1,3,'#2B2E36');r(X,Y+14,16,2,'#C9C2B0')},
   bed:(X,Y,x,y)=>{r(X,Y+2,16,10,'#6E4A2E');r(X,Y+11,16,4,'#B5653A');r(X,Y+11,16,1,'#D07E52');r(X,Y+14,16,1,'#8A4A2A');const h=hash(x,y);
   [[2,4,'#F7D154'],[7,6,'#E86D8A'],[11,3,'#F7D154'],[13,7,'#FFFFFF'],[4,8,'#E86D8A']].forEach(([a,b,c],i)=>{if((h+i)%4){r(X+a,Y+b+1,1,2,'#3E8E3A');r(X+a-1,Y+b,3,1,c);r(X+a,Y+b-1,1,1,c)}})},

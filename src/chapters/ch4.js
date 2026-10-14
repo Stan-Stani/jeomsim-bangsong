@@ -1210,6 +1210,8 @@ const DONE=[{expand:()=>wrapUp()},{say:'구름 엄마도 축제 방송을 들었
  {say:'겨울. 태식 선배가 대학에 합격했어요.',black:1},'그 소식은 점심 방송으로 들었어요.','봄. 사연함에 새 쪽지가 있어요.',
  '교장 선생님 글씨가 아니에요.','"새 학기 사연 있어요. —복숭아 2호"','4교시 끝!',{say:'다시 축제 날, 오후 네 시예요.',black:0},'방송실 복습 노트북에서 단어를 다시 볼 수 있어요.'];
 
+/* what the 운동장 clock shows (its hands; the 'C' line says the same): lunch, 방과 후, the festival day's hours */
+const clock=()=>{const F=f();return F.done?[4,0]:F.live?[2,5]:F.clue?[1,50]:F.promise?[10,0]:F.counsel?[5,0]:[12,30]};
 function questText(){
  const F=f();
  if(F.done)return '4교시 끝! · 복습은 방송실 노트북에서';
@@ -1282,8 +1284,8 @@ const VARIANTS={
   r(X+2,Y+1,12,9,'#8A8E96');r(X+3,Y+2,10,7,'#F4F1E6');r(X+4,Y+3,8,2,on?'#FF6A5A':'#A8443C');r(X+5,Y+3,6,1,on?'#FFD0C8':'#C45A50');
   r(X+4,Y+6,3,1,'#3E4350');r(X+8,Y+6,4,1,'#3E4350');r(X+7,Y+10,2,1,'#8A8E96')},  // ON AIR at the festival
  clock:(X,Y,x,y)=>{bldg(X,Y,x,y);r(X,Y,16,16,'#E9E1D0');const cx=at(x-1,y)==='C'?X:X+16,cy=Y+8;inTile(X,Y,()=>{disc(cx,cy,8,'#3E4C5A');disc(cx,cy,7,'#F7F3E8');
-  g.fillStyle='#2B2E36';const F=state.f,hr=F.done?4:F.live?2.1:F.clue?1+50/60:F.promise?10:F.counsel?5:12.5,mn=!F.counsel?30:F.clue&&!F.live&&!F.done?50:F.live&&!F.done?5:0;
-  const hand=(a,len,w)=>{g.save();g.translate(cx,cy);g.rotate(a);g.fillRect(-w/2,-len,w,len);g.restore()};hand(hr/12*Math.PI*2,4,2);hand(mn/60*Math.PI*2,6,1)})},  // the festival day's hours
+  g.fillStyle='#2B2E36';const [h,mn]=clock(),hr=h+mn/60;
+  const hand=(a,len,w)=>{g.save();g.translate(cx,cy);g.rotate(a);g.fillRect(-w/2,-len,w,len);g.restore()};hand(hr/12*Math.PI*2,4,2);hand(mn/60*Math.PI*2,6,1)})},
  building:(X,Y,x,y)=>bldg(X,Y,x,y),  // the 축제 sign in the windows
  bed:(X,Y,x,y)=>{sandF(X,Y,x,y);r(X,Y+2,16,10,'#6E4A2E');r(X,Y+11,16,4,'#B5653A');r(X,Y+11,16,1,'#D07E52');r(X,Y+14,16,1,'#8A4A2A');const h=hash(x,y);
   [[2,4,'#F7D154'],[7,6,'#E86D8A'],[11,3,'#F7D154'],[13,7,'#FFFFFF'],[4,8,'#E86D8A']].forEach(([a,b,c],i)=>{if((h+i)%4){r(X+a,Y+b+1,1,2,'#3E8E3A');r(X+a-1,Y+b,3,1,c);r(X+a,Y+b-1,1,1,c)}});
@@ -1382,5 +1384,5 @@ const term={name:'복습 노트북',  // the 방송실 laptop (1교시 reviews i
  due:(n,k)=>{const d=dueWords(),old=d.filter(w=>!WORDS.includes(w)).length;
   return `복습할 단어가 ${n}개 있어요.`+(k<n?` 이번에는 ${k}개만 해요.`:'')+(old&&old===d.length?' 다 1~3교시 단어예요.':old?' 1~3교시 단어도 있어요.':'')},
  allWords:n=>[`단어 ${n}개를 다 모았어요!`,'다시 맞힐수록 ★가 늘어나요. 사람들이 또 물어볼 거예요.']};
-return {WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,PHOTOS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,TILES,VARIANTS,PLAYER,term};
+return {WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,PHOTOS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,term};
 }});

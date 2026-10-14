@@ -945,6 +945,8 @@ const FOLLOW=null;
 const INTRO=[{who:'…',say:'다음 날 점심시간. 방송실.'},{who:'…',say:'구름이 큰 종이를 들고 기다려요.'}];
 const DONE=[{say:'사연함에 카세트가 하나 들어 있어요.',set:()=>{f().quiet=1}},'"1994 방송부 · 복숭아" 쪽지: "목소리 좋다. 다음은 이야기."','구름이 쪽지를 오래 봐요. "1994년…? 우리 방송부 선배?"','2교시 끝!',{expand:()=>wrapUp()},'방송실 책상 위 복습 노트북에서 단어를 다시 볼 수 있어요.'];
 
+/* what the 운동장 clock shows: lunch, 방과 후 at the 분식집, the next day's lunch (the first broadcast) */
+const clock=()=>{const F=f();return F.done?[12,50]:F.nextDay?[12,30]:F.afterSchool?[4,30]:[12,30]};
 function questText(){
  const F=f();
  if(F.done)return dueWords().length?'2교시 끝 · 방송실 복습 노트북':'2교시 끝! · 3교시로 가요';
@@ -1056,5 +1058,5 @@ const TILES={...SCHOOL_TILES,...VARIANTS,
 };
 const PLAYER=LOOK.player;
 const term={name:'복습 노트북'};  // the 방송실 laptop (1교시 reviews in a paper 복습 노트); earlier 교시' due words show from the start (walk-engine aff7b40)
-return {WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,TILES,VARIANTS,PLAYER,seatPulled,seatPulledN,term};  // the school's desks and tables ask these whether a chair is pulled out
+return {WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,seatPulled,seatPulledN,term};  // the school's desks and tables ask these whether a chair is pulled out
 }});

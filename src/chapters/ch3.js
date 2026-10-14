@@ -367,6 +367,7 @@ const has=w=>state.badges.includes(w);
 /* ---------- zones ---------- */
 /* 느티고 (src/school.js): the 방송실, the 매점 (in the 급식실) and the 2층 (도서관, 음악실) are open; the 정문 leads to 학교 앞 once school's out. */
 const ZONES={...SCHOOL({open:['cafe','hall2','music','library','bcast'],gate:{to:'street',x:10,y:8,dir:'up',lock:()=>!f().toNR&&'학교가 끝나야 밖에 나갈 수 있어요.'},zones:{
+ class:{things:{'J':'시간표예요. 오늘 오후는 국어하고 영어예요.'}},  // only after school (the bell leaves you here)
  bcast:{paint:[[13,0,'b'],[7,2,'T']],  // the 방송실's 사연함 (as in 2교시 and 4교시): the poster points to its slot by the door
   things:{'#':['벽에 하리 첫 방송 사진이 붙어 있어요.','벽에 "방송 중 조용히!" 종이가 있어요.','먼지를 닦아서 벽이 깨끗해졌어요.'],
    'b':()=>f().letter?'사연함이에요. 오늘도 편지가 오면 좋겠어요.':f().secret?'사연함 안에 편지가 있어요! 하리가 열쇠를 가지고 있어요.'
@@ -550,8 +551,8 @@ const NPC={
    {say:'신발장 옆 문으로 나가. 늦으면 벌금이야.'},
    {who:'…',sfx:'bell',say:'점심시간 끝. 오후 수업이 시작됐어요.',black:1},  // class time is a time cut: over black, not over the 방송실
    {expand:()=>classTime(CLASS,['국어','영어'])},
-   {who:'학교 종',say:'딩동댕동… 오후 수업이 다 끝났어요.',black:0},
-   {who:'…',say:'방과 후. 다온이 구름 손을 잡고 먼저 나갔어요.',award:['무시하다'],set:()=>{f().toNR=1},leave:[{npc:'daonB',to:[7,0]},{npc:'gureum',to:[8,0]}]}]},
+   {who:'학교 종',say:'딩동댕동… 오후 수업이 다 끝났어요.',black:0,go:['class',11,11,'up']},  // the bell leaves you at your desk (its door out works; the room stays shut before)
+   {who:'…',say:'방과 후. 다온은 벌써 구름을 데리러 방송실로 갔어요.',award:['무시하다'],set:()=>{f().toNR=1}}]},
 
  gureumFin:{name:'백구름',zone:'bcast',x:5,y:3,dir:'up',look:LOOK.gureum,banmal:1,badge:['감동'],
   hide:()=>!f().secret,
@@ -1006,6 +1007,8 @@ const FOLLOW={name:'남궁찬',look:LOOK.chan,when:()=>!!f().letter&&!f().juice,
 const INTRO=[{who:'…',say:'하리의 첫 방송 뒤, 방송실이 밝아졌어요.'},{who:'…',say:'월요일 아침. 구름이 벌써 기계 앞에 있어요.',cam:[5,3]}];
 const DONE=[{expand:()=>wrapUp()},{say:'방송이 끝나자 교무실 마이크로 교장 선생님 방송이 나와요.',set:()=>{f().quiet=1}},'"축제가 끝나면 방송실은 심화반 교실이 됩니다."',{say:'그 순간, 방송 기계에서 펑! 연기가 나요.',set:()=>{f().smoke=1}},'다섯 명이 아무 말도 못 하고 서로 쳐다봐요.',{say:'3교시 끝!',set:()=>{f().ended=1}},'방송실 복습 노트북에서 단어를 다시 볼 수 있어요.'];
 
+/* what the 운동장 clock shows: Monday morning, lunch (from the rumor), 방과 후, the next morning, its lunch (the 사연 코너) */
+const clock=()=>{const F=f();return F.done?[12,50]:F.juice?[12,30]:F.secret?[8,20]:F.toNR?[4,30]:F.rumor?[12,40]:[8,30]};
 function questText(){
  const F=f();
  if(F.done)return !F.ended?'방송실 · 구름 마무리 멘트':dueWords().length?'3교시 끝 · 방송실 복습 노트북':'3교시 끝! · 4교시로 가요';
@@ -1128,5 +1131,5 @@ function car(X,Y,x,y,t){if(y!==4&&y!==5)return;const W=MW*16+96,cx=y===4?((t/9)%
  inTile(X,Y,()=>{const bx=X+px,c=y===4?'#D2533F':'#F2C46B';r(bx,Y+4,30,9,c);r(bx+6,Y+2,16,5,c);r(bx+8,Y+3,5,3,'#BFE3F0');r(bx+15,Y+3,5,3,'#BFE3F0');r(bx+3,Y+12,5,3,'#1B1E2B');r(bx+22,Y+12,5,3,'#1B1E2B');r(y===4?bx+28:bx,Y+6,2,2,'#FFF3C4')})}
 const PLAYER=LOOK.player;
 const term={name:'복습 노트북'};  // the 방송실 laptop (1교시 reviews in a paper 복습 노트)
-return {WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,TILES,VARIANTS,PLAYER,term};
+return {WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,term};
 }});

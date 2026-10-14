@@ -849,6 +849,8 @@ const FOLLOW=null;
 const INTRO=[{who:'…',say:'봄.'},{who:'…',say:'전학 첫날이에요.'},{who:'…',say:'그런데 버스가 십오 분 늦었어요.'},{who:'…',say:'여기가 느티고등학교. 진짜 큰 나무가 있어요.'}];
 const DONE=[{say:'노래는 곧 멈췄어요. 복도가 다시 조용해요.',set:()=>{f().quiet=1}},'저쪽 신발장에 분홍색 종이가 보여요.','1교시 끝!',{expand:()=>wrapUp()},'교실 교탁 위에 {복습 노트|복습 노트}가 있어요.'];
 
+/* what the 운동장 clock shows (its hands; the 'C' line says the same): late morning, lunch, just before 종례, 하교 */
+const clock=()=>{const F=f();return F.crew3?[4,0]:F.deal?[3,50]:F.lunch?[12,30]:[9,15]};
 function questText(){
  const F=f();
  if(F.done)return dueWords().length?'1교시 끝 · 교탁 위 복습 노트':'1교시 끝! · 2교시로 가요';
@@ -890,5 +892,5 @@ const VARIANTS={
 const TILES={...SCHOOL_TILES,...VARIANTS,
 };
 const PLAYER=LOOK.player;
-return {WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,TILES,VARIANTS,PLAYER,seatPulled,seatPulledN};  // the school's desks and tables ask these whether a chair is pulled out
+return {WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,seatPulled,seatPulledN};  // the school's desks and tables ask these whether a chair is pulled out
 }});
