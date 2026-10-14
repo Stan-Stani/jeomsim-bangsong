@@ -911,7 +911,7 @@ look:LOOK.hanT,
    {who:'오다온',say:'맞아. 혼자 고민하면 벌금이야.',face:'happy'},
    {who:'유하리',say:'선배, 그럼 다 같이 한 곡 해요!',face:'happy',move:{npc:'hariNR',to:[4,5],dir:'right'}},
    {who:'…',say:'다섯 명이 다 같이 노래했어요.',cam:[5,5]},
-   {who:'…',say:'그리고 다음 날 아침. 다시 학교예요.',award:['고민하다'],set:()=>{f().secret=1},go:['hall',5,8,'up']}]},
+   {who:'…',say:'그리고 다음 날 아침. 다시 학교예요.',black:1,award:['고민하다'],set:()=>{f().secret=1},go:['hall',5,8,'up']}]},  // the night is a time cut over black; the end of the talk brings up the 1층 hall
 
  /* ---------- extras: one-off students so the school feels lived-in. No badges, no teaching.
     Day one (before toNR): 매점, board corner and library are busy; after the rumor they talk about it.
