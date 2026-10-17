@@ -3658,10 +3658,10 @@ look:LOOK.hanT,
    {who:'…',say:'덜컹, 덜컹… 복숭아 주스 다섯 개!',give:'복숭아 주스',sfx:'item',set:()=>{f().canned=1}},
    {who:'남궁찬',say:'…이모 아니면 누구지? 더 궁금해.',face:'think',cam:null},
    {say:'주스는 점심 방송 전에 하리 학생 줘요. 방송 잘 들을게요!',face:'happy'},
-   {who:'…',sfx:'bell',say:'수업 종이 울려요. 다들 교실로 뛰어가요.',black:1},  // class time is a time cut: over black, not over the 매점
+   {who:'…',sfx:'bell',say:'수업 종이 울려요. 다들 교실로 뛰어가요.',black:1,set:()=>{f().juice=1}},  // class time is a time cut: over black, not over the 매점. juice ends 찬's following here, under black (set after the bell, he flashed beside your desk)
    {expand:()=>classTime(CLASS,['과학'])},
    {who:'학교 종',say:'딩동댕동… 점심시간이에요.',black:0,go:['class',11,11,'up']},  // the bell leaves you at your desk, not at the 매점
-   {who:'…',say:'찬이 먼저 방송실로 뛰어갔어요.',award:['복숭아'],set:()=>{f().juice=1}}]},
+   {who:'…',say:'찬이 먼저 방송실로 뛰어갔어요.',award:['복숭아']}]},
 
  daonBoard:{name:'오다온',zone:'hall',x:18,y:2,dir:'up',look:LOOK.daon,banmal:1,badge:['붙다'],
   hide:()=>!!f().sawComments,
@@ -5660,7 +5660,7 @@ globalThis.GRAMMAR_NOTES={
 </script>
 <script>
 /* This build (version.json): v = a hash of the game, t = when this version first appeared. */
-globalThis.BUILD={"v": "21415f19", "t": "2026-10-17T02:49Z"};
+globalThis.BUILD={"v": "e0470596", "t": "2026-10-17T02:57Z"};
 </script>
 <script>
 /* GENERATED from walk-engine/engine.js (fb80c2f) — do not edit here; edit walk-engine and run its sync.sh. */
