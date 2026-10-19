@@ -4,6 +4,11 @@
  {check:()=>ZID==='yard'&&player.x<=8,msg:'the first view starts by the 느티나무'},
  {inspect:['yard',3,9],shot:'02-zelkova'},
  {talk:'guard',shotBefore:'02b-yard-gate'},
+ // Optional stories leave the main route and teaching inventory alone.
+ {check:()=>{window.__sideMain=JSON.stringify([state.badges,state.items,C.questText()]);return C.WORDS.length===20},msg:'side stories add no taught words'},
+ {talk:'xBench1',shotSay:{text:'소개팅',name:'side1-morning-bench'}},
+ {talk:'xSoc1'},{talk:'xSenior'},{talk:'xNotice'},
+ {check:()=>['bench','soccer','senior','notice'].every(k=>state.f['side_'+k+'_0'])&&JSON.stringify([state.badges,state.items,C.questText()])===window.__sideMain,msg:'all four morning visits are optional and exposure only'},
  {bump:['hall','R']},
  {talk:'mathT'},{talk:'musicT'},  // the other teachers at their desks (수학 선생님 points to 정 선생님's seat)
  {talk:'jung',wrong:true,shotBefore:'03-teachers-office',shotChoice:'03a-teacher-question',shotTap:'03b-tap-word'},
@@ -39,6 +44,10 @@
  {check:()=>{$('gnoteCard').querySelector('.nex .w').click();return !$('gloss').hidden},msg:'a word in the note opens the dictionary'},
  {check:()=>{cancel();const g=$('gloss').hidden&&!$('panel').hidden;cancel();return g&&$('panel').hidden},msg:'B closes the word help, then the 일지'},
  {check:()=>{const seen=[];for(let i=0;i<4&&!$('noteChip').hidden;i++){seen.push($('noteChip').dataset.k);$('noteChip').click();cancel()}return seen.join()==='geodeun,lge'&&$('noteChip').hidden},msg:'the other new 문법 노트 (-거든, then -ㄹ게) wait their turn on the chip'},
+ {check:()=>{window.__sideMain=JSON.stringify([state.badges,state.items,C.questText()]);return true},msg:'before optional lunch visits'},
+ {talk:'xBench2',shotSay:{text:'좋아요가',name:'side1-lunch-post'}},
+ {talk:'xSoc2'},{talk:'xSenior'},{talk:'xNotice',shotSay:{text:'주저',name:'side1-lunch-help'}},
+ {check:()=>['bench','soccer','senior','notice'].every(k=>state.f['side_'+k+'_1'])&&JSON.stringify([state.badges,state.items,C.questText()])===window.__sideMain,msg:'all four lunch visits work through friends too; no badges, items or quest changes'},
  {bump:['hall','Q']},
  // both tiles of the two-tile cafeteria door must open (the playthrough found only the left one did)
  {walkTo:['hall',17,8]},
@@ -73,8 +82,15 @@
  {check:()=>!camT,msg:'camera back on the player after 종례'},
  {check:()=>state.f.crew3,msg:'crew of three'},
  {check:()=>state.badges.length===C.WORDS.length,msg:'all words collected'},
+ {talk:'xBench1',shotSay:{text:'다정한 분',name:'side1-after-bench'}},
+ {talk:'xSoc1',shotSay:{text:'떡볶이 줄',name:'side1-after-soccer'}},
+ {talk:'xSenior',shotSay:{text:'밥은 먹었니',name:'side1-after-senior'}},
+ {talk:'xNotice',shotSay:{text:'어쨌든',name:'side1-after-notice'}},
+ {check:()=>['bench','soccer','senior','notice'].every(k=>state.f['side_'+k+'_2'])&&state.badges.length===20,msg:'all four after-homeroom visits leave the taught inventory at twenty'},
  {talk:'gureumH',shotSay:{text:'지지직',name:'11-speaker-crackles'}},
  {check:()=>state.f.done,msg:'chapter done'},
+ {talk:'xBench1'},{talk:'xSoc1'},{talk:'xSenior'},{talk:'xNotice'},  // each ordinary after line remains available after done
+
  {inspect:['hall',2,9],shot:'12-shoe-locker-note'},
  {talk:'guard'},
  {clock:26*3600e3},

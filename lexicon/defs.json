@@ -3378,8 +3378,8 @@
 },
 "끼": null,
 "끼다": {
-"e": "to put on (gloves)",
-"k": "손이나 몸에 넣어 입어요."
+"e": "to join in; to put on (gloves, a ring)",
+"k": "여럿이 하는 일에 함께 들어가요. · 장갑이나 반지를 손에 넣어요."
 },
 "끼어들다": {
 "e": "to butt in, interrupt",
@@ -4527,8 +4527,8 @@
 "k": "떳떳하고 힘 있는 모양."
 },
 "당신": {
-"e": "you",
-"k": "'너'를 높인 말."
+"e": "you (formal, dramatic or between spouses; context matters)",
+"k": "상대를 가리키는 말. 부부 사이나 드라마 대사에서 써요. 아무에게나 쓰면 무례할 수 있어요."
 },
 "당연하다": {
 "e": "to be natural, obvious",
@@ -7226,8 +7226,8 @@
 "k": "아주 싫어해요."
 },
 "미치다": {
-"e": "to go mad",
-"k": "생각이 정상이 아니게 돼요."
+"e": "to go crazy; to be crazy about something",
+"k": "정신이 이상해져요. · 무엇을 아주 많이 좋아해요."
 },
 "미크": {
 "e": "Mique — character name",
@@ -12633,8 +12633,8 @@
 "k": "숫자 500이에요."
 },
 "오빠": {
-"e": "older brother (of a female)",
-"k": "여자가 부르는 나이 많은 남자 형제."
+"e": "older brother; older male friend (said by a girl or woman)",
+"k": "여자가 자기보다 나이 많은 남자 형제나 가까운 남자를 부르는 말."
 },
 "오스클로": {
 "e": "Ossclaw — beast",
@@ -18709,8 +18709,8 @@
 "k": "집의 말. 가운데 모이는 곳."
 },
 "허언증": {
-"e": "compulsive lying",
-"k": "거짓말을 자꾸 하는 병."
+"e": "compulsive lying; “always making things up” (teasing here)",
+"k": "거짓말을 자꾸 한다고 할 때 쓰는 말. 여기서는 친구가 장난으로 해요."
 },
 "헉": {
 "e": "gasp! (shock)",
@@ -19998,5 +19998,81 @@
 "빌려주다": {
 "k": "내 것을 남이 잠깐 쓰게 해요.",
 "e": "to lend"
+},
+"건우": {
+"e": "Geonu — a second-year student, Junseo’s friend",
+"k": "2학년 학생. 준서의 친구예요."
+},
+"그만큼": {
+"e": "that much; as much as that",
+"k": "그것과 같은 정도로."
+},
+"도현": {
+"e": "Dohyeon — a third-year student worried about his mock exam",
+"k": "모의고사 때문에 걱정하는 3학년 학생."
+},
+"민서": {
+"e": "Minseo — a first-year student going on a blind date",
+"k": "소개팅을 앞둔 1학년 학생."
+},
+"발밑": {
+"e": "under one’s feet; where one steps",
+"k": "발 아래쪽. 발로 밟는 곳."
+},
+"뺏다": {
+"e": "to take away; to snatch",
+"k": "남의 물건을 억지로 가져가요."
+},
+"성적표": {
+"e": "report card; exam results sheet",
+"k": "시험 점수나 학교 성적을 적은 종이."
+},
+"시우": {
+"e": "Siu — a quiet first-year student",
+"k": "조용한 1학년 학생."
+},
+"실제로": {
+"e": "in reality; actually",
+"k": "이야기 속이 아니라, 진짜로."
+},
+"에휴": {
+"e": "sigh; oh dear",
+"k": "힘들거나 답답해서 내는 소리."
+},
+"연기하다": {
+"e": "to act; to perform a role",
+"k": "다른 사람이 된 것처럼 말하고 행동해요."
+},
+"연두": {
+"e": "Yeondu — a first-year student, Minseo’s friend",
+"k": "1학년 학생. 민서의 친구예요."
+},
+"장면": {
+"e": "scene",
+"k": "이야기나 드라마의 한 부분."
+},
+"조언": {
+"e": "advice",
+"k": "도움이 되라고 해 주는 말."
+},
+"준서": {
+"e": "Junseo — a second-year student who loves soccer and stories",
+"k": "축구와 이야기를 좋아하는 2학년 학생."
+},
+"지폐": {
+"e": "banknote; paper money",
+"k": "종이로 만든 돈."
+},
+"짚다": {
+"e": "to brace or rest a hand on",
+"k": "손이나 막대를 대고 몸을 받쳐요."
+},
+"퍼뜨리다": {
+"e": "to spread",
+"k": "여러 곳이나 여러 사람에게 전해지게 해요."
+},
+"화상(핀잔)": {
+"e": "you clown; that fool (a mild scolding)",
+"k": "못마땅한 사람을 가볍게 나무라는 말. 여기서는 자기 자신에게 해요."
 }
 }
