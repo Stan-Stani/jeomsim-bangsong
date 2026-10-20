@@ -519,7 +519,7 @@ const kindTo=line=>({say:line,face:'happy',when:third});
 const ads=()=>shops()===3;
 
 /* 느티고 (src/school.js): the 방송실, the 2층 and the 운동장 (festival stage, tents) are open; the 정문 leads to the 동네 상가 after the 상담. */
-const ZONES={...SCHOOL({open:['bcast','hall2','music','library','hagwon','class','cafe','gym'],gate:{to:'street',x:10,y:8,dir:'down',lock:()=>!f().counsel&&'정문이에요. 아직 학교가 안 끝나서 못 나가요.'},zones:{
+const ZONES={...SCHOOL({open:['bcast','hall2','music','library','hagwon','class','cafe','gym'],gate:{to:'street',x:10,y:8,dir:'up',lock:()=>!f().counsel&&'정문이에요. 아직 학교가 안 끝나서 못 나가요.'},zones:{
  class:{things:{'J':()=>f().promise?'시간표예요. 오늘은 축제라서 수업이 없어요.':'시간표예요. 오늘 오후는 국어하고 수학이에요.'},npcs:['k4A','k4B','k4C','k4D']},  // classmates at lunch; on festival morning the 3반 복숭아 주스 booth is getting ready here
  cafe:{things:{'M':()=>f().promise?'오늘은 축제라서 급식이 없어요. 매점만 열어요.':'오늘의 메뉴: 밥, 미역국, 제육볶음, 김치.'},npcs:['c4Imo','c4K1','c4K2','c4K3']},
  gym:{npcs:['g4D1','g4D2','g4T']},  // the 댄스 동아리 practising for the festival
@@ -701,7 +701,7 @@ const SIDE={
    {who:'연두',say:'"만져도 돼?" 하고 물어봐요.',look:LOOK.yeondu},
    {who:'민서',say:'고양이가 손에 머리를 비벼요.',look:LOOK.minseo,face:'happy'},
    {who:'연두',say:'이제 둘이 같이 낮잠을 자요.',look:LOOK.yeondu},
-   {who:'나',say:'고양이 마음도 기다려 줬네.',look:LOOK.player},
+   {who:'나',say:'고양이 마음도 기다려 줬네.'},
   ],
   [
    {who:'민서',say:'다음엔 강아지 얘기도 써 볼까요?',look:LOOK.minseo},
@@ -740,7 +740,7 @@ const SIDE={
  exam:[
   [
    {who:'도현',say:'이번 시험은 답 칸 안 밀렸어.',look:LOOK.dohyeon},
-   {who:'나',say:'선배, 친구들이랑 공부하셨죠?',look:LOOK.player},
+   {who:'나',say:'선배, 친구들이랑 공부하셨죠?'},
    {who:'도현',say:'응. 모르는 건 서로 물어봤어.',look:LOOK.dohyeon},
    {who:'도현',say:'범생 흉내는 이제 안 내려고.',look:LOOK.dohyeon},
    {who:'도현',say:'모르면 뭐든 물어보면 되더라.',look:LOOK.dohyeon},
@@ -748,11 +748,11 @@ const SIDE={
   ],
   [
    {who:'도현',say:'성적표가 나왔어. 조금 올랐어.',look:LOOK.dohyeon},
-   {who:'나',say:'잘됐네요. 오늘도 학원 가세요?',look:LOOK.player},
+   {who:'나',say:'잘됐네요. 오늘도 학원 가세요?'},
    {who:'도현',say:'응. 내 발 좀 봐.',look:LOOK.dohyeon},
    {who:'도현',say:'학원 안 가려는 발의 몸부림이야.',look:LOOK.dohyeon},
    {who:'도현',say:'농담이야. 잠깐 쉬는 중이야.',look:LOOK.dohyeon,face:'happy'},
-   {who:'나',say:'물 마시면서 쉬세요.',look:LOOK.player},
+   {who:'나',say:'물 마시면서 쉬세요.'},
   ],
   [
    {who:'도현',say:'오늘은 친구랑 축제 보려고.',look:LOOK.dohyeon},
