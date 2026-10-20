@@ -495,6 +495,12 @@ const REVIEW=[
 
 const ITEMS={'광고 포스터':'"축제 생방송! 토요일 두 시, 운동장 무대. —방송부"','부품':'편의점 사장님이 준 퓨즈 두 개. 조그맣고 은색이에요.',
  '앨범 사진':'찬이 폰으로 찍은 사진. "1994 방송부 · 디제이 한복순 (복숭아)"'};
+/* after school on day one (the 상담 done, before festival morning): the school's rooms are shut */
+const afterT=()=>!!state.f.counsel&&!state.f.promise;
+/* classroom chairs and the 급식실's orange stools (as in 1교시) */
+const CHAIR_N4={art:{pal:{O:'#1B1E2B',h:'#6C8DAD',w:'#4F6F8F',m:'#6F757C'},back:4,lift:5,
+ down:['.OOOOOOOO.','.OhhhhhhO.','.OwwwwwwO.','.OwwwwwwO.','OOOOOOOOOO','OhhhhhhhhO','OOOOOOOOOO','.m......m.']}};
+const CAFE_STOOL_N4={art:{pal:{O:'#1B1E2B',e:'#E07A5A',E:'#B85E44',m:'#6F757C'},drop:0,lift:10,down:['.OOOOOOOO.','.OeeeeeeO.','.OOOOOOOO.','..m....m..']}};
 const f=()=>state.f;
 const hasItem=i=>state.items.includes(i);
 const has=w=>state.badges.includes(w);
@@ -513,8 +519,10 @@ const kindTo=line=>({say:line,face:'happy',when:third});
 const ads=()=>shops()===3;
 
 /* 느티고 (src/school.js): the 방송실, the 2층 and the 운동장 (festival stage, tents) are open; the 정문 leads to the 동네 상가 after the 상담. */
-const ZONES={...SCHOOL({open:['bcast','hall2','music','library','hagwon'],gate:{to:'street',x:10,y:8,dir:'down',lock:()=>!f().counsel&&'정문이에요. 아직 학교가 안 끝나서 못 나가요.'},zones:{
- class:{things:{'J':'시간표예요. 오늘 오후는 국어하고 수학이에요.'}},  // only after school (the bell leaves you here)
+const ZONES={...SCHOOL({open:['bcast','hall2','music','library','hagwon','class','cafe','gym'],gate:{to:'street',x:10,y:8,dir:'down',lock:()=>!f().counsel&&'정문이에요. 아직 학교가 안 끝나서 못 나가요.'},zones:{
+ class:{things:{'J':'시간표예요. 오늘 오후는 국어하고 수학이에요.'},npcs:['k4A','k4B','k4C','k4D']},  // classmates at lunch; on festival morning the 3반 떡볶이 booth is getting ready here
+ cafe:{things:{'M':()=>f().promise?'오늘은 축제라서 급식이 없어요. 매점만 열어요.':'오늘의 메뉴: 밥, 미역국, 제육볶음, 김치.'},npcs:['c4Imo','c4K1','c4K2','c4K3']},
+ gym:{npcs:['g4D1','g4D2','g4T']},  // the 댄스 동아리 practising for the festival
  street:{things:{  // 학교 앞 (src/school.js) as 동네 상가: the 학원 door is open; ads in the windows, the evening
    'O':x=>{const F=f(),i=x<7?0:x<14?1:x<21?2:3;if(i===3)return '창문에 별 스티커가 붙어 있어요.';
     if(![F.shopM,F.shopB,F.shopP][i])return ['문구점 창문. 예쁜 공책하고 펜이 있어요.','창문 너머로 떡볶이가 보글보글.','편의점 창문. 컵라면이 줄줄이 있어요.'][i];
@@ -538,7 +546,8 @@ const ZONES={...SCHOOL({open:['bcast','hall2','music','library','hagwon'],gate:{
    'c':'옛날 녹음기예요. 테이프가 걸려 있어요.',
    'x':['상자에 "축제 1998"이라고 쓰여 있어요.','상자 안에 전선이 가득해요.','상자가 무거워요. 안 움직여요.']},
   npcs:['gureumA','gureumF','daonA']},
- hall:{locks:{class:()=>f().clue?'2학년 3반 교실이에요. 다들 운동장에 있어요.':'2학년 3반 교실이에요. 다들 축제 준비로 바빠요.'},
+ hall:{locks:{class:()=>f().clue?'2학년 3반 교실이에요. 다들 운동장에 있어요.':afterT()&&'2학년 3반 교실이에요. 다들 학원에 갔어요.',
+   cafe:()=>f().clue?'급식실이에요. 다들 운동장에 있어요.':afterT()&&'급식실이에요. 오늘은 문을 닫았어요.'},
   legend:{'b':{tile:'sayeonSlot'}},paint:[[26,9,'b']],  // the 사연함's slot, right of the 방송실 door (the box is behind the wall)
   things:{'b':()=>f().done?'방송실 사연함 구멍이에요. 오늘 사연이 많이 들어왔어요.':'방송실 사연함 구멍이에요. "축제 사연도 환영!"',
    '#':(x,y)=>y===0&&x<16?['하얀 벽이에요. 아래쪽은 초록색이에요.','깨끗한 벽이에요. 먼지 하나 없어요.']  // inside the 교무실 and the 교장실
@@ -559,7 +568,8 @@ const ZONES={...SCHOOL({open:['bcast','hall2','music','library','hagwon'],gate:{
    'W':['창밖에 운동장하고 느티나무가 보여요.','창밖에 축제 무대가 보여요.'],
    'q':()=>f().done?'"방송실" 표지판. 빨간 불이 아직 깜빡깜빡해요.':f().fixed?'"방송실" 표지판. 빨간 불이 켜졌어요.':'"방송실" 표지판이에요. 문 옆에 있어요.'},
   npcs:['jung','taesikO','principal','chanP','kid','xA','xB','xC','xD','xE','xF','xG','xH']},
- yard:{legend:{'u':{tile:'stageSpk'},'B':{tile:'banner'},'s':{tile:'stage',walk:1},'e':{tile:'stageEdge'},'z':{tile:'stageStep',walk:1},'m':{tile:'pmixer'},'k':{tile:'tent'}},
+ yard:{locks:{gym:()=>f().clue?'체육관이에요. 다들 운동장에 있어요.':afterT()&&'체육관이에요. 오늘은 문을 닫았어요.'},
+  legend:{'u':{tile:'stageSpk'},'B':{tile:'banner'},'s':{tile:'stage',walk:1},'e':{tile:'stageEdge'},'z':{tile:'stageStep',walk:1},'m':{tile:'pmixer'},'k':{tile:'tent'}},
   paint:[[16,4,'uBBBBBu'],[16,5,'sssssss'],[16,6,'sssssss'],[14,7,'m'],[16,7,'eezzeee'],[2,11,'kk.kk']],
   rooms:[[1,4,10,12,'운동장 · 느티나무'],[13,4,22,8,'운동장 · 축제 무대'],[13,9,22,12,'운동장'],[24,5,30,12,'운동장 · 체육관 앞']],
   things:{'H':['느티고등학교 건물이에요. 창문이 반짝여요.','3층 창문에 "축제" 글씨가 붙어 있어요.','오래된 건물이지만 깨끗해요.'],
@@ -604,6 +614,16 @@ const ZONES={...SCHOOL({open:['bcast','hall2','music','library','hagwon'],gate:{
   npcs:['silJang','hgStudent','taesikH']}};
 
 const LOOK={
+ c4Imo:{hair:'#4A3A34',skin:'#D9A882',shirt:'#F2E6C8',pants:'#6B5B4B',style:'bun',lashes:1,lips:'#C06A6A'},
+ c4K1:{hair:'#2A2220',skin:'#F2CEAE',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#3F7D5A',style:'short'},
+ c4K2:{hair:'#3A2824',skin:'#E4B894',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'long',lashes:1,lips:'#D27C86'},
+ c4K3:{hair:'#4A382E',skin:'#E2B48E',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#C9A13A',style:'short'},
+ g4D1:{hair:'#1F1A1E',skin:'#F0CDAF',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#3F7D5A',style:'long',lashes:1,lips:'#D27C86'},
+ g4D2:{hair:'#2E2622',skin:'#DCAA84',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'spiky'},
+ k4A:{hair:'#2C2422',skin:'#E0B28C',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'short'},
+ k4B:{hair:'#1F1A1C',skin:'#F0C9A8',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'long',lashes:1,lips:'#CC7680'},
+ k4C:{hair:'#5A3E2C',skin:'#E8BE98',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'spiky'},
+ k4D:{hair:'#2A2024',skin:'#D6A27C',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'bob',lashes:1,lips:'#C46E78'},
  minseo:{hair:'#2B1F1F',skin:'#F0CBAA',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#3F7D5A',style:'long',lashes:1,lips:'#D0808A'},
  yeondu:{hair:'#4A3226',skin:'#E6BC98',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#3F7D5A',style:'bob',lashes:1,lips:'#C97680'},
  junseo:{hair:'#1E1A1C',skin:'#D29C76',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'short'},
@@ -754,6 +774,40 @@ function sideScene(key){
 }
 
 const NPC={
+ /* ---------- 2학년 3반, the 급식실 and the 체육관: lunch on day one and festival morning (closed after school and during the show).
+    No badges, no teaching. ---------- */
+ k4A:{name:'반 친구',zone:'class',x:3,y:7,dir:'up',look:LOOK.k4A,sit:1,chair:CHAIR_N4,banmal:1,hide:()=>afterT()||!!f().clue,
+  talk:()=>f().promise?[{say:'떡볶이 판 다 닦았어! 이제 손님만 오면 돼.',face:'happy'}]
+   :[{say:'방송실 기계 탔다며? 진짜 괜찮아?',face:'surprised'},{say:'축제 방송, 우리 반도 들으러 갈게.'}]},
+ k4B:{name:'반 친구',zone:'class',x:6,y:7,dir:'up',look:LOOK.k4B,sit:1,chair:CHAIR_N4,banmal:1,hide:()=>afterT()||!!f().clue,
+  talk:()=>f().promise?[{say:'가게 이름은 "3반 떡볶이". 다온이가 정했어.'},{say:'…이름 정하는 데 한 시간 걸렸어.'}]
+   :[{say:'축제 사흘 남았어. 떡볶이 연습해야 돼.'},{say:'다온이는 방송부 때문에 바쁘대. 이해해.'}]},
+ k4C:{name:'반 친구',zone:'class',x:2,y:9,dir:'up',look:LOOK.k4C,sit:1,chair:CHAIR_N4,banmal:1,hide:()=>afterT()||!!f().clue,
+  talk:()=>f().promise?[{say:'방송 두 시지? 그때 가게 잠깐 닫을래.'}]
+   :[{say:'찬이 오늘 조용하네. 무슨 일 있어?',face:'think'}]},
+ k4D:{name:'반 친구',zone:'class',x:14,y:7,dir:'up',look:LOOK.k4D,sit:1,chair:CHAIR_N4,banmal:1,hide:()=>afterT()||!!f().clue,
+  talk:()=>f().promise?[{say:'우리 엄마도 축제 온대. 방송부 포스터 봤대.'}]
+   :[{say:'학부모님들도 방송 들으러 온다며?'},{say:'떨리겠다. 나라면 도망가.'}]},
+ c4Imo:{name:'매점 이모',zone:'cafe',x:18,y:1,dir:'down',look:LOOK.c4Imo,hide:()=>afterT()||!!f().clue,
+  talk:()=>f().promise?[{say:'오늘은 급식이 없어요. 매점만 열었어요.'},{say:'방송부 생방송, 이모도 갈게요. 맨 앞에!',face:'happy'}]
+   :[{say:'방송실에서 연기 났다면서요? 다친 사람은 없죠?',face:'surprised'},{say:'축제 날 복숭아 주스 두 배로 들여놓을게요.'}]},
+ c4K1:{name:'1학년 학생',zone:'cafe',x:5,y:3,dir:'up',look:LOOK.c4K1,hide:()=>afterT()||!!f().clue,
+  talk:()=>f().promise?[{say:'김밥 사러 왔어요. 줄이 엄청 길어요.'}]
+   :[{say:'선배, 축제 방송 하는 거죠?'},{say:'하리 노래 또 듣고 싶어요.',face:'happy'}]},
+ c4K2:{name:'2학년 학생',zone:'cafe',x:3,y:6,dir:'up',look:LOOK.c4K2,sit:1,chair:CAFE_STOOL_N4,banmal:1,hide:()=>!!f().counsel,
+  talk:()=>[{say:'제육볶음 맵다! 물 좀!',face:'surprised'}]},
+ c4K3:{name:'3학년 선배',zone:'cafe',x:15,y:6,dir:'up',look:LOOK.c4K3,sit:1,chair:CAFE_STOOL_N4,banmal:1,hide:()=>!!f().counsel,
+  talk:()=>[{say:'…축제? 고3한테는 그냥 토요일이야.'},{say:'방송은… 들을 수 있으면 들을게.'}]},
+ g4D1:{name:'1학년 학생',zone:'gym',x:8,y:5,dir:'down',look:LOOK.g4D1,hide:()=>afterT()||!!f().clue,
+  talk:()=>f().promise?[{say:'선배! 저희 댄스 동아리 공연은 한 시예요!',face:'happy'},{say:'방송부 생방송 바로 앞이에요.'}]
+   :[{say:'댄스 동아리 축제 연습 중이에요.'},{say:'하나, 둘… 아, 또 틀렸다!',face:'sad'}]},
+ g4D2:{name:'2학년 학생',zone:'gym',x:10,y:5,dir:'down',look:LOOK.g4D2,hide:()=>afterT()||!!f().clue,banmal:1,
+  talk:()=>f().promise?[{say:'마지막 연습! 음악 크게 틀어!'}]
+   :[{say:'우리 음악, 축제 날 방송부 스피커로 틀어도 돼?'},{say:'기계 고쳐지면 말해 줘.'}]},
+ g4T:{name:'체육 선생님',zone:'gym',x:6,y:10,dir:'up',look:LOOK.pe,hide:()=>afterT()||!!f().clue,
+  talk:()=>f().promise?[{say:'무대는 운동장이에요. 여기는 연습만 해요.'}]
+   :[{say:'점심시간엔 체육관이 댄스 동아리 거예요.'},{say:'농구는 축제 끝나고 해요.'}]},
+
  minseo:{name:'민서',zone:'yard',x:8,y:10,dir:'right',look:LOOK.minseo,
   status:()=>null,script:()=>sideScene('drama'),talk:()=>SIDE.drama[3]},
  yeondu:{name:'연두',zone:'yard',x:9,y:10,dir:'left',look:LOOK.yeondu,

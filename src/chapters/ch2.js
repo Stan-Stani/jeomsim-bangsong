@@ -332,7 +332,7 @@ const has=w=>state.badges.includes(w);
 /* school exit: closed in class time and during the next day's lunch until the broadcast is done */
 const outLock=()=>!f().afterSchool?'아직 하교 시간이 아니에요. 밖에 못 나가요.':f().nextDay&&!f().done?'점심시간이에요. 학교 밖에 나가면 안 돼요.':false;
 /* 느티고 (src/school.js): the 방송실, the 2층 음악실 and the 체육관 across the 운동장 are open; the 정문 leads to 학교 앞. */
-const ZONES={...SCHOOL({open:['hall2','music','gym','bcast','class','bunsik'],gate:{to:'street',x:10,y:8,dir:'up',lock:outLock},zones:{
+const ZONES={...SCHOOL({open:['hall2','music','gym','bcast','class','bunsik','cafe'],gate:{to:'street',x:10,y:8,dir:'up',lock:outLock},zones:{
  street:{npcs:['xS1','xS2','xS3','xS4']},  // 학교 앞 (src/school.js): the 분식집 door is open
  bcast:{paint:[[13,0,'b'],[7,2,'T']],greet:()=>f().nextDay&&!f().ready&&'gureumL',  // day two, lunch: walking in starts the crowded run-through
   things:{'#':['벽에 먼지가 많아요.','벽에 오래된 사진 자국이 있어요.','구름이 벽을 조금 닦았어요. 거기만 하얘요.'],
@@ -348,7 +348,7 @@ const ZONES={...SCHOOL({open:['hall2','music','gym','bcast','class','bunsik'],ga
    'c':'옛날 녹음기예요. 테이프가 걸려 있어요.',
    'x':['상자에 "축제 1998"이라고 쓰여 있어요.','상자 안에 전선이 가득해요.','상자가 무거워요. 안 움직여요.']},
   npcs:['gureum','gureumL','hariMic','daonL','chanL']},
- hall:{locks:{class:()=>!f().nextDay&&'2학년 3반이에요. 지금은 들어갈 일이 없어요.'},  // your classroom opens on day two: the lunch bell leaves you at your desk
+ hall:{locks:{class:()=>!f().nextDay&&'2학년 3반이에요. 지금은 들어갈 일이 없어요.',cafe:()=>f().afterSchool&&!f().nextDay&&'급식실이에요. 점심이 끝나서 문을 닫았어요.'},  // your classroom opens on day two: the lunch bell leaves you at your desk
   legend:{'b':{tile:'sayeonSlot'}},paint:[[26,9,'b']],  // the 사연함's slot, right of the 방송실 door (the box is behind the wall)
   things:{'b':()=>f().done?'방송실 사연함 구멍이에요. 누가 여기로 카세트를 넣었을까요?':'방송실 사연함 구멍이에요. "방송부에 사연을 보내 주세요!"',
    '#':(x,y)=>y===0&&x<16?['하얀 벽이에요. 아래쪽은 초록색이에요.','깨끗한 벽이에요. 먼지 하나 없어요.']  // inside the 교무실 and the 교장실: no graffiti there
@@ -378,6 +378,11 @@ const ZONES={...SCHOOL({open:['hall2','music','gym','bcast','class','bunsik'],ga
    'd':['드럼이에요. 치고 싶지만… 쉿.','심벌이 반짝반짝해요.'],
    'x':['악기 선반이에요. 리코더하고 우쿨렐레가 있어요.','탬버린이 하나 있어요. 방울이 하나 빠졌어요.']},
   npcs:['hariM','tagM']},
+ cafe:{  // lunch on both days (closed after school): 매점 이모 and students eating
+  things:{'M':'오늘의 메뉴: 밥, 된장국, 돈가스, 깍두기.',
+   '=':['배식대예요. 돈가스 냄새가 좋아요.','깍두기가 아주 빨개요. 매워 보여요.','밥이 산처럼 쌓였어요.'],
+   'v':'자판기예요. 바나나우유는 벌써 다 팔렸어요.'},
+  npcs:['caImo','caK1','caK3','caK4','caK6']},
  gym:{greet:()=>!f().chanGym&&'chanG',  // 찬 at the door opens the gym scene as you walk in (the 선배 and 하리 can't be met first)
   things:{'#':['체육관 벽이에요. 공 자국이 많아요.','벽에 "느티고 화이팅!" 현수막이 있어요.'],
    'W':['높은 창문이에요. 햇빛이 길게 들어와요.','창문에 그물이 있어요. 공 때문이에요.'],
@@ -437,11 +442,20 @@ const STREET={pal:{L:'rgba(60,66,72,.55)',k:'#3C4248',Q:'#6E8FB0',b:'#7E3E2E',B:
 const STOOL_PAL={O:'#1B1E2B',e:'#2B6E9A',E:'#1E4F70',m:'#6F757C'};
 const STOOL_N={art:{pal:STOOL_PAL,drop:0,lift:4,down:['.OOOOOOOO.','.OeeeeeeO.','.OOOOOOOO.','..m....m..']}};
 const STOOL={art:{pal:STOOL_PAL,keep:14,drop:7,down:['..OOOOOO..','..OeeeeO..','..OEEEEO..','..OOOOOO..','...m..m...']}};
+/* the 급식실's orange stools (as in 1교시): pulled up to the long tables */
+const CAFE_PAL={O:'#1B1E2B',e:'#E07A5A',E:'#B85E44',m:'#6F757C'};
+const CAFE_STOOL_N={art:{pal:CAFE_PAL,drop:0,lift:10,down:['.OOOOOOOO.','.OeeeeeeO.','.OOOOOOOO.','..m....m..']}};
+const CAFE_STOOL={art:{pal:CAFE_PAL,keep:14,drop:7,down:['..OOOOOO..','..OeeeeO..','..OEEEEO..','..OOOOOO..','...m..m...']}};
 const seatPulled=(x,y)=>{try{if(player.sit&&player.dir==='up'&&player.x===x&&player.y===y+1)return true;
  return live().some(n=>n.x===x&&n.y===y+1&&n.dir==='up'&&!n.walk&&sitting(n))}catch(e){return false}};
 const seatPulledN=(x,y)=>{try{return live().some(n=>n.x===x&&n.y===y-1&&n.dir==='down'&&!n.walk&&sitting(n))}catch(e){return false}};
 
 const LOOK={
+ caImo:{hair:'#4A3A34',skin:'#D9A882',shirt:'#F2E6C8',pants:'#6B5B4B',style:'bun',lashes:1,lips:'#C06A6A'},
+ caK1:{hair:'#2A2220',skin:'#F2CEAE',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#3F7D5A',style:'short'},
+ caK3:{hair:'#1E1C20',skin:'#DCAA84',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'spiky'},
+ caK4:{hair:'#2E2622',skin:'#EAC0A0',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'bun',lashes:1,lips:'#C9707A'},
+ caK6:{hair:'#181618',skin:'#D09A72',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#C9A13A',style:'short'},
  /* Returning side cast keeps its 1교시 appearance; 지안 is a first-year classmate. */
  minseo:{hair:'#2B1F1F',skin:'#F0CBAA',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#3F7D5A',style:'long',lashes:1,lips:'#D0808A'},
  yeondu:{hair:'#4A3226',skin:'#E6BC98',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#3F7D5A',style:'bob',lashes:1,lips:'#C97680'},
@@ -988,6 +1002,27 @@ const NPC={
  xJ:{name:'준서',zone:'hall',x:23,y:7,dir:'down',look:LOOK.junseo,banmal:1,
   hide:()=>!f().nextDay,
   script:()=>sideScene('cat'),talk:()=>[]},
+
+ /* the 급식실 at lunch (first day, next day, after the broadcast): 매점 이모 and students eating. No badges, no teaching. */
+ caImo:{name:'매점 이모',zone:'cafe',x:18,y:1,dir:'down',look:LOOK.caImo,
+  talk:()=>f().done?[{say:'노래하는 학생, 목소리 정말 좋네요.',face:'happy'},{say:'다음엔 이모 신청곡도 틀어 줘요.'}]
+   :f().nextDay?[{say:'오늘 점심에 방송한다면서요?'},{say:'이모도 여기서 들을게요. 스피커가 바로 위에 있어요.'}]
+   :[{say:'어서 와요. 오늘 급식은 돈가스예요.'},{say:'방송부 포스터? 이모도 봤어요. 학생도 방송부예요?'}]},
+ caK1:{name:'1학년 학생',zone:'cafe',x:5,y:3,dir:'up',look:LOOK.caK1,
+  talk:()=>f().done?[{say:'방송 들었어요? 줄 서다가 다 멈췄어요.',face:'happy'}]
+   :f().nextDay?[{say:'오늘 점심에 방송부가 노래 튼대요!'},{say:'줄 빨리 줄었으면 좋겠어요.'}]
+   :[{say:'선배, 여기가 줄 끝이에요.'},{say:'돈가스 날은 줄이 두 배예요.',face:'sad'}]},
+ caK3:{name:'2학년 학생',zone:'cafe',x:3,y:6,dir:'up',look:LOOK.caK3,sit:1,chair:CAFE_STOOL_N,banmal:1,
+  talk:()=>f().done?[{say:'밥 먹다가 숟가락 놓고 들었어.',face:'happy'}]
+   :f().nextDay?[{say:'방송부가 진짜 방송한대? 기계 고장 났다며.'}]
+   :[{say:'이모, 돈가스 소스 더 주세요!'},{say:'…안 들리시나 봐.'}]},
+ caK4:{name:'2학년 학생',zone:'cafe',x:9,y:8,dir:'down',look:LOOK.caK4,sit:1,chair:CAFE_STOOL,banmal:1,
+  talk:()=>f().done?[{say:'그 노래 제목 뭐야? 계속 생각나.'}]
+   :f().nextDay?[{say:'방송 몇 시에 해? 밥 다 먹기 전에 하면 좋겠다.'}]
+   :[{say:'방송부가 부원 모집한대.'},{say:'나? 나는 노래 못 해. 밥만 잘 먹어.'}]},
+ caK6:{name:'3학년 선배',zone:'cafe',x:15,y:6,dir:'up',look:LOOK.caK6,sit:1,chair:CAFE_STOOL_N,banmal:1,
+  talk:()=>f().done?[{say:'…노래 들으면서 먹으니까 밥이 맛있네.'}]
+   :[{say:'…빨리 먹고 자습하러 가야 돼.'},{say:'고3은 밥도 뛰면서 먹어.'}]},
 
  xPE:{name:'체육 선생님',zone:'gym',x:6,y:10,dir:'up',look:LOOK.pe,
   hide:()=>!f().afterSchool||!!f().nextDay,
