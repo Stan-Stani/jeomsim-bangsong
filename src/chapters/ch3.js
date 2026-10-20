@@ -326,7 +326,7 @@ const REVIEW=[
  {w:'긴장하다',by:'xN4',ask:'논술 생각만 하면 ___ 잠이 안 와.',opts:[['긴장해서',1],['건강해서',0,'건강하다는 몸이 튼튼한 거야. 떨려서 못 자면 "긴장해서".'],['즐겨서',0,'즐기다는 재밌게 하는 거야. 떨려서 못 자면 "긴장해서".']]},
  // the principal in the 교장실
  {w:'제출하다',by:'principal',when:()=>!f().submitted,ask:'등록 신청서는 정 선생님한테 ___ 돼요.',opts:[['제출하면',1],['출제하면',0,'출제는 선생님이 문제를 만드는 거예요. 학생이 서류를 내면 "제출하면".'],['가입하면',0,'가입은 동아리에 들어가는 거예요. 서류를 내면 "제출하면".']]},
- {w:'가입하다',by:'principal',when:()=>!!f().submitted,ask:'방송부에 새로 ___ 학생이 있다고요?',opts:[['가입한',1],['제출한',0,'제출하다는 서류를 내는 거예요. 동아리에 들어가면 "가입한".'],['감동한',0,'감동하다는 마음이 크게 움직이는 거예요. 동아리에 들어가면 "가입한".']]},
+ {w:'가입하다',by:'principal',when:()=>!!f().submitted,ask:'부원 다섯 명이 다 ___ 거, 확인했어요.',opts:[['가입한',1],['제출한',0,'제출하다는 서류를 내는 거예요. 동아리에 들어가면 "가입한".'],['감동한',0,'감동하다는 마음이 크게 움직이는 거예요. 동아리에 들어가면 "가입한".']]},
 ];
 
 /* class time between the bells (classTime in the engine): day one's afternoon (국어, 영어) between lunch and 방과 후, in 다온's talk in
@@ -739,7 +739,7 @@ const NPC={
 
  gureumFin:{name:'백구름',zone:'bcast',x:5,y:3,dir:'up',look:LOOK.gureum,banmal:1,badge:['감동'],
   hide:()=>!f().secret,
-  get after(){return pick([[{say:'학부모님들이 방송실을 심화반 교실로 쓰고 싶대…',face:'sad'},'우리 이제 막 시작했는데.'],['기계에서 연기 났어. 내일 방송은 할 수 있을까?'],['톡이 아직도 와. 다들 감동했대.'],['복숭아 님… 진짜 누굴까?']])},  // only after the finale
+  get after(){return pick([[{say:'학부모회 얘기가 진짜 회의까지 갔어…',face:'sad'},'우리 이제 막 시작했는데.'],['기계에서 연기 났어. 내일 방송은 할 수 있을까?'],['톡이 아직도 와. 다들 감동했대.'],['복숭아 님… 진짜 누굴까?']])},  // only after the finale
   status:()=>{if(!has('감동'))return f().aired?'todo':null},
   script:()=>{const F=f();
    if(F.done)return null;
@@ -760,7 +760,7 @@ const NPC={
 
  daonEnd:{name:'오다온',zone:'bcast',x:9,y:5,dir:'left',look:LOOK.daon,banmal:1,
   hide:()=>!f().secret,
-  script:()=>f().done?[{say:'방송실을 심화반 교실로? 말도 안 돼.',face:'angry'},{say:'축제까지 방법을 찾자. 포기하면 벌금이야.'}]
+  script:()=>f().done?[{say:'방송실 일을 회의에서 정한다고? 말도 안 돼.',face:'angry'},{say:'축제까지 방법을 찾자. 포기하면 벌금이야.'}]
    :f().juice&&!hasItem('복숭아 주스')?[{say:'주스 고마워. 시간 딱 맞췄네.',face:'happy'}]
    :f().juice?[{say:'방송까지 십 분! 하리부터 주스 줘. 목 마르대.'}]
    :[{say:'점심 방송에서 하리가 첫 사연을 읽어. 늦으면 벌금이야.'},{say:'하리 목 마르대. 점심 전에 주스 하나 사 와.'}],
@@ -1013,7 +1013,7 @@ look:LOOK.hanT,
    {say:'다섯 명! 좋아요. 제출 완료예요.',face:'happy'},
    Q.jungS[0],
    {say:'네, 주세요. …오, 맞춤법이 많이 좋아졌네요.',take:['찬 독후감']},
-   {say:'이제 방송부는 정식 동아리예요. 축하해요!',face:'happy'},{say:'교장 선생님 조건 하나, 부원 다섯 명은 끝이에요.'},
+   {say:'이제 방송부는 정식 동아리예요. 축하해요!',face:'happy'},{say:'교장 선생님 조건 중 하나, 부원 다섯 명은 채웠어요.'},
    {say:'게시판에 포스터 붙여도 돼요. 반장한테 말해요.'},
    {say:'다온이는 복도 게시판 앞에 있어요.',set:()=>{f().submitted=1},leave:{npc:'jungLib',to:[9,11]}}]},
 

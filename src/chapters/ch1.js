@@ -677,7 +677,7 @@ const NPC={
    :F.metTeacher?['시험지가 너무 많아요.','3반 교실은 복도 오른쪽 끝이에요.']:['정 선생님 자리는 화분 옆이에요.'])}},
  musicT:{name:'음악 선생님',zone:'hall',x:2,y:2,dir:'down',look:LOOK.musicT,hide:()=>{const F=f();return F.metTeacher&&!F.lunch||F.deal&&!F.crew3},
   talk:()=>[{say:'2학년 3반 전학생? 정 선생님 반이네요.',face:'happy'},{say:'저는 음악 선생님이에요. 음악실은 2층이에요.'}],
-  again:()=>{const F=f();return pick(F.done?['아까 스피커에서 옛날 노래가 나왔죠? 저도 깜짝 놀랐어요.','안내 방송도 아닌데 노래가 나왔어요. 이상하네요.']:F.crew3?['첫날 어땠어요? 내일 봐요.','방송부 얘기, 교무실에서도 다들 해요.']
+  again:()=>{const F=f();return pick(F.done?['아까 스피커에서 옛날 노래가 나왔죠? 저도 깜짝 놀랐어요.','음악실에 있었는데 거기까지 노래가 들렸어요. 이상하네요.']:F.crew3?['첫날 어땠어요? 내일 봐요.','방송부 얘기, 교무실에서도 다들 해요.']
    :F.metChan?['방송실 귀신? 하하, 그런 거 없어요.','교무실에서는 조용히 해 주세요.']:F.lunch?['아까 음악 시간, 3반 노래 좋았어요.','교무실에서는 조용히 해 주세요.']:['교무실에서는 조용히 해 주세요.','첫날이라 힘들죠? 천천히 해요.'])}},
  engT:{name:'영어 선생님',zone:'hall',x:2,y:2,dir:'down',look:LOOK.engT,hide:()=>{const F=f();return !(F.metTeacher&&!F.lunch||F.deal&&!F.crew3)},
   talk:()=>{const F=f();return [{say:'3반 전학생이죠? 저는 영어 선생님이에요.'},{say:F.deal?'정 선생님은 지금 3반 교실에 있어요. 종례 시간이에요.':F.seated?'아까 단어 시험, 어땠어요? 하하.':'오늘 3반 영어 시간에 단어 시험이 있어요.'}]},
