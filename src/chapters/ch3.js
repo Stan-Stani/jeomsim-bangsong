@@ -545,7 +545,7 @@ const SIDE={
    {who:'도현',say:'중학교 땐 내가 수석이었거든.',look:LOOK.dohyeon},
    {who:'도현',say:'지금은 만년 꼴찌 같아.',look:LOOK.dohyeon,face:'sad'},
    {who:'나',say:'지난번엔 틀린 문제 다시 보셨죠?',look:LOOK.player},
-   {who:'도현',say:'응. 이번엔 조심성 좀 챙기려고.',look:LOOK.dohyeon},
+   {who:'도현',say:'응. 이번엔 좀 더 꼼꼼히 보려고.',look:LOOK.dohyeon},
    {who:'도현',say:'애초에 답을 한 칸 밀려 썼잖아.',look:LOOK.dohyeon},
    {who:'도현',say:'모범생인 척해도 이런다니까.',look:LOOK.dohyeon},
    {who:'나',say:'이번엔 이름이랑 칸부터 보세요.',look:LOOK.player},
@@ -664,12 +664,13 @@ const NPC={
    :lunchT()?[{say:'점심 먹고 왔어? 나는 매점 빵.'}]:[{say:'월요일 아침이야. 아직 꿈속 같아.',face:'sad'}]}},
  clB:{name:'반 친구',zone:'class',x:6,y:7,dir:'up',look:LOOK.clB,sit:1,chair:CHAIR_N,banmal:1,hide:()=>afterT(),
   talk:()=>{const F=f();return F.done?[{say:'교장 선생님 방송… 무슨 뜻이야?',face:'think'}]
+   :F.aired?[{say:'하리 목소리 떨리던데, 그래도 좋았어.',face:'happy'}]
    :F.juice?[{say:'하리가 사연 읽는대. 떨리겠다.'}]
    :F.secret?[{say:'다온이가 오늘은 웃네. 신기하다.'}]
    :lunchT()?[{say:'찬이 또 뛰어다니더라. 무슨 일이야?'}]:[{say:'수학 숙제 했어? …나도 안 했어.'}]}},
  clC:{name:'반 친구',zone:'class',x:2,y:9,dir:'up',look:LOOK.clC,sit:1,chair:CHAIR_N,banmal:1,hide:()=>afterT(),
-  talk:()=>f().secret?[{say:'떡볶이 가게 이름, 뭐로 하지?',face:'think'}]
-   :[{say:'축제가 이번 주 토요일이래.'},{say:'우리 반은 떡볶이 판대. 다온이가 정했어.'}]},
+  talk:()=>f().secret?[{say:'주스 가게 이름, 뭐로 하지?',face:'think'}]
+   :[{say:'축제가 이번 주 토요일이래.'},{say:'우리 반은 복숭아 주스 판대. 다온이가 정했어.'}]},
  clD:{name:'반 친구',zone:'class',x:14,y:7,dir:'up',look:LOOK.clD,sit:1,chair:CHAIR_N,banmal:1,hide:()=>afterT(),
   talk:()=>{const F=f();return F.done?[{say:'기계에서 연기 났다며? 괜찮아?',face:'surprised'}]
    :F.secret?[{say:'오늘 점심 방송도 해? 기대된다.'}]
@@ -759,7 +760,7 @@ const NPC={
 
  daonEnd:{name:'오다온',zone:'bcast',x:9,y:5,dir:'left',look:LOOK.daon,banmal:1,
   hide:()=>!f().secret,
-  script:()=>f().done?[{say:'방송 한 번은 누구나 한다고? 말도 안 돼.',face:'angry'},{say:'축제까지 방법을 찾자. 포기하면 벌금이야.'}]
+  script:()=>f().done?[{say:'방송실을 심화반 교실로? 말도 안 돼.',face:'angry'},{say:'축제까지 방법을 찾자. 포기하면 벌금이야.'}]
    :f().juice&&!hasItem('복숭아 주스')?[{say:'주스 고마워. 시간 딱 맞췄네.',face:'happy'}]
    :f().juice?[{say:'방송까지 십 분! 하리부터 주스 줘. 목 마르대.'}]
    :[{say:'점심 방송에서 하리가 첫 사연을 읽어. 늦으면 벌금이야.'},{say:'하리 목 마르대. 점심 전에 주스 하나 사 와.'}],
@@ -803,10 +804,10 @@ look:LOOK.hanT,
  /* the principal at her desk in the 교장실 (as in 1교시 and 4교시): formal and a little stern; her announcement after the
     사연 comes from the 교무실 mic; no hint of 복숭아 before 4교시 */
  principal:{name:'한복순 교장 선생님',zone:'hall',x:12,y:1,dir:'down',look:LOOK.principal,
-  talk:()=>[{say:'방송부 학생이군요.'},{say:'요즘 방송부 소문이 많네요. 좋은 소문이면 좋겠어요.'}],
+  talk:()=>f().submitted?NPC.principal.again():[{say:'방송부 학생, 왔어요?'},{say:'요즘 방송부 소문이 많네요. 좋은 소문이면 좋겠어요.'}],
   again:()=>{const F=f();if(F.done)return [{say:'방송 들었죠? 학부모회 의견이에요.'},{say:'약속은 지켜요. 축제 방송을 듣고 정해요.',face:'sad'}];
    if(F.aired)return [{say:'점심 방송, 교장실에서도 들렸어요.'},{say:'방송실로 돌아가요. 구름 학생이 기다려요.'}];
-   if(F.secret)return [{say:'오늘 오후에 {학부모회|학부모회} 회의가 있어요.'},{say:'바빠요. 복도에서 뛰지 마요.'}];
+   if(F.secret)return [{say:'오늘 아침에 {학부모회|학부모회} 회의가 있었어요.'},{say:'바빠요. 복도에서 뛰지 마요.'}];
    if(F.submitted)return [{say:'정 선생님한테 신청서를 냈다고 들었어요.'},{say:'부원 다섯 명, 확인했어요.'},{say:'이제 남은 건 축제 날 방송이에요.'}]  // the 1교시 deal: five members (met now) and the festival broadcast (still ahead);
    return [{say:'동아리 등록 신청서요? 그건 정 선생님한테 내요.'},{say:'다섯 명 이름, 다 있어야 돼요.'}]}},
  jung:{name:'정 선생님',zone:'hall',x:6,y:2,dir:'down',look:LOOK.jung,badge:['가입하다','제출하다','독후감','맞춤법'],
@@ -874,7 +875,7 @@ look:LOOK.hanT,
    {say:'아, 복숭아! 하하하! 내가 복숭아?',face:'happy'},
    {say:'이모 얼굴이 복숭아처럼 예쁘다고?'},
    {who:'남궁찬',say:'아니, 그게 아니라…',face:'surprised'},
-   {say:'이모는 편지 같은 거 안 써요. 글씨가 {엉망|엉망}이거든.'},
+   {say:'이모는 편지 같은 거 안 써요. 글씨가 {엉망|엉망}이거든요.'},
    {say:'대신 복숭아 주스는 많이 팔지요!'},
    {say:'자, 동전. 오늘은 이모가 쏠게요.'},
    {say:'자판기에서 다섯 개 가져가요.',cam:[21,3]},
@@ -961,7 +962,7 @@ look:LOOK.hanT,
 
  kid:{name:'1학년 학생',zone:'hall',x:11,y:8,dir:'left',look:LOOK.kid,
   hide:()=>!f().rumor,
-  script:()=>f().done?[{say:'선배! 방송실이 없어진대요?',face:'surprised'},{say:'아까 복도에서 탄 냄새도 났어요.'}]
+  script:()=>f().done?[{say:'선배! 방송실이 없어질 수도 있대요?',face:'surprised'},{say:'아까 복도에서 탄 냄새도 났어요.'}]
    :f().aired?[{say:'선배! 오늘 사연 듣고 울었어요.',face:'sad'},{say:'저도 사연 보낼래요!',face:'happy'}]
    :f().secret?[{say:'오늘 점심에 사연 코너 한대요!',face:'happy'},{say:'방송부 안 끝났대요. 다행이다.'}]
    :[{say:'선배, 들었어요? 방송부 끝났대요!',face:'surprised'},{say:'구름 선배가 울었대요. 진짜예요?'}],
@@ -1012,7 +1013,7 @@ look:LOOK.hanT,
    {say:'다섯 명! 좋아요. 제출 완료예요.',face:'happy'},
    Q.jungS[0],
    {say:'네, 주세요. …오, 맞춤법이 많이 좋아졌네요.',take:['찬 독후감']},
-   {say:'이제 방송부는 정식 동아리예요. 축하해요!',face:'happy'},
+   {say:'이제 방송부는 정식 동아리예요. 축하해요!',face:'happy'},{say:'교장 선생님 조건 하나, 부원 다섯 명은 끝이에요.'},
    {say:'게시판에 포스터 붙여도 돼요. 반장한테 말해요.'},
    {say:'다온이는 복도 게시판 앞에 있어요.',set:()=>{f().submitted=1},leave:{npc:'jungLib',to:[9,11]}}]},
 

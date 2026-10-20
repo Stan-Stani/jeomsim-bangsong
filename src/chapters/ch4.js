@@ -268,8 +268,8 @@ const REVIEW=[
   opts:[['방법',1],['방학',0,'방학은 학교 쉬는 때야. 어떻게 막는지는 "방법".'],['방송',0,'방송은 우리가 하는 거고. 어떻게 막는지는 "방법".']]},
  {w:'약속',by:'daonS',when:()=>!!f().live,ask:'농담하면 벌금. 이건 우리 ___이야.',
   opts:[['약속',1],['악수',0,'악수는 손 잡는 거야. 꼭 지키는 건 "약속".'],['약국',0,'약국은 약 파는 데야. 꼭 지키는 건 "약속".']]},
- {w:'쫓겨나다',by:'daonS',when:()=>!!f().done,pre:['방송실, 그대로 둔대.'],ask:'우리 이제 안 ___. …안 울어. 먼지야.',
-  opts:[['쫓겨나',1],['쫓아가',0,'쫓아가는 건 뒤를 따라 뛰는 거야. 억지로 나가게 되는 건 "쫓겨나".'],['들어가',0,'들어가는 건 안으로 가는 거야. 억지로 나가게 되는 건 "쫓겨나".']]},
+ {w:'쫓겨나다',by:'daonS',when:()=>!!f().done,pre:['교장 선생님 마음은 벌써 정했대.'],ask:'우리 이제 안 ___ 거야. …안 울어. 먼지야.',
+  opts:[['쫓겨날',1],['쫓아갈',0,'쫓아가는 건 뒤를 따라 뛰는 거야. 억지로 나가게 되는 건 "쫓겨날".'],['들어갈',0,'들어가는 건 안으로 가는 거야. 억지로 나가게 되는 건 "쫓겨날".']]},
  {w:'이루다',by:'daonS',ask:'목표 하나 ___. 다음은 매일 방송이야.',
   opts:[['이뤘어',1],['이겼어',0,'이기는 건 시합이야. 목표는 "이뤘어".'],['잃었어',0,'잃은 거 아니야. 해낸 거야. "이뤘어".']]},
  /* 구름 at the stage, on air and after */
@@ -298,7 +298,7 @@ const REVIEW=[
   opts:[['목표',1],['목포',0,'목포는 도시 이름이에요. 꼭 하고 싶은 일은 "목표".'],['방학',0,'방학은 학교를 쉬는 때예요. 꼭 하고 싶은 일은 "목표".']]},
  {w:'꿈',by:'jungY',ask:'교장 선생님 ___이 디제이였다니. 저도 몰랐어요.',
   opts:[['꿈',1],['껌',0,'하하, 껌은 씹는 거예요. 하고 싶었던 일은 "꿈".'],['꿀',0,'꿀은 벌이 만드는 거예요. 하고 싶었던 일은 "꿈".']]},
- {w:'심화반',by:'principalS',ask:'여러분도 알다시피 ___은 3층이에요. 계단 운동도 되고요.',
+ {w:'심화반',by:'principalS',ask:'월요일 회의에서 ___은 3층 창고로 하자고 할 거예요. 계단 운동도 되고요.',
   opts:[['심화반',1],['심판',0,'심판은 경기에서 규칙을 지키는지 보는 사람이에요. 깊게 공부하는 반은 "심화반".'],['신화',0,'신화는 옛날 신 이야기예요. 깊게 공부하는 반은 "심화반".']]},
  {w:'표정',by:'principalS',face:'happy',ask:'무대에서 본 여러분 ___, 오래 기억할게요.',
   opts:[['표정',1],['표시',0,'표시는 무엇을 알려 주는 표예요. 얼굴에 보이는 기분은 "표정".'],['표지',0,'표지는 책의 겉이에요. 얼굴에 보이는 기분은 "표정".']]},
@@ -366,7 +366,7 @@ const REVIEW=[
   opts:[['친해진',1],['어색해진',0,'어색하면 보기 안 좋죠. 점점 친구가 되면 "친해진".'],['진해진',0,'진해지는 건 색이나 커피예요. 사람은 "친해진".']]},
  {w:'전하다',by:'jung',ask:'태식 학생한테 ___ 줘요. 너무 무리하지 말라고.',
   opts:[['전해',1],['정해',0,'정하다는 고르는 거예요. 말을 대신 보내면 "전해".'],['전학해',0,'하하, 전학은 학교를 옮기는 거예요. 말을 대신 보내면 "전해".']]},
- {w:'하필',by:'jung',ask:'___ 축제 사흘 전에 기계가 타다니. 운이 없네요.',
+ {w:'하필',by:'jung',ask:'___ 축제 바로 전에 기계가 타다니. 운이 없네요.',
   opts:[['하필',1],['역시',0,'역시는 생각한 대로일 때예요. 운이 나쁠 때는 "하필".'],['마침',0,'마침은 때가 딱 좋을 때예요. 운이 나쁠 때는 "하필".']]},
  {w:'데려오다',by:'jung',when:()=>!!f().fixed,ask:'태식 학생을 학교까지 ___ 거, 정말 대단했어요.',
   opts:[['데려온',1],['데려간',0,'여기가 학교예요. 이쪽으로 같이 왔으면 "데려온".'],['내려온',0,'내려오다는 위에서 아래로 오는 거예요. 같이 왔으면 "데려온".']]},
@@ -520,7 +520,7 @@ const ads=()=>shops()===3;
 
 /* 느티고 (src/school.js): the 방송실, the 2층 and the 운동장 (festival stage, tents) are open; the 정문 leads to the 동네 상가 after the 상담. */
 const ZONES={...SCHOOL({open:['bcast','hall2','music','library','hagwon','class','cafe','gym'],gate:{to:'street',x:10,y:8,dir:'down',lock:()=>!f().counsel&&'정문이에요. 아직 학교가 안 끝나서 못 나가요.'},zones:{
- class:{things:{'J':'시간표예요. 오늘 오후는 국어하고 수학이에요.'},npcs:['k4A','k4B','k4C','k4D']},  // classmates at lunch; on festival morning the 3반 떡볶이 booth is getting ready here
+ class:{things:{'J':()=>f().promise?'시간표예요. 오늘은 축제라서 수업이 없어요.':'시간표예요. 오늘 오후는 국어하고 수학이에요.'},npcs:['k4A','k4B','k4C','k4D']},  // classmates at lunch; on festival morning the 3반 복숭아 주스 booth is getting ready here
  cafe:{things:{'M':()=>f().promise?'오늘은 축제라서 급식이 없어요. 매점만 열어요.':'오늘의 메뉴: 밥, 미역국, 제육볶음, 김치.'},npcs:['c4Imo','c4K1','c4K2','c4K3']},
  gym:{npcs:['g4D1','g4D2','g4T']},  // the 댄스 동아리 practising for the festival
  street:{things:{  // 학교 앞 (src/school.js) as 동네 상가: the 학원 door is open; ads in the windows, the evening
@@ -691,14 +691,14 @@ const SIDE={
    {who:'연두',say:'주인공이 혼잣말을 해요.',look:LOOK.yeondu},
    {who:'연두',say:'"나 스토커야? 변태 같잖아."',look:LOOK.yeondu},
    {who:'민서',say:'엑, 본인도 이상한 줄 아네요.',look:LOOK.minseo,face:'surprised'},
-   {who:'연두',say:'그래도 또 고양이를 따라가.',look:LOOK.yeondu},
+   {who:'연두',say:'그래도 또 고양이를 따라가요.',look:LOOK.yeondu},
    {who:'민서',say:'저희가 끝을 새로 써 보려고요.',look:LOOK.minseo},
   ],
   [
    {who:'민서',say:'선배, 저희가 쓴 끝이에요.',look:LOOK.minseo},
    {who:'연두',say:'주인공은 멀리서 기다려요.',look:LOOK.yeondu},
    {who:'민서',say:'실은 고양이가 먼저 왔어요.',look:LOOK.minseo},
-   {who:'연두',say:'"만져도 돼?" 하고 물어봐.',look:LOOK.yeondu},
+   {who:'연두',say:'"만져도 돼?" 하고 물어봐요.',look:LOOK.yeondu},
    {who:'민서',say:'고양이가 손에 머리를 비벼요.',look:LOOK.minseo,face:'happy'},
    {who:'연두',say:'이제 둘이 같이 낮잠을 자요.',look:LOOK.yeondu},
    {who:'나',say:'고양이 마음도 기다려 줬네.',look:LOOK.player},
@@ -777,11 +777,11 @@ const NPC={
  /* ---------- 2학년 3반, the 급식실 and the 체육관: lunch on day one and festival morning (closed after school and during the show).
     No badges, no teaching. ---------- */
  k4A:{name:'반 친구',zone:'class',x:3,y:7,dir:'up',look:LOOK.k4A,sit:1,chair:CHAIR_N4,banmal:1,hide:()=>afterT()||!!f().clue,
-  talk:()=>f().promise?[{say:'떡볶이 판 다 닦았어! 이제 손님만 오면 돼.',face:'happy'}]
+  talk:()=>f().promise?[{say:'주스 컵 다 씻었어! 이제 손님만 오면 돼.',face:'happy'}]
    :[{say:'방송실 기계 탔다며? 진짜 괜찮아?',face:'surprised'},{say:'축제 방송, 우리 반도 들으러 갈게.'}]},
  k4B:{name:'반 친구',zone:'class',x:6,y:7,dir:'up',look:LOOK.k4B,sit:1,chair:CHAIR_N4,banmal:1,hide:()=>afterT()||!!f().clue,
-  talk:()=>f().promise?[{say:'가게 이름은 "3반 떡볶이". 다온이가 정했어.'},{say:'…이름 정하는 데 한 시간 걸렸어.'}]
-   :[{say:'축제 사흘 남았어. 떡볶이 연습해야 돼.'},{say:'다온이는 방송부 때문에 바쁘대. 이해해.'}]},
+  talk:()=>f().promise?[{say:'가게 이름은 "3반 복숭아". 다온이가 정했어.'},{say:'…이름 정하는 데 한 시간 걸렸어.'}]
+   :[{say:'축제 사흘 남았어. 주스 만드는 연습해야 돼.'},{say:'다온이는 방송부 때문에 바쁘대. 이해해.'}]},
  k4C:{name:'반 친구',zone:'class',x:2,y:9,dir:'up',look:LOOK.k4C,sit:1,chair:CHAIR_N4,banmal:1,hide:()=>afterT()||!!f().clue,
   talk:()=>f().promise?[{say:'방송 두 시지? 그때 가게 잠깐 닫을래.'}]
    :[{say:'찬이 오늘 조용하네. 무슨 일 있어?',face:'think'}]},
@@ -924,8 +924,8 @@ const NPC={
    {say:'{학부모회|학부모회}에서 방송실을 원해요.'},
    {say:'공부 잘하는 학생들 교실로요.'},
    Q.pr[0],
-   {say:'3층 창고는 치우는 데 오래 걸리거든요.'},
-   {say:'"노래 틀고 떠드는 건 누구나 해요." 그렇게 말했어요.'},
+   {say:'3층 창고도 있지만, 치우는 데 오래 걸리거든요.'},
+   {say:'"노래 틀고 떠드는 건 누구나 해요." 학부모회 말이에요.'},
    {say:'오늘 학부모님들과 {운영위원회|운영위원회}도 방송을 들어요.'},
    {say:'그리고 월요일 회의에서 방송실 일을 정해요.'},
    {say:'방송부가 왜 필요한지 들려주세요.',face:'think'},
@@ -1202,7 +1202,7 @@ const NPC={
   script:()=>f().done?pickNew('hari',[  // after the show: a different one each talk
     [{say:'선배, 저 오늘 하나도 안 얼었어요!',face:'happy'},{say:'노래하다 보니까 사람들이 다 웃고 있었어요.'}],
     [{say:'포스터 붙일 때는 목소리가 막 떨렸는데…',face:'think'},{say:'오늘은 마이크 앞에서 두 곡이나 불렀어요.',face:'happy'}],
-    [{say:'월요일 점심 방송에도 노래해도 돼요?'},{say:'이번엔 제가 먼저 다온 선배한테 말할래요.',face:'happy'}],
+    [{say:'월요일 점심 방송에도 노래해도 돼요?'},{say:'이번엔 제가 먼저 다온 언니한테 말할래요.',face:'happy'}],
     [{say:'교장 선생님이 복숭아였다니…',face:'surprised'},{say:'저 아직도 심장이 쿵쿵 뛰어요.'}]])
    :f().live?[{say:'교장 선생님이요…? 심장이 터질 것 같아요.',face:'surprised'}]
    :[{say:'선배… 사람이 너무 많아요.',face:'sad'},{say:'그래도 할게요. 딱 한 곡이 아니라, 두 곡.',face:'think'}],
@@ -1271,7 +1271,7 @@ const NPC={
    {say:'별명은 복숭아. 정말 오랜만에 말하네요.',face:'happy'},
    {who:'…',say:'학부모 자리에서 누가 외쳐요. "복숭아 언니!"'},
    {who:'…',say:'옛날 방송부 친구들이에요. 다 같이 손을 흔들어요.'},
-   {say:'학부모님들, 운영위원회 선생님들. 방송 들으셨죠?'},  // the decision itself is the 운영위's, on Monday (the epilogue); here the room's case is heard
+   {say:'학부모님들, 운영위원님들. 방송 들으셨죠?'},  // the decision itself is the 운영위's, on Monday (the epilogue); here the room's case is heard
    {who:'…',say:'운영위원 한 분이 웃으면서 고개를 끄덕여요.'},
    {say:'결정은 월요일 회의에서 해요. 제 마음은 벌써 정했지만요.'},
    {who:'…',say:'운동장에서 "와아!" 소리가 터져요.'},
@@ -1358,7 +1358,7 @@ const FOLLOW={name:'마태식',look:LOOK.taesik,when:()=>!!f().taesikCome&&!f().
 /* the fix scene is 구름's talk; from the mixer or from 태식 it plays the same, with 구름 named on his lines */
 function fixTalk(){return NPC.gureumF.talk().map(s=>s.who?s:{...s,who:'백구름'})}
 
-const INTRO=[{who:'…',say:'축제 사흘 전. 방송실에 탄 냄새가 나요.'},{who:'…',say:'방송 기계에서 아직 연기가 조금 나요.'}];
+const INTRO=[{who:'…',say:'축제 사흘 전. 방송실에 탄 냄새가 나요.'},{who:'…',say:'방송 기계는 까맣게 타서 꺼져 있어요.'}];
 const DONE=[{expand:()=>wrapUp()},{say:'구름 엄마도 축제 방송을 들었대요.',set:()=>{f().quiet=1}},{say:'"목소리 좋더라." 구름이 그 말을 세 번 했어요.',grammar:'deora'},  // the epilogue: festival night, then time cuts over black (Monday's 운영위, winter, spring)
  {say:'월요일. 운영위원회 회의가 끝났어요.',black:1},'방송실은 그대로. 심화반은 3층 창고를 치워서 써요.',
  {say:'겨울. 태식 선배가 대학에 합격했어요.'},'그 소식은 점심 방송으로 들었어요.','봄. 사연함에 새 쪽지가 있어요.',

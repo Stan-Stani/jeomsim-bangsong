@@ -94,7 +94,7 @@ const BANK=[
 
 const Q={ // NPC questions, kept here so review can reuse them. who:'나' = the player says it.
  gureum:[
-  {own:1,w:'기회',ask:'이번 방송이 마지막 ___일지도 몰라.',opts:[['기회',1],['위기',0,'위기는 위험하고 어려운 때야. 다시 안 올 수도 있는 좋은 때는 "기회".'],['기분',0,'기분은 마음 상태야. 한 번뿐인 좋은 때는 "기회".']]},
+  {own:1,w:'기회',ask:'축제 날 방송이 마지막 ___일지도 몰라.',opts:[['기회',1],['위기',0,'위기는 위험하고 어려운 때야. 다시 안 올 수도 있는 좋은 때는 "기회".'],['기분',0,'기분은 마음 상태야. 한 번뿐인 좋은 때는 "기회".']]},
   {own:1,w:'놓치다',ask:'첫날 버스 때문에 지각했다며? 나도 버스를 자주 ___. 그래서 아침마다 뛰어.',opts:[['놓쳐',1],['놓아',0,'놓다는 물건을 어디에 두는 거야. 버스를 못 타면 "놓쳐".'],['넣어',0,'넣다는 안에 들어가게 하는 거야. 버스를 못 타면 "놓쳐".']]},
   {own:1,w:'기회',ask:'그래도 아직 기회는 있어. 그럼 우리 뭐부터 ___?',opts:[['할까',1],['할게',0,'"{-ㄹ게|-(으)ㄹ게}"는 약속이야. 같이 정하자고 물어볼 때는 "할까?"'],['하지 마',0,'"-지 마"는 하지 말라는 거야. 물어볼 때는 "할까?"']]},
  ],
@@ -319,8 +319,8 @@ const REVIEW=[
  {w:'곡',by:'musicT',when:()=>!!f().done,ask:'방송 노래, 한 ___ 더 듣고 싶어요.',opts:[['곡',1],['국',0,'하하, 국은 먹는 거예요. 노래는 한 "곡", 두 "곡".'],['권',0,'권은 책을 셀 때예요. 노래는 한 "곡", 두 "곡".']]},
  {w:'챙기다',by:'musicT',when:()=>!!f().done,ask:'노래한 친구, 물은 잘 ___ 줬어요? 목 아팠을 거예요.',opts:[['챙겨',1],['생겨',0,'생기다는 없던 게 새로 나타나는 거예요. 물을 가져다주면 "챙겨".'],['재촉해',0,'재촉하다는 빨리 하라고 하는 거예요. 물을 가져다주면 "챙겨".']]},
  // the principal in the 교장실
- {w:'놓치다',by:'principal',ask:'이번 기회를 ___ 방송실은 없어요.',opts:[['놓치면',1],['놓으면',0,'놓다는 일부러 어디에 두는 거예요. 기회를 잡지 못하면 "놓치면".'],['놀리면',0,'놀리다는 남을 웃음거리로 만드는 거예요. 기회를 잡지 못하면 "놓치면".']]},
- {w:'기회',by:'principal',ask:'축제까지 ___는 한 번이에요.',opts:[['기회',1],['기억',0,'기억은 머릿속에 남은 거예요. 다시 안 올 수도 있는 좋은 때는 "기회".'],['기분',0,'기분은 마음 상태예요. 다시 안 올 수도 있는 좋은 때는 "기회".']]},
+ {w:'놓치다',by:'principal',ask:'축제 날 기회를 ___ 방송실은 없어요.',opts:[['놓치면',1],['놓으면',0,'놓다는 일부러 어디에 두는 거예요. 기회를 잡지 못하면 "놓치면".'],['놀리면',0,'놀리다는 남을 웃음거리로 만드는 거예요. 기회를 잡지 못하면 "놓치면".']]},
+ {w:'기회',by:'principal',ask:'축제 날 ___는 한 번이에요.',opts:[['기회',1],['기억',0,'기억은 머릿속에 남은 거예요. 다시 안 올 수도 있는 좋은 때는 "기회".'],['기분',0,'기분은 마음 상태예요. 다시 안 올 수도 있는 좋은 때는 "기회".']]},
  {w:'효과',by:'principal',when:()=>!!f().done,ask:'점심 방송 ___는 있었어요. 하지만 연습은 연습이에요.',opts:[['효과',1],['효도',0,'효도는 부모님을 잘 모시는 거예요. 방송으로 생긴 변화는 "효과".'],['과자',0,'하하, 과자는 간식이에요. 방송으로 생긴 변화는 "효과".']]},
 ];
 
@@ -516,7 +516,7 @@ const SIDE={
    {who:'민서',say:'아직도 인사말부터 연습해요.',look:LOOK.minseo,face:'think'},
    {who:'연두',say:'어떻게 인사할 건데?',look:LOOK.yeondu},
    {who:'민서',say:'"안녕하세요!" 말고는 생각이 안 나.',look:LOOK.minseo},
-   {who:'연두',say:'눈을 지긋이 감고 숨 쉬어.',look:LOOK.yeondu},
+   {who:'연두',say:'눈을 지그시 감고 숨 쉬어.',look:LOOK.yeondu},
    {who:'민서',say:'응. 그냥 내 얘기부터 해 볼게.',look:LOOK.minseo},
   ],
   [
@@ -543,7 +543,7 @@ const SIDE={
    {who:'준서',say:'체육관에 사람만 한 고양이!',look:LOOK.junseo,face:'surprised'},
    {who:'준서',say:'앞에서 가방이 시야를 가렸지만.',look:LOOK.junseo},
    {who:'나',say:'그건 말도 안 되잖아.',look:LOOK.player},
-   {who:'준서',say:'기껏 귀만 봐서 확신은 못 해.',look:LOOK.junseo,face:'think'},
+   {who:'준서',say:'귀만 겨우 봐서 확신은 못 해.',look:LOOK.junseo,face:'think'},
    {who:'준서',say:'이번엔 확인하고 얘기할게.',look:LOOK.junseo},
   ],
   [
@@ -571,12 +571,12 @@ const SIDE={
    {who:'지안',say:'시우야, 나한테 볼 일 있어?',look:LOOK.jian},
    {who:'시우',say:'어… 같이 만화책 볼래?',look:LOOK.siu},
    {who:'지안',say:'좋아. 점심 먹고 같이 보자.',look:LOOK.jian,face:'happy'},
-   {who:'시우',say:'바로 좋다고 해서 벙벙해요.',look:LOOK.siu,face:'surprised'},
+   {who:'시우',say:'바로 좋다고 해서 얼떨떨해요.',look:LOOK.siu,face:'surprised'},
    {who:'나',say:'긴장을 풀어. 같이 책 보면 되지.',look:LOOK.player},
   ],
   [
    {who:'지안',say:'선배, 저는 1학년 지안이에요.',look:LOOK.jian},
-   {who:'시우',say:'점심에 낑겨앉아서 책을 봤어요.',look:LOOK.siu},
+   {who:'시우',say:'점심에 끼어 앉아서 책을 봤어요.',look:LOOK.siu},
    {who:'시우',say:'내일은 의자 하나 더 빌리려고요.',look:LOOK.siu},
    {who:'시우',say:'선생님께 부탁드리려고요.',look:LOOK.siu},
    {who:'지안',say:'제가 만화 속 대사도 읽었어요.',look:LOOK.jian},
@@ -620,7 +620,7 @@ const NPC={
    {say:'축제 날 방송 전에 점심 방송부터 해 보자.'},
    {say:'근데 목소리가 없어.',face:'sad'},
    Q.gureum[0],
-   {say:'이번 기회 놓치면 끝이야. 방송실도 끝.',face:'sad'},
+   {say:'축제 때 놓치면 끝이야. 방송실도 끝.',face:'sad'},
    Q.gureum[1],
    {say:'하하, 다온이한테 벌금도 냈지?',face:'happy'},
    {who:'나',say:'응… 오백 원. 그 얘기는 그만해.'},
@@ -675,7 +675,7 @@ const NPC={
   again:()=>pick(f().nextDay?['소금을 넣으면 물이 잘 안 얼어요. 신기하죠?','점심시간에 방송실이 바쁘네요.']:['내일 실험 날이에요. 3반한테 말해 줘요.','음악실 노래 귀신? 과학적으로 말이 안 돼요. 하하.'])},
  /* the principal at her desk in the 교장실 (as in 1교시 and 4교시): formal and a little stern; no hint of 복숭아 before 4교시 */
  principal:{name:'한복순 교장 선생님',zone:'hall',x:12,y:1,dir:'down',look:LOOK.principal,
-  talk:()=>[{say:'방송부 학생이군요. 부원은 몇 명이에요?'},{say:'부원 다섯 명, 그리고 축제 날 방송. 잊지 마세요.'}],
+  talk:()=>f().nextDay||f().done?NPC.principal.again():[{say:'방송부 왔어요? 부원은 몇 명이에요?'},{say:'부원 다섯 명, 그리고 축제 날 방송. 잊지 마세요.'}],
   again:()=>{const F=f();if(F.done)return [{say:'점심 방송, 들었어요.'},{say:'복도가 아주 조용했어요. 다들 듣고 있었어요.'},{say:'좋은 연습이었어요. 하지만 연습은 연습이에요.'},{say:'부원은 아직 네 명. 그리고 진짜는 축제 날이에요.'}];
    if(F.nextDay)return [{say:'점심시간에 방송실이 바쁘다고 들었어요.'},{say:'아침에 학부모회 분들이 왔다 갔어요.'},{say:'방송실을 심화반 교실로 쓰고 싶대요.'},{say:'…그래도 축제까지는 약속이에요.'}];
    if(F.afterSchool)return [{say:'아직 학교에 있어요? 하교 시간이 지났어요.'},{say:'조심히 들어가요.'}];
@@ -1025,8 +1025,10 @@ const NPC={
    :[{say:'…빨리 먹고 자습하러 가야 돼.'},{say:'고3은 밥도 뛰면서 먹어.'}]},
 
  xPE:{name:'체육 선생님',zone:'gym',x:6,y:10,dir:'up',look:LOOK.pe,
-  hide:()=>!f().afterSchool||!!f().nextDay,
-  talk:()=>[{say:'지금은 농구부 연습 시간이에요.'},{say:'구경은 괜찮아요. 공 조심해요!'}]},
+  hide:()=>!f().afterSchool&&!f().nextDay,
+  talk:()=>f().done?[{say:'점심 방송, 여기서도 다 들렸어요.'},{say:'공 정리하다가 멈추고 들었어요.',face:'happy'}]
+   :f().nextDay?[{say:'점심시간엔 체육관이 조용하네요.'},{say:'공 정리하는 중이에요. 방송부죠? 오늘 방송 기대할게요.'}]
+   :[{say:'지금은 농구부 연습 시간이에요.'},{say:'구경은 괜찮아요. 공 조심해요!'}]},
  xBall1:{name:'준서',zone:'gym',x:2,y:6,dir:'left',look:LOOK.junseo,banmal:1,
   hide:()=>!f().afterSchool||!!f().nextDay,
   script:()=>sideScene('cat'),talk:()=>[]},
@@ -1051,7 +1053,7 @@ look:LOOK.xS3,banmal:1,
 const FOLLOW=null;
 
 const INTRO=[{who:'…',say:'다음 날 점심시간. 방송실.'},{who:'…',say:'구름이 큰 종이를 들고 기다려요.'}];
-const DONE=[{who:'백구름',say:'교장 선생님도 들으셨대. 좋은 연습이래.',set:()=>{f().quiet=1}},{who:'백구름',say:'진짜는 축제 날이야. 그리고 부원 한 명 더.'},'사연함에 카세트가 하나 들어 있어요.','"1994 방송부 · 복숭아" 쪽지: "목소리 좋다. 다음은 이야기."','구름이 쪽지를 오래 봐요. "1994년…? 우리 방송부 선배?"','2교시 끝!',{expand:()=>wrapUp()},'방송실 책상 위 복습 노트북에서 단어를 다시 볼 수 있어요.'];
+const DONE=[{who:'백구름',say:'교장 선생님도 들으셨대. 좋은 연습이래.',set:()=>{f().quiet=1}},{who:'백구름',say:'진짜는 축제 날이야. 그리고 부원 한 명 더.'},{who:'백구름',say:'근데 학부모회가 방송실을 심화반 교실로 쓰고 싶대.',face:'sad'},'사연함에 카세트가 하나 들어 있어요.','"1994 방송부 · 복숭아" 쪽지: "목소리 좋다. 다음은 이야기."','구름이 쪽지를 오래 봐요. "1994년…? 우리 방송부 선배?"','2교시 끝!',{expand:()=>wrapUp()},'방송실 책상 위 복습 노트북에서 단어를 다시 볼 수 있어요.'];
 
 /* what the 운동장 clock shows: lunch, 방과 후 at the 분식집, the next day's lunch (the first broadcast) */
 const clock=()=>{const F=f();return F.done?[12,50]:F.nextDay?[12,30]:F.afterSchool?[4,30]:[12,30]};

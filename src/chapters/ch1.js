@@ -677,7 +677,7 @@ const NPC={
    :F.metTeacher?['시험지가 너무 많아요.','3반 교실은 복도 오른쪽 끝이에요.']:['정 선생님 자리는 화분 옆이에요.'])}},
  musicT:{name:'음악 선생님',zone:'hall',x:2,y:2,dir:'down',look:LOOK.musicT,hide:()=>{const F=f();return F.metTeacher&&!F.lunch||F.deal&&!F.crew3},
   talk:()=>[{say:'2학년 3반 전학생? 정 선생님 반이네요.',face:'happy'},{say:'저는 음악 선생님이에요. 음악실은 2층이에요.'}],
-  again:()=>{const F=f();return pick(F.done?['아까 스피커에서 옛날 노래가 나왔죠? 저도 깜짝 놀랐어요.','그 스피커, 원래 아무 소리도 안 나요. 이상하네요.']:F.crew3?['첫날 어땠어요? 내일 봐요.','방송부 얘기, 교무실에서도 다들 해요.']
+  again:()=>{const F=f();return pick(F.done?['아까 스피커에서 옛날 노래가 나왔죠? 저도 깜짝 놀랐어요.','안내 방송도 아닌데 노래가 나왔어요. 이상하네요.']:F.crew3?['첫날 어땠어요? 내일 봐요.','방송부 얘기, 교무실에서도 다들 해요.']
    :F.metChan?['방송실 귀신? 하하, 그런 거 없어요.','교무실에서는 조용히 해 주세요.']:F.lunch?['아까 음악 시간, 3반 노래 좋았어요.','교무실에서는 조용히 해 주세요.']:['교무실에서는 조용히 해 주세요.','첫날이라 힘들죠? 천천히 해요.'])}},
  engT:{name:'영어 선생님',zone:'hall',x:2,y:2,dir:'down',look:LOOK.engT,hide:()=>{const F=f();return !(F.metTeacher&&!F.lunch||F.deal&&!F.crew3)},
   talk:()=>{const F=f();return [{say:'3반 전학생이죠? 저는 영어 선생님이에요.'},{say:F.deal?'정 선생님은 지금 3반 교실에 있어요. 종례 시간이에요.':F.seated?'아까 단어 시험, 어땠어요? 하하.':'오늘 3반 영어 시간에 단어 시험이 있어요.'}]},
@@ -757,7 +757,7 @@ const NPC={
     {say:'혼자서는 무서웠는데… 오늘 진짜 고마웠어요.'},
     {say:'다섯 명은 어려워도 해 볼게요.'},
     {who:'스피커',say:'지지직… ♪ 라라라… ♪'},
-    {who:'…',say:'고장 난 스피커에서 옛날 노래가 나와요!'},
+    {who:'…',say:'조용하던 복도 스피커에서 옛날 노래가 나와요!'},
     {say:'방송실 기계는 다 고장 났는데…'},
     {say:'…지금 그거, 누가 튼 거예요?',set:()=>{f().done=1},finale:1}]},
   talk:()=>[]},
@@ -955,7 +955,7 @@ const NPC={
   talk:()=>[{say:'종례 끝! 이제 학원 가야 돼.'},{say:'지겹다… 너도 학원 다녀?'}]},
  xHome2:{chat:'xHome1',name:'2학년 학생',zone:'yard',x:9,y:11,dir:'left',look:LOOK.xHome2,banmal:1,
   hide:()=>!f().crew3,
-  script:()=>f().done?[{say:'아까 복도 스피커에서 노래 나왔지?',face:'surprised'},{say:'누가 튼 거야? 방송실은 문 닫았잖아.'}]:null,
+  script:()=>f().done?[{say:'아까 복도 스피커에서 노래 나왔지?',face:'surprised'},{say:'누가 튼 거야? 방송실은 아무도 안 쓰잖아.'}]:null,
   talk:()=>[{say:'너 방송부 한다며? 벌써 소문났어.'},{say:'축제 때 진짜 방송해? 대박.'}]},
 
  xHall1:{name:'2학년 학생',zone:'hall',x:2,y:7,dir:'right',look:LOOK.xHall1,banmal:1,
