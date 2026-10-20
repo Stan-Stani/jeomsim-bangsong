@@ -10,14 +10,15 @@ The player is a 전학생 who arrives in 2학년 3반 in spring.
 
 On day one a folded note falls out of a borrowed 지우개 sleeve: *"점심시간, 방송실 구석. —복숭아"*.
 In that dusty corner the player finds **방송부**, the school broadcast club — one member left (백구름), a dead mixing desk,
-and a notice from the 교장: no members and no broadcast by the 축제 → the room becomes a 심화반 study room.
+and a notice from the 교장: five members by the 축제 and a broadcast on festival day, or the club closes and the room becomes a
+심화반 classroom. Teachers now make announcements from the 교무실 PA, so the room looks unneeded; the 학부모회 wants it.
 
 Running goal (4 chapters): rebuild the lunchtime broadcast and go live at the 축제.
 Running light mystery: **who is 복숭아?** Notes signed 복숭아 keep turning up at the right moment, with small clues:
 an old 1994 방송부 cassette (2교시), a peach 향기 and pre-1988 spelling "했읍니다" (3교시), a 1994 yearbook photo (4교시).
 Red herring: 매점 이모 sells 복숭아 주스, and 찬 is sure it's her.
-Reveal (4교시 finale): 복숭아 is 교장 **한복순** — 복순 → "복숭아", her nickname as the club's DJ in 1994. She signed the closure
-under pressure from the parents' committee and quietly pushed the kids to beat it.
+Reveal (4교시 finale): 복숭아 is 교장 **한복순** — 복순 → "복숭아", her nickname as the club's DJ in 1994. She wrote the closure
+notice (the 학부모회 wanted the room) and quietly pushed the kids to beat it; she also played day one's "ghost" song on the 교무실 PA.
 
 Tone: warm slice-of-life, small-scale stakes, school humor (late fines, rumor mill, 매점 runs, 롱패딩 seniors).
 Crushes may exist in the background (찬 is hopeless about 다온; nobody acts on it). No bullying beyond one teasing scene the player stops.
@@ -66,7 +67,8 @@ Steps:
 3. Seat next to 다온; her 지우개 drops (하필 now). 줍다 it → a folded note falls out → item `복숭아 쪽지`. 다온: "일부러 넣은 거 아니야."
 4. 급식실: 찬 says your arrival already 소문나다 ("전학생이 방송실 귀신 봤대!"); he 쏘다 you a 바나나우유 → item `바나나우유`; 친해지다.
 5. 방송실 구석: 구름 hides behind the desk, 당황하다, eyes 마주치다 and he looks away. Give him the 바나나우유. He shows the closure notice → item `폐부 안내문`.
-6. 교장실 (in 복도): 전하다 the notice back with "방송부 할 거예요"; 교장: "축제까지 방송 한 번. 부원 다섯 명." → flag `deal`.
+6. 교장실 (in 복도): 전하다 the notice back with "방송부 할 거예요"; 교장: two conditions — 부원 다섯 명 by the 축제, and a broadcast
+   on festival day; she'll keep the room until then and decide after hearing it → flag `deal`.
 7. 교실, 종례: 정 선생님 announces 축제 date; 찬 and 다온 reluctantly say they'll "구경만" come → flag `crew3`.
 Finale idea: 하교 — the dead speaker in the corridor crackles with an old song nobody played. 구름: "…지금 그거, 누가 튼 거예요?" (finale)
 Hook: a second note on your shoe locker: "고마워. 다음은 노래. —복숭아"
@@ -97,12 +99,13 @@ Steps:
 1. 교무실: 가입하다 — five names on the form; 정 선생님 wants it 제출하다 today → item `가입 신청서` (four names; 찬's is missing).
 2. 찬 is at the 도서관 writing a punishment 독후감; his 맞춤법 is a disaster. Help fix it (choice questions on spelling) → he signs → flag `signed5`.
 3. 복도: the poster for the 사연 segment must 붙다 on the 게시판 → item `사연함` placed.
-4. 찬 엿듣다 구름 on the phone ("그만둘까…" — about 학원, not the club), 오해하다, and the school SNS fills with 댓글 "방송부 끝났대". 다온 says 무시하다; 구름 hurt.
+4. 찬 엿듣다 구름 on the phone ("그만둘까…" — his mother wants one more 학원 after school, so he wonders about quitting the club), 오해하다, and the school SNS fills with 댓글 "방송부 끝났대". 다온 says 무시하다; 구름 hurt.
 5. 노래방: whole crew practicing; 찬 끼어들다 every song; player reads the 눈치 and gets 찬 to 사과하다 to 구름; 구름 admits it's a 비밀 he was 고민하다 about (parents want him at one more 학원 after school).
 6. 사연함: one letter smells of peach 향기 and is spelled "했읍니다" — 정 선생님: "옛날 맞춤법이에요." 찬: "매점 이모다!" → 매점 이모 laughs, sells 복숭아 주스 to everyone (뽑다 from the 자판기) → item `복숭아 주스`.
 7. 하리 reads the first 사연 on air despite feeling 창피하다; the school is 감동 → flag `sayeonAired`.
 Finale idea: 구름 on air: "보내 주신 사연, 잘 읽었어요. 복숭아 님, 누구세요?" (finale)
-Hook: 교장's announcement: the 방송실 will become a 심화반 room right after the 축제 — and the mixing desk's 회로 just burned out.
+Hook: 교장's PA announcement: the 학부모회 proposes the 방송실 as a 심화반 room; parents and the 운영위원회 will hear the festival
+broadcast and the room is decided at a meeting afterwards — and the mixing desk's 회로 (taped up in 2교시) just burned out.
 
 ### 4교시 · 축제 생방송 (area 3)
 Places: **방송실 (hub)** · 운동장 축제 무대 · 동네 상가 (편의점, 학원 건물) · 교장실.
@@ -115,11 +118,30 @@ Steps:
 3. 동네 상가: 하리 and 찬 hang 광고 posters in shops → item `광고 포스터` (3 shops; each owner one line). 편의점 owner hands over a spare fuse → item `부품`.
 4. 학원 건물: 태식 between classes; "나 이제 생초보 아니야, 기술 있어." He'll come if you bring the part → he follows (FOLLOW) back to school.
 5. 방송실: 태식 fixes the 회로 (build question); 구름 promises his 부모님 he'll keep his 평가 up (약속) → flag `fixed`.
-6. 교장실: the club may be 쫓겨나다 after all; a 1994 yearbook on the shelf shows the 방송부 photo — DJ 한복순 "복숭아". Inspect it → flag `clue`.
+6. 교장실: 교장 explains the 학부모회 ("노래 틀고 떠드는 건 누구나 해요"), the 3층 창고 that would take long to clear, and Monday's
+   운영위 meeting: show why the school needs the club, or be 쫓겨나다; a 1994 yearbook on the shelf shows the 방송부 photo — DJ 한복순 "복숭아". Inspect it → flag `clue`.
 7. 운동장 무대: live broadcast; 하리 sings, 찬 does the jokes, 다온 runs the clock, 구름 at the mic.
-8. 교장 comes on air: she was 복숭아; her 꿈 was to hear this room alive again — it 이루다. The room stays; 태식 later 합격하다 (epilogue line). Her 표정 when the kids cheer.
+8. 교장 tells the crew she was 복숭아, then names herself on the mic; 1994 alumni among the parents shout "복숭아 언니!", a
+   운영위원 nods; the decision is Monday's but her mind is made up. Her 꿈 was to hear this room alive again — it 이루다. Epilogue:
+   Monday's 운영위 keeps the room (심화반 gets the cleared 3층 창고); 태식 later 합격하다. Her 표정 when the kids cheer.
 Finale idea: 교장 on air: "여기는 느티고 방송부. 삼십 년 만이네요." (finale, last line by 구름: "내일 점심에도 들어 주세요.")
 Hook (series): a new note in the 사연함, not in 교장's handwriting: "다음 학기 사연 있어요. —복숭아 2호"
+
+## 3b. Stakes ledger and setups (keep the chapters to this)
+
+The deal has two terms: **M** five registered members, **F** a broadcast on festival day. Lunch broadcasts are practice.
+| After | M | F | Room |
+|---|---|---|---|
+| 1교시 `deal` | 2 willing | open | kept until the festival; decided after hearing it |
+| 2교시 `done` | 4 | open ("연습은 연습이에요") | 학부모회 wants it for a 심화반 (background) |
+| 3교시 `submitted` | **met** (교장 confirms) | open | — |
+| 3교시 `done` | met | open | PA: parents + 운영위 will hear the festival broadcast; meeting after. Desk burns out. |
+| 4교시 `fixed` | met | possible again | now they must be good enough |
+| 4교시 `done` | met | **met** | 운영위 on Monday keeps it (epilogue) |
+
+Setups → payoffs: 심화반 plan (1교시 notice) → 4교시; teachers' 교무실 PA (1교시 구름) → day-one song confessed in 4교시;
+tape repair (2교시) → burnout (3교시); 학부모회 visit (2교시 교장), meeting (3교시) → 4교시; 1994 trophy/cassette/old spelling →
+yearbook → reveal. No line may restate a met term as open, or treat the room as already lost.
 
 ## 4. Words per chapter
 

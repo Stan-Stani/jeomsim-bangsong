@@ -50,6 +50,7 @@ const DICT={
  '납땜':{k:'뜨거운 도구로 기계 안의 선을 붙이는 일.',e:'soldering'},
  '공대':{k:'공과 대학. 기계, 전기 같은 것을 배우는 대학.',e:'engineering school'},
  '학부모회':{k:'학생 부모님들의 모임.',e:"parents' committee (PTA)"},
+ '운영위원회':{k:'선생님, 부모님, 동네 사람이 모여서 학교 일을 같이 정하는 모임.',e:'school steering committee'},
  '졸업 앨범':{k:'졸업할 때 만드는 사진 책.',e:'yearbook'},
  '디제이':{k:'라디오에서 음악을 틀고 말하는 사람.',e:'DJ'},
  '실장님':{k:'학원 사무실에서 일하는 사람. 학원 일을 다 알아요.',e:'(academy) office manager'},
@@ -771,7 +772,7 @@ const NPC={
    {say:'왔어? …기계가 완전히 죽었어.',face:'sad'},
    {who:'…',say:'버튼을 눌러도 불이 안 들어와요.'},
    {say:'축제까지 사흘. 방송 못 하면 끝이야.',face:'sad'},
-   {say:'축제 끝나면 여기가 {심화반|심화반} 교실이 된대.'},
+   {say:'방송 못 하면 여기가 {심화반|심화반} 교실이 될 거야.'},
    Q.gureum[0],
    {say:'어젯밤에 잠도 못 잤어. 계속 생각했어.'},
    Q.gureum[1],
@@ -788,8 +789,8 @@ const NPC={
    if(!has('방법'))return null;
    if(!f().counsel)return [{say:'교무실 가 봐. 태식 선배 지금 상담 중이야.'},{say:'교무실은 복도 왼쪽 끝이야.'}];
    if(!f().fixed)return [{say:'학원? 3학년은 매일 밤까지 학원이야.'},{say:'포스터는 찬이랑 하리가 들고 갔어.'}];
-   if(!f().promise)return [{say:'불 들어왔다! …나 안 울었어. 먼지야.',face:'happy'}];
-   if(f().warned)return [{say:'교장 선생님 얘기 들었어. …괜찮아.',face:'think'},{say:'우리가 잘하면 돼. 무대에서 보자.'}];
+   if(!f().promise)return [{say:'불 들어왔다! …나 안 울었어. 먼지야.',face:'happy'},{say:'이제 사람들이 듣게 만들어야 해.'}];
+   if(f().warned)return [{say:'교장 선생님 얘기 들었어. 학부모님들도 온대.',face:'think'},{say:'제대로 들려주자. 무대에서 보자.'}];
    return [{say:'교장실 빨리 가. 교무실 옆이야.',face:'angry'},{say:'늦으면 벌금이야. …농담이야. 근데 빨리.'}]},
   talk:()=>[
    {say:'구름아, 울지 마. 아직 안 끝났어.'},
@@ -848,7 +849,7 @@ const NPC={
  kid:{name:'1학년 학생',zone:'hall',x:20,y:7,dir:'up',look:LOOK.kid,
   script:()=>{
    if(f().done)return [{say:'선배! 교장 선생님이 복숭아였어요?!',face:'surprised'},{say:'우리 반 단톡방 지금 난리 났어요.'}];
-   if(f().live)return [{say:'선배! 하리 선배 노래 들었어요!',face:'happy'},{say:'근데 교장 선생님이 왜 무대에 오셨어요?'}];
+   if(f().live)return [{say:'선배! 하리 노래 들었어요!',face:'happy'},{say:'근데 교장 선생님이 왜 무대에 오셨어요?'}];
    if(f().clue)return [{say:'축제다! 선배, 방송 몇 시예요?',face:'happy'},{say:'두 시요? 맨 앞에서 들을게요!'}];
    if(f().promise)return [{say:'선배! 편의점에서 방송부 포스터 봤어요!'},{say:'우리 엄마도 보러 온대요.',face:'happy'}];
    return null},
@@ -869,10 +870,13 @@ const NPC={
    {say:'{학부모회|학부모회}에서 방송실을 원해요.'},
    {say:'공부 잘하는 학생들 교실로요.'},
    Q.pr[0],
-   {say:'오늘 축제 방송, 저도 들을 거예요.'},
-   {say:'잘하면 방송실은 그대로예요. 못하면…',face:'think'},
-   {who:'남궁찬',say:'…방송실에서 쫓겨나는 거죠?',face:'sad'},
-   {say:'그래요. 미안해요. 저도 입장이 곤란해요.',face:'sad'},
+   {say:'3층 창고는 치우는 데 오래 걸리거든요.'},
+   {say:'"노래 틀고 떠드는 건 누구나 해요." 그렇게 말했어요.'},
+   {say:'오늘 학부모님들과 {운영위원회|운영위원회}도 방송을 들어요.'},
+   {say:'그리고 월요일 회의에서 방송실 일을 정해요.'},
+   {say:'방송부가 왜 필요한지 들려주세요.',face:'think'},
+   {who:'남궁찬',say:'…못 하면 방송실에서 쫓겨나는 거죠?',face:'sad'},
+   {say:'그럴 수도 있어요. 미안해요. 저도 입장이 곤란해요.',face:'sad'},
    Q.pr[1],
    {say:'자, 저는 무대에 먼저 가 볼게요.'},
    {who:'…',say:'교장 선생님이 나갔어요. 교장실이 조용해요.',award:['심화반','표정'],set:()=>{f().warned=1},leave:{npc:'principal',to:[9,8]}}]},
@@ -889,7 +893,7 @@ const NPC={
    {who:'…',say:'"1994 방송부" 사진. 여학생이 마이크를 잡고 웃어요.',phone:DJ_PHOTO},  // the photo itself, so the reveal doesn't rest on reading the caption
    {who:'…',say:'사진 밑에: "{디제이|디제이} 한복순 (복숭아)"'},
    {say:'한복순… 복순… 복숭아?! 헐, 대박.',face:'surprised'},
-   {say:'매점 이모 아니었어? 내 추리가 틀렸어?',face:'sad'},
+   {say:'나 처음엔 매점 이모라고 했잖아. 완전 틀렸네.',face:'sad'},
    {say:'잠깐, 사진 찍자. 찰칵.',give:PHOTO},
    {say:'방송 끝나고 이거 교장 선생님한테 보여 드려.',face:'happy'},
    {who:'…',say:'시간이 금방 가요. 곧 두 시, 생방송이에요.',black:1,set:()=>{f().clue=1}}]},  // a time cut over black; the end of the talk brings the hall back
@@ -1125,10 +1129,13 @@ const NPC={
     {who:'남궁찬',say:'오늘의 농담! 교장 선생님 최애 과일은?',face:'happy'},
     {who:'남궁찬',say:'…복숭아! 하하하!',face:'happy'},
     {who:'…',say:'운동장이 한바탕 웃음바다가 돼요.'},
+    {who:'…',say:'팔짱 낀 학부모님도 웃음을 못 참아요.'},
     {who:'오다온',say:'…남궁찬. 방송 끝나고 벌금.',face:'angry'},
     {say:'다음은 사연 코너! 오늘은 하리가 읽어요.',face:'happy'},  // the 사연 코너 from 3교시 (owner's call, review k3)
     {who:'유하리',say:'"방송부 선배들, 점심 방송 매일 잘 듣고 있어요."',face:'think'},
+    {who:'유하리',say:'"방송 얘기로 반 친구들이랑 처음 말했어요."',face:'think'},
     {who:'유하리',say:'"오늘은 노래 꼭 들려주세요. —1학년 3반"',face:'happy'},
+    {who:'…',say:'맨 뒤의 학부모님 한 분이 고개를 끄덕여요.'},
     {who:'유하리',say:'다음 곡… 제가 부를게요.',face:'think'},
     {who:'…',say:'구름이 나를 보고 하리 마이크를 가리켜요.'},
     ...cue(0)]}
@@ -1195,18 +1202,24 @@ const NPC={
    {who:'남궁찬',say:'헉! 진짜 교장 선생님이었어!',face:'surprised'},
    {say:'복순, 복숭아. 친구들이 그렇게 불렀어요.',face:'happy'},
    {say:'쪽지도, 카세트도, 편지도 다 저였어요.'},
+   {say:'첫날 그 노래도요. 교무실 마이크로 틀었어요.'},
    Q.prS[0],
    Q.prS[1],
    {say:'방송실이 다시 살아나는 거. 그게 새 꿈이었어요.',face:'sad'},
-   {say:'방송부 문 닫는다는 안내문은 미안해요. 학부모회 때문이었어요.',face:'sad'},
+   {say:'폐부 안내문은 제가 썼어요. 미안해요.',face:'sad'},
+   {say:'학부모회 의견도 들어야 하는 게 교장이에요.'},
    {say:'그래서 몰래 쪽지를 썼어요. 여러분 힘내라고.',grammar:'rago'},
    {say:'마이크… 저도 잠깐 써도 될까요?',face:'think'},
    {who:'백구름',say:'그, 그럼요! 여기요!',face:'surprised',move:{npc:'principalS',to:[19,5],dir:'down'}},  // she starts up the steps to the mic (center of the stage) on this line: the walk takes ~1 s, so by the narration below she is there, not still on the stairs
    {who:'…',say:'교장 선생님이 무대에 올라가서 마이크 앞에 서요.'},
    {say:'느티고 여러분, 교장 한복순입니다.'},
-   {say:'학부모회도 오늘 방송을 들었어요.'},  // why she can change her mind: the parents who wanted the room heard the show
-   {say:'방송실은 그대로 둡니다.'},
-   {say:'심화반은 3층 빈 교실에서 합니다.'},
+   {say:'1994년, 저도 이 방송부 디제이였어요.'},
+   {say:'별명은 복숭아. 정말 오랜만에 말하네요.',face:'happy'},
+   {who:'…',say:'학부모 자리에서 누가 외쳐요. "복숭아 언니!"'},
+   {who:'…',say:'옛날 방송부 친구들이에요. 다 같이 손을 흔들어요.'},
+   {say:'학부모님들, 운영위원회 선생님들. 방송 들으셨죠?'},  // the decision itself is the 운영위's, on Monday (the epilogue); here the room's case is heard
+   {who:'…',say:'운영위원 한 분이 웃으면서 고개를 끄덕여요.'},
+   {say:'결정은 월요일 회의에서 해요. 제 마음은 벌써 정했지만요.'},
    {who:'…',say:'운동장에서 "와아!" 소리가 터져요.'},
    {who:'…',say:'교장 선생님 표정이 소녀처럼 환해요.'},
    Q.prS[2],
@@ -1292,8 +1305,9 @@ const FOLLOW={name:'마태식',look:LOOK.taesik,when:()=>!!f().taesikCome&&!f().
 function fixTalk(){return NPC.gureumF.talk().map(s=>s.who?s:{...s,who:'백구름'})}
 
 const INTRO=[{who:'…',say:'축제 사흘 전. 방송실에 탄 냄새가 나요.'},{who:'…',say:'방송 기계에서 아직 연기가 조금 나요.'}];
-const DONE=[{expand:()=>wrapUp()},{say:'구름 엄마도 축제 방송을 들었대요.',set:()=>{f().quiet=1}},{say:'"목소리 좋더라." 구름이 그 말을 세 번 했어요.',grammar:'deora'},  // the epilogue: festival night, then a time cut over black (winter, spring)
- {say:'겨울. 태식 선배가 대학에 합격했어요.',black:1},'그 소식은 점심 방송으로 들었어요.','봄. 사연함에 새 쪽지가 있어요.',
+const DONE=[{expand:()=>wrapUp()},{say:'구름 엄마도 축제 방송을 들었대요.',set:()=>{f().quiet=1}},{say:'"목소리 좋더라." 구름이 그 말을 세 번 했어요.',grammar:'deora'},  // the epilogue: festival night, then time cuts over black (Monday's 운영위, winter, spring)
+ {say:'월요일. 운영위원회 회의가 끝났어요.',black:1},'방송실은 그대로. 심화반은 3층 창고를 치워서 써요.',
+ {say:'겨울. 태식 선배가 대학에 합격했어요.'},'그 소식은 점심 방송으로 들었어요.','봄. 사연함에 새 쪽지가 있어요.',
  '교장 선생님 글씨가 아니에요.','"새 학기 사연 있어요. —복숭아 2호"','4교시 끝!',{say:'다시 축제 날, 오후 네 시예요.',black:0},'방송실 복습 노트북에서 단어를 다시 볼 수 있어요.'];
 
 /* what the 운동장 clock shows (its hands; the 'C' line says the same): lunch, 방과 후, the festival day's hours */

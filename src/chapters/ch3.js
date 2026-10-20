@@ -17,7 +17,8 @@ const DICT={
   '주다(도움)':{k:'다른 사람을 위해 해요.',e:'to do for someone'},
   '-(으)ㄹ게':{k:'내가 하겠다고 약속할 때 써요. (갈게, 할게)',e:'I will (promise)'},
   '사다(사요)':{k:'돈을 내고 물건을 가져요.',e:'to buy'},
- '학부모회':{k:'학생 부모님들의 모임.',e:"parents' committee (PTA)"},  // the principal's meeting (as in 4교시)
+ '학부모회':{k:'학생 부모님들의 모임.',e:"parents' committee (PTA)"},
+ '운영위원회':{k:'선생님, 부모님, 동네 사람이 모여서 학교 일을 같이 정하는 모임.',e:'school steering committee'},  // the principal's meeting (as in 4교시)
  '비밀':{k:'다른 사람한테 말하지 않는 이야기. "쉿!"',e:'secret',ex:'이건 우리 둘만의 비밀이야.',hj:'祕密 · 비밀번호의 비밀'},
  '엿듣다':{k:'남의 이야기를 몰래 들어요. 문 뒤에서, 벽 뒤에서. (엿들어요, 엿들었어요)',e:'to eavesdrop',ex:'문 뒤에서 이야기를 엿들었어요.'},
  '오해하다':{k:'말이나 일을 잘못 알아요. 사실과 다르게 생각해요.',e:'to misunderstand',ex:'내 말을 오해하지 마.',hj:'誤解 · 解 = 풀다 · 이해(理解)의 해'},
@@ -699,7 +700,7 @@ const NPC={
 
  gureumFin:{name:'백구름',zone:'bcast',x:5,y:3,dir:'up',look:LOOK.gureum,banmal:1,badge:['감동'],
   hide:()=>!f().secret,
-  get after(){return pick([[{say:'방송실이 심화반 교실이 된대…',face:'sad'},'우리 이제 막 시작했는데.'],['기계에서 연기 났어. 내일 방송은 할 수 있을까?'],['톡이 아직도 와. 다들 감동했대.'],['복숭아 님… 진짜 누굴까?']])},  // only after the finale
+  get after(){return pick([[{say:'학부모님들이 방송실을 심화반 교실로 쓰고 싶대…',face:'sad'},'우리 이제 막 시작했는데.'],['기계에서 연기 났어. 내일 방송은 할 수 있을까?'],['톡이 아직도 와. 다들 감동했대.'],['복숭아 님… 진짜 누굴까?']])},  // only after the finale
   status:()=>{if(!has('감동'))return f().aired?'todo':null},
   script:()=>{const F=f();
    if(F.done)return null;
@@ -720,7 +721,7 @@ const NPC={
 
  daonEnd:{name:'오다온',zone:'bcast',x:9,y:5,dir:'left',look:LOOK.daon,banmal:1,
   hide:()=>!f().secret,
-  script:()=>f().done?[{say:'방송실이 심화반 교실? 말도 안 돼.',face:'angry'},{say:'축제까지 방법을 찾자. 포기하면 벌금이야.'}]
+  script:()=>f().done?[{say:'방송 한 번은 누구나 한다고? 말도 안 돼.',face:'angry'},{say:'축제까지 방법을 찾자. 포기하면 벌금이야.'}]
    :f().juice&&!hasItem('복숭아 주스')?[{say:'주스 고마워. 시간 딱 맞췄네.',face:'happy'}]
    :f().juice?[{say:'방송까지 십 분! 하리부터 주스 줘. 목 마르대.'}]
    :[{say:'점심 방송에서 하리가 첫 사연을 읽어. 늦으면 벌금이야.'},{say:'하리 목 마르대. 점심 전에 주스 하나 사 와.'}],
@@ -754,7 +755,7 @@ const NPC={
  /* ---------- 복도 ---------- */
  /* two more teachers at their desks: the 교무실 구름 calls 사람 많은 */
  kimT:{name:'김 선생님',zone:'hall',x:3,y:4,dir:'left',look:LOOK.kimT,
-  script:()=>react('kimT',[{say:'아까 교장 선생님이 여기서 방송했어요.'},{say:'방송실이 교실이 된다니… 저도 놀랐어요.',face:'surprised'}]),
+  script:()=>react('kimT',[{say:'아까 교장 선생님이 여기서 방송했어요.'},{say:'방송실 일을 회의에서 정한대요. 저도 놀랐어요.',face:'surprised'}]),
   talk:()=>[{say:'시험지를 보고 있어요. 빨간 펜이 모자라요.'},{say:'정 선생님 자리는 화분 옆이에요.'}]},
  hanT:{name:'한 선생님',zone:'hall',x:2,y:2,dir:'down',  // at her desk, off the aisle (at 7,3 the desks and 정 선생님 sealed her in; at 3,3 김 선생님's ? drew over her)
 look:LOOK.hanT,
@@ -765,10 +766,10 @@ look:LOOK.hanT,
     사연 comes from the 교무실 mic; no hint of 복숭아 before 4교시 */
  principal:{name:'한복순 교장 선생님',zone:'hall',x:12,y:1,dir:'down',look:LOOK.principal,
   talk:()=>[{say:'방송부 학생이군요.'},{say:'요즘 방송부 소문이 많네요. 좋은 소문이면 좋겠어요.'}],
-  again:()=>{const F=f();if(F.done)return [{say:'방송 들었죠? 축제가 끝나면 방송실은 심화반 교실이 돼요.'},{say:'…학교가 정한 일이에요.',face:'sad'}];
+  again:()=>{const F=f();if(F.done)return [{say:'방송 들었죠? 학부모회 의견이에요.'},{say:'약속은 지켜요. 축제 방송을 듣고 정해요.',face:'sad'}];
    if(F.aired)return [{say:'점심 방송, 교장실에서도 들렸어요.'},{say:'방송실로 돌아가요. 구름 학생이 기다려요.'}];
    if(F.secret)return [{say:'오늘 오후에 {학부모회|학부모회} 회의가 있어요.'},{say:'바빠요. 복도에서 뛰지 마요.'}];
-   if(F.submitted)return [{say:'정 선생님한테 신청서를 냈다고 들었어요.'},{say:'방송도 했고, 부원도 다섯 명이네요.'}]  // the 1교시 deal (one broadcast, five members) is met: 하리's song in 2교시, the five names now;
+   if(F.submitted)return [{say:'정 선생님한테 신청서를 냈다고 들었어요.'},{say:'부원 다섯 명, 확인했어요.'},{say:'이제 남은 건 축제 날 방송이에요.'}]  // the 1교시 deal: five members (met now) and the festival broadcast (still ahead);
    return [{say:'동아리 등록 신청서요? 그건 정 선생님한테 내요.'},{say:'다섯 명 이름, 다 있어야 돼요.'}]}},
  jung:{name:'정 선생님',zone:'hall',x:6,y:2,dir:'down',look:LOOK.jung,badge:['가입하다','제출하다','독후감','맞춤법'],
   get after(){const F=f();   // the review line follows the two days: club form, rumor, the morning after, the 사연
@@ -870,7 +871,10 @@ look:LOOK.hanT,
    {say:'…으, 근데 내 신발 밑에 이거 뭐야?',face:'angry'},
    Q.daonBd[1],
    {who:'…',say:'한참 뒤에 껌이 겨우 떨어졌어요.'},
-   {say:'됐다. 사연이 많이 오면 좋겠다.',award:['붙다'],walk:{npc:'chanRumor',from:[9,8]}}]},
+   {say:'됐다. 사연이 많이 오면 좋겠다.'},
+   {who:'…',sfx:'bell',say:'종이 울려요. 다들 교실로 뛰어가요.',black:1},  // a time cut over black: the morning's classes
+   {who:'학교 종',say:'딩동댕동… 오전 수업 끝! 점심시간이에요.'},
+   {who:'…',say:'점심시간. 게시판 앞으로 누가 뛰어와요.',black:0,award:['붙다'],walk:{npc:'chanRumor',from:[9,8]}}]},
 
  chanRumor:{name:'남궁찬',zone:'hall',x:22,y:7,dir:'left',look:LOOK.chan,banmal:1,badge:['엿듣다','오해하다'],
   hide:()=>!f().posted||!!f().toNR,
@@ -1008,7 +1012,7 @@ look:LOOK.hanT,
  /* ---------- 학교 앞 ---------- */
  guard:{name:'박 경비 아저씨',zone:'street',x:13,y:8,dir:'up',look:LOOK.guard,
   script:()=>{const q=quizLine(Q.cafe,'guard');
-   const hi=f().done?[{say:'교장 선생님 방송도 들었어요. 방송실이 교실이 된다고요?'},{say:'옛날 방송부 학생들이 들으면 슬퍼하겠어요.'}]
+   const hi=f().done?[{say:'교장 선생님 방송도 들었어요. 방송실을 심화반 교실로요?'},{say:'옛날 방송부 학생들이 들으면 슬퍼하겠어요.'}]
     :f().aired?[{say:'오늘 사연, 경비실에서도 들었어요.'},{say:'옛날 생각이 나네요. 참 좋았어요.'}]
     :f().secret?[{say:'사연 코너요? 옛날 방송부도 했지요.'},{say:'그때 디제이가 편지를 참 좋아했어요.'}]
     :[{say:'학생, 노래방 가요? 좋지요.'},{say:'옛날 방송부도 여기서 많이 놀았어요.'}];
@@ -1108,15 +1112,15 @@ look:LOOK.hanT,
   talk:()=>f().juice?[{say:'이모, 빵 하나 주세요.'},{say:'급식 줄이 너무 길어요. 배고파요.'}]:[{say:'이모, 빵 하나 주세요.'},{say:'아침을 못 먹었어요. 배고파요.'}]},  // juice: it's lunchtime
  xN2:{name:'2학년 학생',zone:'hall',x:19,y:8,dir:'right',look:LOOK.xN2,banmal:1,
   hide:()=>!f().secret,
-  script:()=>f().done?[{say:'방송실이 심화반 교실이 된대.',face:'surprised'}]:f().aired?[{say:'그 사연 누가 보냈을까?',face:'think'}]:null,
+  script:()=>f().done?[{say:'학부모님들이 축제 방송 들으러 온대.',face:'surprised'}]:f().aired?[{say:'그 사연 누가 보냈을까?',face:'think'}]:null,
   talk:()=>[{say:'오늘 점심에 사연 코너 한대.'},{say:'나도 사연 보낼까? 비밀로.'}]},
  xN3:{chat:'xN2',name:'2학년 학생',zone:'hall',x:20,y:8,dir:'left',look:LOOK.xN3,banmal:1,
   hide:()=>!f().secret,
-  script:()=>f().done?[{say:'헐. 사연 코너 이제 막 시작했는데.',face:'sad'}]:f().aired?[{say:'복숭아? 이름이 귀엽다.'},{say:'나도 사연 쓸 때 별명 쓸래.'}]:null,
+  script:()=>f().done?[{say:'헐. 사연 코너 이제 막 시작했는데.',face:'sad'}]:f().aired?[{say:'전학 간 친구 사연, 좀 울컥했어.'},{say:'나도 사연 쓸 때 이름은 안 쓸래.'}]:null,
   talk:()=>[{say:'너 사연 쓰면 창피해서 어떡해?'},{say:'이름 안 쓰면 돼. 하하.'}]},
  xN4:{name:'3학년 선배',zone:'hall',x:13,y:8,dir:'down',look:LOOK.xN4,banmal:1,
   hide:()=>!f().secret,
-  script:()=>f().done?[{say:'심화반 교실? 고3은 좋아하겠네.'},{say:'…{난|나(저는)} 점심 방송이 더 좋은데.'}]
+  script:()=>f().done?[{say:'방송실이 심화반 교실? 고3은 좋아하겠네.'},{say:'…{난|나(저는)} 점심 방송이 더 좋은데.'}]
    :f().aired?[{say:'방송 들으면서 공부했어.'},{say:'이상하게 집중이 잘 되더라.'}]:null,
   talk:()=>[{say:'…논술 맞춤법 틀리면 감점이래.'},{say:'고3은 띄어쓰기도 무서워.'}]},
 
@@ -1146,10 +1150,10 @@ const FOLLOW={name:'남궁찬',look:LOOK.chan,when:()=>!!f().letter&&!f().juice,
  talk:()=>f().oldSpelling?[{say:'매점! 급식실 안에! 범인은 이모야!',face:'happy'}]:[{say:'복숭아… 복숭아… 누굴까?',face:'think'},{say:'일단 정 선생님한테 가자.'}]};
 
 const INTRO=[{who:'…',say:'하리의 첫 방송 뒤, 방송실이 밝아졌어요.'},{who:'…',say:'월요일 아침. 구름이 벌써 기계 앞에 있어요.',cam:[5,3]}];
-const DONE=[{expand:()=>wrapUp()},{say:'방송이 끝나자 교무실 마이크로 교장 선생님 방송이 나와요.',set:()=>{f().quiet=1}},'"축제가 끝나면 방송실은 심화반 교실이 됩니다."',{say:'그 순간, 방송 기계에서 펑! 연기가 나요.',set:()=>{f().smoke=1}},'다섯 명이 아무 말도 못 하고 서로 쳐다봐요.',{say:'3교시 끝!',set:()=>{f().ended=1}},'방송실 복습 노트북에서 단어를 다시 볼 수 있어요.'];
+const DONE=[{expand:()=>wrapUp()},{say:'방송이 끝나자 교무실 마이크로 교장 선생님 방송이 나와요.',set:()=>{f().quiet=1}},'"학부모회에서 방송실을 심화반 교실로 쓰자고 했습니다."','"축제 날 방송, 학부모님들과 {운영위원회|운영위원회}도 함께 듣습니다."','"방송실 일은 축제가 끝나고 회의에서 정합니다."',{say:'그 순간, 방송 기계에서 펑! 연기가 나요.',set:()=>{f().smoke=1}},'다섯 명이 아무 말도 못 하고 서로 쳐다봐요.',{say:'3교시 끝!',set:()=>{f().ended=1}},'방송실 복습 노트북에서 단어를 다시 볼 수 있어요.'];
 
 /* what the 운동장 clock shows: Monday morning, lunch (from the rumor), 방과 후, the next morning, its lunch (the 사연 코너) */
-const clock=()=>{const F=f();return F.done?[12,50]:F.juice?[12,30]:F.secret?[8,20]:F.toNR?[4,30]:F.rumor?[12,40]:[8,30]};
+const clock=()=>{const F=f();return F.done?[12,50]:F.juice?[12,30]:F.secret?[8,20]:F.toNR?[4,30]:F.rumor||F.boxed?[12,40]:[8,30]};
 function questText(){
  const F=f();
  if(F.done)return !F.ended?'방송실 · 구름 마무리 멘트':dueWords().length?'3교시 끝 · 방송실 복습 노트북':'3교시 끝! · 4교시로 가요';
