@@ -572,7 +572,7 @@ const ZONES={...SCHOOL({open:['bcast','hall2','music','library','hagwon'],gate:{
    'e':['무대 앞이에요. 빨간 천에 금색 줄이 있어요.','무대가 꽤 높아요. 계단으로 올라가요.'],
    'm':()=>f().clue?'무대용 기계예요. 선이 방송실까지 길게 가요.':'빈 탁자예요. "방송부 자리"라고 쓰여 있어요.',
    'k':x=>x<4?(f().clue?'1반 떡볶이 부스예요. "다 팔렸어요!" 종이가 붙어 있어요.':'부스를 세우는 중이에요. 천막이 노래요.'):(f().clue?'3반 복숭아 주스 부스예요. 매점 이모 작품이래요.':'부스예요. "2학년 3반"이라고 쓰여 있어요.')},
-  npcs:['guard','setup','daonS','gureumS','hariS','chanS','taesikS','principalS','crowd1','crowd2','jungY','xY1','xPE','xY3','xY4','xY5','xY6','xY7','xPE2']}}}),
+  npcs:['minseo','yeondu','guard','setup','daonS','gureumS','hariS','chanS','taesikS','principalS','crowd1','crowd2','jungY','xY1','xPE','xY3','xY4','xY5','xY6','xY7','xPE2']}}}),
  hagwon:{name:'느티 수학 학원',reg:'CRAM SCHOOL',
   legend:{'#':{tile:'hagwonWall'},'.':{tile:'hFloor',walk:1},'D':{tile:'hagwonExitDoor',walk:1},'W':{tile:'hagwonHallWin'},'R':{tile:'hDoor'},'P':{tile:'adPoster'},
    'J':{tile:'hBoard'},'v':{tile:'hagwonVending'},'m':{tile:'hCounter',over:1},'b':{tile:'hBench'},'w':{tile:'hagwonWater'},'p':{tile:'hagwonPlant'}},
@@ -603,6 +603,11 @@ const ZONES={...SCHOOL({open:['bcast','hall2','music','library','hagwon'],gate:{
   npcs:['silJang','hgStudent','taesikH']}};
 
 const LOOK={
+ minseo:{hair:'#2B1F1F',skin:'#F0CBAA',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#3F7D5A',style:'long',lashes:1,lips:'#D0808A'},
+ yeondu:{hair:'#4A3226',skin:'#E6BC98',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#3F7D5A',style:'bob',lashes:1,lips:'#C97680'},
+ junseo:{hair:'#1E1A1C',skin:'#D29C76',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'short'},
+ geonu:{hair:'#3A2A22',skin:'#E2B48C',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'spiky'},
+ dohyeon:{hair:'#18181B',skin:'#CF9A74',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#C9A13A',style:'short'},
  player:{hair:'#2B2422',skin:'#E6BE9C',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'short'},
  gureum:{hair:'#3B2E2A',skin:'#E2B794',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'bob'},
  daon:{hair:'#2A2024',skin:'#EBC3A2',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'bun',lashes:1,lips:'#C9707A'},
@@ -645,7 +650,113 @@ const PR='한복순 교장 선생님';
 const pick=a=>a[Math.random()*a.length|0];  // a repeat line picked at random, so a character talked to often doesn't say the same thing
 const lastSaid={},pickNew=(k,a)=>{const i=a.map((_,j)=>j).filter(j=>j!==lastSaid[k]),j=lastSaid[k]=pick(i.length?i:[0]);return a[j]};  // …and never the same one twice in a row (for a script, asked once per talk)
 
+/* Optional exposure stories: lunch, after school, then the festival day (also after the finale).
+   Each period stands alone if a visit was missed. Friends proxy to the same scene; only its last
+   spoken line records a side flag. No teaching, review, items, journal notes or quest changes. */
+const sideTime=()=>f().promise?2:f().counsel?1:0;
+const SIDE={
+ drama:[
+  [
+   {who:'민서',say:'선배, 연두랑 드라마를 봤어요.',look:LOOK.minseo},
+   {who:'연두',say:'주인공이 고양이를 꼬시더라고요.',look:LOOK.yeondu},
+   {who:'민서',say:'생선으로 관심을 끌었거든요.',look:LOOK.minseo},
+   {who:'연두',say:'대사는 이거예요. "뽀뽀해도 돼?"',look:LOOK.yeondu,face:'happy'},
+   {who:'민서',say:'고양이가 싫다고 도망가요.',look:LOOK.minseo},
+   {who:'연두',say:'그렇지만 계속 따라가요.',look:LOOK.yeondu},
+   {who:'민서',say:'싫다는데 따라가면 안 되죠.',look:LOOK.minseo},
+  ],
+  [
+   {who:'민서',say:'선배, 드라마 끝이 너무 이상해요.',look:LOOK.minseo},
+   {who:'연두',say:'주인공이 혼잣말을 해요.',look:LOOK.yeondu},
+   {who:'연두',say:'"나 스토커야? 변태 같잖아."',look:LOOK.yeondu},
+   {who:'민서',say:'엑, 본인도 이상한 줄 아네요.',look:LOOK.minseo,face:'surprised'},
+   {who:'연두',say:'그래도 또 고양이를 따라가.',look:LOOK.yeondu},
+   {who:'민서',say:'저희가 끝을 새로 써 보려고요.',look:LOOK.minseo},
+  ],
+  [
+   {who:'민서',say:'선배, 저희가 쓴 끝이에요.',look:LOOK.minseo},
+   {who:'연두',say:'주인공은 멀리서 기다려요.',look:LOOK.yeondu},
+   {who:'민서',say:'실은 고양이가 먼저 왔어요.',look:LOOK.minseo},
+   {who:'연두',say:'"만져도 돼?" 하고 물어봐.',look:LOOK.yeondu},
+   {who:'민서',say:'고양이가 손에 머리를 비벼요.',look:LOOK.minseo,face:'happy'},
+   {who:'연두',say:'이제 둘이 같이 낮잠을 자요.',look:LOOK.yeondu},
+   {who:'나',say:'고양이 마음도 기다려 줬네.',look:LOOK.player},
+  ],
+  [
+   {who:'민서',say:'다음엔 강아지 얘기도 써 볼까요?',look:LOOK.minseo},
+  ],
+ ],
+ puppet:[
+  [
+   {who:'준서',say:'내 소설로 인형극 만들 거야.',look:LOOK.junseo},
+   {who:'건우',say:'떡볶이 왕자님? 그걸로?',look:LOOK.geonu},
+   {who:'준서',say:'응. 종이 인형만 있으면 돼.',look:LOOK.junseo},
+   {who:'건우',say:'그 싸움 소문이랑 엮이면 안 돼.',look:LOOK.geonu},
+   {who:'준서',say:'이번엔 처음부터 지어낸 얘기야.',look:LOOK.junseo},
+   {who:'건우',say:'그럼 제목 밑에 그렇게 쓰자.',look:LOOK.geonu},
+  ],
+  [
+   {who:'준서',say:'인형 목소리 어때? "떡볶이 내놔!"',look:LOOK.junseo},
+   {who:'건우',say:'너무하다. 왕자님이 다 먹어?',look:LOOK.geonu},
+   {who:'준서',say:'나 혼자 다 먹는 역할이야.',look:LOOK.junseo},
+   {who:'건우',say:'그러다 인형한테 욕먹겠다.',look:LOOK.geonu},
+   {who:'준서',say:'인형이 나한테? 그건 좀 무섭다.',look:LOOK.junseo,face:'surprised'},
+   {who:'건우',say:'"구라 치지 마. 네가 다 먹었지?"',look:LOOK.geonu},
+   {who:'준서',say:'하하. 그건 인형 대사로 쓰자.',look:LOOK.junseo},
+  ],
+  [
+   {who:'준서',say:'인형극 끝도 다 만들었어.',look:LOOK.junseo},
+   {who:'준서',say:'왕자님은 떡볶이를 나눠 줘.',look:LOOK.junseo},
+   {who:'건우',say:'그 종이 왕자님, 개멋지다!',look:LOOK.geonu,face:'happy'},
+   {who:'준서',say:'종이 왕관도 씌워 줬어.',look:LOOK.junseo},
+   {who:'건우',say:'사람 소문보다 이런 얘기가 좋아.',look:LOOK.geonu},
+   {who:'준서',say:'나도. 여기선 떡볶이도 안 식어.',look:LOOK.junseo},
+  ],
+  [
+   {who:'준서',say:'다음 인형은 순대 모양이야.',look:LOOK.junseo},
+  ],
+ ],
+ exam:[
+  [
+   {who:'도현',say:'이번 시험은 답 칸 안 밀렸어.',look:LOOK.dohyeon},
+   {who:'나',say:'선배, 친구들이랑 공부하셨죠?',look:LOOK.player},
+   {who:'도현',say:'응. 모르는 건 서로 물어봤어.',look:LOOK.dohyeon},
+   {who:'도현',say:'범생 흉내는 이제 안 내려고.',look:LOOK.dohyeon},
+   {who:'도현',say:'모르면 뭐든 물어보면 되더라.',look:LOOK.dohyeon},
+   {who:'도현',say:'근데 점수는 아직 안 나왔어.',look:LOOK.dohyeon},
+  ],
+  [
+   {who:'도현',say:'성적표가 나왔어. 조금 올랐어.',look:LOOK.dohyeon},
+   {who:'나',say:'잘됐네요. 오늘도 학원 가세요?',look:LOOK.player},
+   {who:'도현',say:'응. 내 발 좀 봐.',look:LOOK.dohyeon},
+   {who:'도현',say:'학원 안 가려는 발의 몸부림이야.',look:LOOK.dohyeon},
+   {who:'도현',say:'농담이야. 잠깐 쉬는 중이야.',look:LOOK.dohyeon,face:'happy'},
+   {who:'나',say:'물 마시면서 쉬세요.',look:LOOK.player},
+  ],
+  [
+   {who:'도현',say:'오늘은 친구랑 축제 보려고.',look:LOOK.dohyeon},
+   {who:'도현',say:'안내에 "가족 동반 환영"이래.',look:LOOK.dohyeon},
+   {who:'도현',say:'부모님은 바쁘셔서 친구랑 왔어.',look:LOOK.dohyeon},
+   {who:'도현',say:'혼자 볼 때보다 훨씬 편해.',look:LOOK.dohyeon,face:'happy'},
+   {who:'도현',say:'서로 모르는 부스도 알려 주고.',look:LOOK.dohyeon},
+   {who:'도현',say:'시험 얘기는 오늘 하루 쉬려고.',look:LOOK.dohyeon},
+  ],
+  [
+   {who:'도현',say:'친구는 화장실 갔어. 기다리는 중.',look:LOOK.dohyeon},
+  ],
+ ],
+};
+function sideScene(key){
+ const t=sideTime(),flag='side_'+key+'_'+t,lines=SIDE[key][t];
+ if(f()[flag])return t===2?SIDE[key][3]:[lines[lines.length-1]];
+ return lines.map((s,i)=>i===lines.length-1?{...s,set:()=>{f()[flag]=1}}:s);
+}
+
 const NPC={
+ minseo:{name:'민서',zone:'yard',x:8,y:10,dir:'right',look:LOOK.minseo,
+  status:()=>null,script:()=>sideScene('drama'),talk:()=>SIDE.drama[3]},
+ yeondu:{name:'연두',zone:'yard',x:9,y:10,dir:'left',look:LOOK.yeondu,
+  status:()=>null,proxy:()=>NPC.minseo,talk:()=>SIDE.drama[3]},
  /* ---------- 방송실, day one ---------- */
  gureumA:{name:'백구름',zone:'bcast',x:5,y:3,dir:'up',look:LOOK.gureum,badge:['절박하다'],banmal:1,
   hide:()=>!!f().taesikCome,
@@ -1109,26 +1220,24 @@ const NPC={
     Day one (before counsel): breaks in the hall; the stage is being built (until 태식 comes back in the evening).
     After school (counsel, before promise): students wait for buses and walk to 학원 in the 동네.
     Festival morning (promise, before clue): the hall is busy with preparations, booths open in the yard.
-    Festival afternoon (clue): everyone is in the yard for the broadcast; the hall is empty but for the 1학년 kid. ---------- */
+    Festival afternoon (clue): everyone is in the yard for the broadcast; the hall is quiet but for the 1학년 kid and the returning side cast. ---------- */
  xA:{name:'2학년 학생',zone:'hall',x:19,y:1,dir:'up',look:LOOK.xA,banmal:1,
   hide:()=>!!f().counsel,
   talk:()=>[{say:'축제 사흘 남았어!'},{say:'우리 반은 떡볶이 팔아. 꼭 와.'}]},
- xB:{name:'2학년 학생',zone:'hall',x:2,y:7,dir:'right',look:LOOK.xB,banmal:1,
-  hide:()=>!!f().counsel,
-  talk:()=>[{say:'축제 끝나면 방송실이 심화반 교실 된대.'},{say:'아깝다. 이제 막 재밌어졌는데.',face:'sad'}]},
- xC:{chat:'xB',name:'2학년 학생',zone:'hall',x:3,y:7,dir:'left',look:LOOK.xC,banmal:1,
-  hide:()=>!!f().counsel,
-  talk:()=>[{say:'심화반? 우리 같은 사람은 못 들어가.'},{say:'나는 기초반이 딱 맞아. 하하.'}]},
- xD:{name:'3학년 선배',zone:'hall',x:16,y:8,dir:'down',look:LOOK.xD,banmal:1,
-  hide:()=>!!f().counsel,
-  talk:()=>[{say:'요즘 다들 대학 얘기만 해.'},{say:'지겹다. 창밖이나 볼래.'}]},
+ /* Returning side cast keep these existing hall positions; they are here in all three periods. */
+ xB:{name:'준서',zone:'hall',x:2,y:7,dir:'right',look:LOOK.junseo,banmal:1,
+  status:()=>null,script:()=>sideScene('puppet'),talk:()=>SIDE.puppet[3]},
+ xC:{name:'건우',zone:'hall',x:3,y:7,dir:'left',look:LOOK.geonu,banmal:1,
+  status:()=>null,proxy:()=>NPC.xB,talk:()=>SIDE.puppet[3]},
+ xD:{name:'도현',zone:'hall',x:16,y:8,dir:'down',look:LOOK.dohyeon,banmal:1,
+  status:()=>null,script:()=>sideScene('exam'),talk:()=>SIDE.exam[3]},
  xE:{name:'1학년 학생',zone:'hall',x:19,y:1,dir:'up',look:LOOK.xE,
   hide:()=>!f().promise||!!f().clue,
   talk:()=>[{say:'축제 순서표 보는 중이에요.'},{say:'방송부는 두 시! 맞죠?',face:'happy'}]},
- xF:{name:'2학년 학생',zone:'hall',x:2,y:7,dir:'right',look:LOOK.xF,banmal:1,
+ xF:{name:'2학년 학생',zone:'hall',x:6,y:7,dir:'right',look:LOOK.xF,banmal:1,
   hide:()=>!f().promise||!!f().clue,
   talk:()=>[{say:'풍선 더 필요해! 누가 좀 불어 줘.'}]},
- xG:{chat:'xF',name:'2학년 학생',zone:'hall',x:3,y:7,dir:'left',look:LOOK.xG,banmal:1,
+ xG:{chat:'xF',name:'2학년 학생',zone:'hall',x:7,y:7,dir:'left',look:LOOK.xG,banmal:1,
   hide:()=>!f().promise||!!f().clue,
   talk:()=>[{say:'나 벌써 스무 개 불었어.'},{say:'머리가 어지러워…',face:'sad'}]},
  xH:{name:'3학년 선배',zone:'hall',x:25,y:6,dir:'left',look:LOOK.xH,banmal:1,
