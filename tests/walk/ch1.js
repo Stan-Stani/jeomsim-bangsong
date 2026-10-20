@@ -54,6 +54,7 @@
  {check:()=>{dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowDown',bubbles:true}));setTimeout(()=>dispatchEvent(new KeyboardEvent('keyup',{key:'ArrowDown',bubbles:true})),120);return true},msg:'press down on the right cafeteria door tile'},
  {shot:'06c-cafe-door-right'},
  {shot:'06d-cafeteria-from-right-door'},
+ {pause:800},  // let the door warp finish: --fast skips the shots that used to give it time
  {check:()=>ZID==='cafe'&&player.x===11&&player.y===1&&player.dir==='down',msg:'the right cafeteria door tile opens too; you arrive at the top, facing down'},
  {talk:'sciT',shotBefore:'06c-office-lunch'},  // lunch: the 과학 선생님 at the 수학 선생님's desk
  {talk:'chan',wrong:true,shotBefore:'07-cafeteria',shotBuild:'07b-sentence-build'},
