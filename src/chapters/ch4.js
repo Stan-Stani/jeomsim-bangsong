@@ -1107,7 +1107,7 @@ const NPC={
    {say:'켜, 켜졌어요! 선배, 대박이에요!',face:'surprised'},
    {w:'회로',who:'나',build:['회로를','고쳐 주셔서','고맙습니다']},
    {who:'마태식',say:'됐어. 나 학원 간다. …축제 날 올게.',face:'happy'},
-   {say:'축제 날 꼭 오세요! 맨 앞자리예요!',face:'happy',award:['회로'],set:()=>{f().fixed=1}}]},
+   {say:'축제 날 꼭 오세요! 맨 앞자리예요!',face:'happy',award:['회로'],set:()=>{f().fixed=1},leave:{follow:1,to:[7,0]}}]},  // 태식 heads out the door as 구름 calls after him
 
  /* ---------- 운동장 · 축제 ---------- */
  guard:{name:'박 경비 아저씨',zone:'yard',x:17,y:12,dir:'left',look:LOOK.guard,
