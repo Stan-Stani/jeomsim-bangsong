@@ -1985,8 +1985,8 @@
 "k": "공과 대학. 기계, 전기를 배우는 대학."
 },
 "공동": {
-"e": "joint, shared (tied)",
-"k": "여럿이 같이 함. 공동 1등."
+"e": "joint, shared; tied (ranking)",
+"k": "여럿이 같이 함. 공동 노트, 공동 1등."
 },
 "공동체": {
 "e": "community",
@@ -5469,8 +5469,8 @@
 "k": "찔린 것처럼 조금 아파요."
 },
 "따다": {
-"e": "to pick (fruit)",
-"k": "나무에서 열매를 떼요."
+"e": "to pick (fruit); to get or obtain (e.g. someone's number)",
+"k": "열매를 떼거나 번호 같은 것을 얻어요."
 },
 "따돌림": {
 "e": "being ostracized, bullying",
@@ -6227,7 +6227,7 @@
 },
 "말을 걸다": {
 "e": "to talk to, strike up a conversation",
-"k": "모르는 사람에게 먼저 말하다."
+"k": "다른 사람에게 먼저 말을 해요."
 },
 "말퀼보": {
 "e": "Malquilvo(-Beaumont) — character name",
@@ -10311,8 +10311,8 @@
 "k": "경찰이 사건을 알아보는 일."
 },
 "수석": {
-"e": "chief, head",
-"k": "제일 높은 자리."
+"e": "top student; chief, head",
+"k": "성적이 가장 좋은 사람. 또는 가장 높은 자리."
 },
 "수수께끼": {
 "e": "riddle",
@@ -11048,8 +11048,8 @@
 "k": "숫자 10."
 },
 "싱겁다": {
-"e": "bland",
-"k": "짠맛이 부족해요."
+"e": "bland; dull, anticlimactic",
+"k": "맛이 짜지 않아요. 기대보다 재미가 없어도 써요."
 },
 "싱글": {
 "e": "single",
@@ -15626,8 +15626,8 @@
 "k": "바로 이때."
 },
 "지긋이": {
-"e": "steadily, gently (gaze)",
-"k": "조용히 오래."
+"e": "gently, steadily (e.g. closing your eyes)",
+"k": "힘을 세게 주지 않고 조용히. 눈을 지긋이 감아요."
 },
 "지나": {
 "e": "Jina — character name (invented)",
@@ -17190,7 +17190,7 @@
 },
 "키스신": {
 "e": "kiss scene",
-"k": "드라마에서 키스하는 장면."
+"k": "영화나 드라마에서 키스하는 장면."
 },
 "키우다": {
 "e": "to raise; grow",
@@ -20074,5 +20074,89 @@
 "화상(핀잔)": {
 "e": "you clown; that fool (a mild scolding)",
 "k": "못마땅한 사람을 가볍게 나무라는 말. 여기서는 자기 자신에게 해요."
+},
+"만화": {
+"e": "comic, cartoon",
+"k": "그림과 짧은 말로 보여 주는 이야기예요."
+},
+"인사말": {
+"e": "greeting, words of greeting",
+"k": "사람을 만나거나 헤어질 때 하는 말이에요."
+},
+"지안": {
+"e": "Jian (a first-year student)",
+"k": "느티고 1학년 학생. 시우와 같이 만화책을 읽어요."
+},
+"한마디": {
+"e": "a word, a brief remark",
+"k": "짧게 하는 말 하나예요."
+},
+"확신": {
+"e": "certainty, conviction",
+"k": "틀림없다고 굳게 믿는 마음이에요."
+},
+"어필하다": {
+"e": "to make an impression, show your appeal",
+"k": "나의 좋은 점을 다른 사람에게 알리려고 해요."
+},
+"그분": {
+"e": "that person (respectful)",
+"k": "그 사람을 높여 부르는 말."
+},
+"꼴찌": {
+"e": "last place; person who comes last",
+"k": "여럿 중에서 맨 마지막 등수나 그 사람."
+},
+"문제없다": {
+"e": "to be fine, have no problem",
+"k": "문제가 없이 괜찮다."
+},
+"미루다": {
+"e": "to postpone, put off",
+"k": "하기로 한 일을 나중으로 옮기다."
+},
+"밀리다": {
+"e": "to be pushed back; shift out of place",
+"k": "뒤로 움직이거나 순서가 한 칸씩 어긋나다."
+},
+"이동하다": {
+"e": "to move, change location",
+"k": "다른 곳으로 옮겨 가다. 이동."
+},
+"작가": {
+"e": "writer, author",
+"k": "소설이나 이야기 같은 글을 쓰는 사람."
+},
+"저장하다": {
+"e": "to save (a file), store",
+"k": "글이나 그림을 나중에 다시 보게 남겨 두다."
+},
+"질투하다": {
+"e": "to be jealous, envy",
+"k": "남이 가진 것이 부러워서 싫어하다. 질투."
+},
+"낮잠": {
+"e": "nap; daytime sleep",
+"k": "낮에 잠깐 자는 잠."
+},
+"본인": {
+"e": "oneself; the person themselves",
+"k": "바로 그 사람 자신."
+},
+"씌우다": {
+"e": "to put on someone; to cover",
+"k": "다른 사람 머리에 모자 같은 것을 올리다."
+},
+"왕관": {
+"e": "crown",
+"k": "왕이나 왕자가 머리에 쓰는 것."
+},
+"인형극": {
+"e": "puppet show",
+"k": "인형을 움직이며 이야기를 보여 주는 연극."
+},
+"지어내다": {
+"e": "to make up; to invent",
+"k": "없던 이야기나 말을 생각해서 만들다."
 }
 }
