@@ -567,7 +567,7 @@ const ZONES={...SCHOOL({open:['bcast','hall2','music','library','hagwon','class'
    's':['신발장이에요. 실내화가 줄줄이 있어요.','신발장 위에 축제 전단지가 쌓여 있어요.'],
    'W':['창밖에 운동장하고 느티나무가 보여요.','창밖에 축제 무대가 보여요.'],
    'q':()=>f().done?'"방송실" 표지판. 빨간 불이 아직 깜빡깜빡해요.':f().fixed?'"방송실" 표지판. 빨간 불이 켜졌어요.':'"방송실" 표지판이에요. 문 옆에 있어요.'},
-  npcs:['jung','taesikO','principal','chanP','kid','xA','xB','xC','xD','xE','xF','xG','xH']},
+  npcs:['jung','taesikO','principal','chanP','daonP','gureumP','hariP','kid','xA','xB','xC','xD','xE','xF','xG','xH']},
  yard:{locks:{gym:()=>f().clue?'체육관이에요. 다들 운동장에 있어요.':afterT()&&'체육관이에요. 오늘은 문을 닫았어요.'},
   legend:{'u':{tile:'stageSpk'},'B':{tile:'banner'},'s':{tile:'stage',walk:1},'e':{tile:'stageEdge'},'z':{tile:'stageStep',walk:1},'m':{tile:'pmixer'},'k':{tile:'tent'}},
   paint:[[16,4,'uBBBBBu'],[16,5,'sssssss'],[16,6,'sssssss'],[14,7,'m'],[16,7,'eezzeee'],[2,11,'kk.kk']],
@@ -835,7 +835,7 @@ const NPC={
    {say:'다온이가 무슨 방법이 있대. 저기.',award:['절박하다'],set:()=>{f().metG=1}}]},
 
  daonA:{name:'오다온',zone:'bcast',x:9,y:5,dir:'left',pos:()=>f().festAM?[10,1]:[9,5],look:LOOK.daon,badge:['방법','쫓겨나다'],banmal:1,
-  hide:()=>!!f().clue,
+  hide:()=>!!f().clue||f().promise&&!f().warned,  // in the 교장실 with the club (daonP) until the principal has talked
   after:'방법은 찾으면 있어. 규칙처럼.',
   status:()=>!has('절박하다')?'wait':undefined,
   script:()=>{
@@ -844,7 +844,7 @@ const NPC={
    if(!f().counsel)return [{say:'교무실 가 봐. 태식 선배 지금 상담 중이야.'},{say:'교무실은 복도 왼쪽 끝이야.'}];
    if(!f().fixed)return [{say:'학원? 3학년은 매일 밤까지 학원이야.'},{say:'포스터는 찬이랑 하리가 들고 갔어.'}];
    if(!f().promise)return [{say:'불 들어왔다! …나 안 울었어. 먼지야.',face:'happy'},{say:'이제 사람들이 듣게 만들어야 해.'}];
-   if(f().warned)return [{say:'교장 선생님 얘기 들었어. 학부모님들도 온대.',face:'think'},{say:'제대로 들려주자. 무대에서 보자.'}];
+   if(f().warned)return [{say:'학부모님들에 운영위원회까지…',face:'think'},{say:'제대로 들려주자. 무대에서 보자.'}];
    return [{say:'교장실 빨리 가. 교무실 옆이야.',face:'angry'},{say:'늦으면 벌금이야. …농담이야. 근데 빨리.'}]},
   talk:()=>[
    {say:'구름아, 울지 마. 아직 안 끝났어.'},
@@ -923,6 +923,7 @@ const NPC={
    {say:'왔어요? 할 말이 있어요.'},
    {say:'{학부모회|학부모회}에서 방송실을 원해요.'},
    {say:'공부 잘하는 학생들 교실로요.'},
+   {who:'오다온',say:'방송실은 저희 동아리 방이에요!',face:'angry'},
    Q.pr[0],
    {say:'3층 창고도 있지만, 치우는 데 오래 걸리거든요.'},
    {say:'"노래 틀고 떠드는 건 누구나 해요." 학부모회 말이에요.'},
@@ -932,8 +933,18 @@ const NPC={
    {who:'남궁찬',say:'…못 하면 방송실에서 쫓겨나는 거죠?',face:'sad'},
    {say:'그럴 수도 있어요. 미안해요. 저도 입장이 곤란해요.',face:'sad'},
    Q.pr[1],
+   {who:'유하리',say:'…들려드릴게요. 꼭이요.'},
    {say:'자, 저는 무대에 먼저 가 볼게요.'},
-   {who:'…',say:'교장 선생님이 나갔어요. 교장실이 조용해요.',award:['심화반','표정'],set:()=>{f().warned=1},leave:{npc:'principal',to:[9,8]}}]},
+   {who:'…',say:'교장 선생님이 나갔어요. 다온, 구름, 하리도 무대 준비하러 나가요.',award:['심화반','표정'],set:()=>{f().warned=1},
+    leave:[{npc:'principal',to:[9,8]},{npc:'daonP',to:[13,8]},{npc:'gureumP',to:[13,8]},{npc:'hariP',to:[13,8]}]}]},
+
+ /* the rest of the club in the 교장실 for the principal's talk (the PA called all of them); they leave with her */
+ daonP:{name:'오다온',zone:'hall',x:11,y:3,dir:'up',look:LOOK.daon,banmal:1,hide:()=>!f().promise||!!f().warned,status:()=>null,
+  talk:()=>[{say:'나도 왜 불렀는지 몰라.',face:'think'},{say:'교장 선생님 얘기부터 들어 보자.'}]},
+ gureumP:{name:'백구름',zone:'hall',x:10,y:3,dir:'up',look:LOOK.gureum,banmal:1,hide:()=>!f().promise||!!f().warned,status:()=>null,
+  talk:()=>[{say:'우리 진짜 뭐 잘못했나…',face:'sad'}]},
+ hariP:{name:'유하리',zone:'hall',x:15,y:3,dir:'up',look:LOOK.hari,hide:()=>!f().promise||!!f().warned,status:()=>null,
+  talk:()=>[{say:'선배, 저 떨려요…',face:'sad'},{say:'교장실은 처음 와 봐요.'}]},
 
  chanP:{name:'남궁찬',zone:'hall',x:14,y:2,dir:'up',look:LOOK.chan,banmal:1,
   hide:()=>!f().promise||!!f().clue,
@@ -1074,7 +1085,7 @@ const NPC={
  /* ---------- 방송실, the fix and the phone call ---------- */
  gureumF:{name:'백구름',zone:'bcast',x:5,y:3,dir:'up',pos:()=>f().festAM?[11,3]:[5,3],  // festival morning: at the mic stand
   look:LOOK.gureum,badge:['절박하다','회로','부모님','약속'],banmal:1,
-  hide:()=>!f().taesikCome||!!f().clue,
+  hide:()=>!f().taesikCome||!!f().clue||f().promise&&!f().warned,  // in the 교장실 (gureumP) meanwhile
   after:'방송도, 공부도. 약속은 지킬 거야.',
   script:()=>{
    if(!f().fixed)return null;
@@ -1090,8 +1101,9 @@ const NPC={
     Q.phone[2],
     {who:'…',say:'그리고 토요일. 축제 날 아침.',black:1,set:()=>{f().festAM=1},go:['bcast',8,1,'down']},  // a new morning: you come in the door, 다온 and 구름 are already at their posts (pos)  // a time cut, like the epilogue's
     {who:'스피커',say:'방송부 학생들은 교장실로 오세요. 교무실 옆입니다.',black:0},
-    {say:'…교장실? 우리 뭐 잘못했어?',face:'surprised',award:['부모님','약속'],set:()=>{f().promise=1}}];
-   if(f().warned)return [{say:'교장 선생님이 그랬어? …그럼 잘하면 돼.',face:'think'},{say:'나 무대 준비할게. 너도 와.'}];
+    {say:'…교장실? 우리 뭐 잘못했어?',face:'surprised',award:['부모님','약속']},
+    {who:'오다온',say:'몰라. 다 같이 가 보자.',set:()=>{f().promise=1},leave:[{npc:'daonA',to:[7,0]},{npc:'gureumF',to:[7,0]}]}];  // the whole club goes
+   if(f().warned)return [{say:'들었지? …그럼 잘하면 돼.',face:'think'},{say:'나 무대 준비할게. 너도 와.'}];
    if(has('부모님'))return [{say:'교장실… 교무실 옆이야. 너 먼저 가. 찬이는 벌써 갔대.',face:'sad'}];
    return null},
   talk:()=>[
