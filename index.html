@@ -5424,7 +5424,7 @@ const NPC={
    {who:'…',say:'구름 눈이 빨개요. 금방 울 것 같아요.'},
    {say:'다온이가 무슨 방법이 있대. 저기.',award:['절박하다'],set:()=>{f().metG=1}}]},
 
- daonA:{name:'오다온',zone:'bcast',x:9,y:5,dir:'left',look:LOOK.daon,badge:['방법','쫓겨나다'],banmal:1,
+ daonA:{name:'오다온',zone:'bcast',x:9,y:5,dir:'left',pos:()=>f().festAM?[10,1]:[9,5],look:LOOK.daon,badge:['방법','쫓겨나다'],banmal:1,
   hide:()=>!!f().clue,
   after:'방법은 찾으면 있어. 규칙처럼.',
   status:()=>!has('절박하다')?'wait':undefined,
@@ -5662,7 +5662,8 @@ const NPC={
    {say:'가자. 앞장서.',award:['생초보','기술'],set:()=>{f().taesikCome=1}}]},
 
  /* ---------- 방송실, the fix and the phone call ---------- */
- gureumF:{name:'백구름',zone:'bcast',x:5,y:3,dir:'up',look:LOOK.gureum,badge:['절박하다','회로','부모님','약속'],banmal:1,
+ gureumF:{name:'백구름',zone:'bcast',x:5,y:3,dir:'up',pos:()=>f().festAM?[11,3]:[5,3],  // festival morning: at the mic stand
+  look:LOOK.gureum,badge:['절박하다','회로','부모님','약속'],banmal:1,
   hide:()=>!f().taesikCome||!!f().clue,
   after:'방송도, 공부도. 약속은 지킬 거야.',
   script:()=>{
@@ -5677,7 +5678,7 @@ const NPC={
     {say:'방송 그만하고 공부만 하래.',face:'sad'},
     Q.phone[1],
     Q.phone[2],
-    {who:'…',say:'그리고 토요일. 축제 날 아침.',black:1},  // a time cut, like the epilogue's
+    {who:'…',say:'그리고 토요일. 축제 날 아침.',black:1,set:()=>{f().festAM=1},go:['bcast',8,1,'down']},  // a new morning: you come in the door, 다온 and 구름 are already at their posts (pos)  // a time cut, like the epilogue's
     {who:'스피커',say:'방송부 학생들은 교장실로 오세요. 교무실 옆입니다.',black:0},
     {say:'…교장실? 우리 뭐 잘못했어?',face:'surprised',award:['부모님','약속'],set:()=>{f().promise=1}}];
    if(f().warned)return [{say:'교장 선생님이 그랬어? …그럼 잘하면 돼.',face:'think'},{say:'나 무대 준비할게. 너도 와.'}];
@@ -6359,7 +6360,7 @@ globalThis.GRAMMAR_NOTES={
 </script>
 <script>
 /* This build (version.json): v = a hash of the game, t = when this version first appeared. */
-globalThis.BUILD={"v": "ba665102", "t": "2026-10-20T23:47Z"};
+globalThis.BUILD={"v": "3ef5ad1b", "t": "2026-10-21T01:26Z"};
 </script>
 <script>
 /* GENERATED from walk-engine/engine.js (1ac7049) — do not edit here; edit walk-engine and run its sync.sh. */
