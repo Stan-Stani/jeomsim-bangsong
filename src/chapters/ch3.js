@@ -506,16 +506,13 @@ const sideHere=()=>!f().toNR||!!f().secret;
 const SIDE={
  cinema:[
   [
-   {who:'민서',say:'선배, 오늘은 영화관에 가기로 했어요.',look:LOOK.minseo},
-   {who:'민서',say:'그분이랑 또 만나기로 했어요.',look:LOOK.minseo},
+   {who:'민서',say:'선배, 오늘 그분이랑 영화관에 가기로 했어요.',look:LOOK.minseo},
    {who:'민서',say:'생각만 해도 두근두근해요.',look:LOOK.minseo,face:'happy'},
-   {who:'연두',say:'어제 본 영화는 로맨틱하더라.',look:LOOK.yeondu},
-   {who:'민서',say:'저는 그런 운명 같은 만남보다…',look:LOOK.minseo},
-   {who:'민서',say:'편하게 얘기할 수 있으면 좋겠어요.',look:LOOK.minseo},
-   {who:'연두',say:'왕자님 같은 사람은 없어도 돼?',look:LOOK.yeondu},
-   {who:'민서',say:'네가 인소를 너무 많이 봤어.',look:LOOK.minseo},
-   {who:'연두',say:'선배, 인소는 인터넷 소설이에요.',look:LOOK.yeondu},
-   {who:'민서',say:'저도 가끔씩 읽긴 해요.',look:LOOK.minseo},
+   {who:'연두',say:'어제 본 영화는 로맨틱하더라. 운명 같은 만남!',look:LOOK.yeondu},
+   {who:'민서',say:'저는 운명보다, 편하게 얘기할 수 있으면 좋겠어요.',look:LOOK.minseo},
+   {who:'나',say:'그게 제일 중요하지.'},
+   {who:'연두',say:'왕자님 같은 사람은 없어도 돼? 인소처럼?',look:LOOK.yeondu},
+   {who:'민서',say:'네가 인소를 너무 많이 봤어. …저도 가끔씩 읽긴 해요.',look:LOOK.minseo},
   ],
   [
    {who:'민서',say:'선배, 영화 약속이 미뤄졌어요.',look:LOOK.minseo,face:'sad'},
