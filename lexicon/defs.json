@@ -20238,5 +20238,33 @@
 "얼떨떨하다": {
 "e": "to be dazed, taken aback",
 "k": "갑자기 일이 생겨서 어리둥절하다. 상을 받아서 얼떨떨해요."
+},
+"감옥": {
+"e": "prison",
+"k": "죄를 지은 사람이 갇혀 지내는 곳."
+},
+"강물": {
+"e": "river water",
+"k": "강에 흐르는 물."
+},
+"기침": {
+"e": "cough",
+"k": "감기에 걸리면 \"콜록콜록\" 나오는 것."
+},
+"동화": {
+"e": "fairy tale, children's story",
+"k": "어린이를 위한 이야기."
+},
+"산속": {
+"e": "in the mountains, deep in a mountain",
+"k": "산의 안쪽."
+},
+"어휴": {
+"e": "ugh, phew (a sigh)",
+"k": "힘들거나 답답할 때 내는 소리."
+},
+"죄짓다": {
+"e": "to commit a crime, to sin",
+"k": "나쁜 일을 하다."
 }
 }

@@ -112,7 +112,7 @@ const Q={ // NPC questions, kept here so review can reuse them. who:'나' = the 
  ],
  chanL:[
   {w:'독후감',gram:1,grammar:'cheok',who:'나',ask:'책이 거꾸로잖아. 읽는 ___하는 거지?',opts:[['척',1],['적',0,'"읽은 적 있어"는 경험이야. 안 읽는데 읽는 것처럼 하면 "읽는 척".']]},
-  {w:'답답하다',ask:'어제부터 계속 세 줄이야. 가슴이 ___.',opts:[['답답해',1],['시원해',0,'시원하면 막힌 게 없어. 글이 안 나와서 막힌 느낌은 "답답해".'],['대답해',0,'대답하다는 질문에 말하는 거야. 막힌 느낌은 "답답해".']]},
+  {w:'답답하다',ask:'아침부터 계속 세 줄이야. 가슴이 ___.',opts:[['답답해',1],['시원해',0,'시원하면 막힌 게 없어. 글이 안 나와서 막힌 느낌은 "답답해".'],['대답해',0,'대답하다는 질문에 말하는 거야. 막힌 느낌은 "답답해".']]},
   {w:'맞춤법',gram:1,ok:'오, 그렇구나!',ask:'"주인공이 왕이 ___." 맞춤법에 맞는 건?',opts:[['됐다',1],['됬다',0,'"되었다"를 줄이면 "됐다". "됬다"는 없는 글자야.']]},
   {w:'맞춤법',gram:1,ok:'아하, 그렇구나!',ask:'"그 일은 ___ 전에 있었다." 바른 건?',opts:[['며칠',1],['몇일',0,'소리는 같지만 맞춤법은 "며칠"이야. "몇일"은 틀려.']]},
  ],
@@ -126,7 +126,7 @@ const Q={ // NPC questions, kept here so review can reuse them. who:'나' = the 
   {w:'오해하다',who:'나',ask:'다 안 들었잖아. 네가 ___ 수도 있어.',opts:[['오해했을',1],['이해했을',0,'이해는 바르게 아는 거야. 다 안 듣고 잘못 알면 "오해했을".'],['오래 했을',0,'오래는 시간이 길 때야. 잘못 알면 "오해했을".']]},
  ],
  lib:[
-  {w:'댓글',ask:'선배도 ___ 하나 써 보세요. "거짓말이에요!" 하고요.',opts:[['댓글',1],['답장',0,'답장은 편지나 문자에 다시 보내는 거예요. 앱 글 밑에 쓰는 건 "댓글".'],['대답',0,'대답은 질문에 말로 하는 거예요. 글 밑에 쓰는 건 "댓글".']]},
+  {w:'댓글',ask:'학생증 나오면 선배도 ___ 하나 써 보세요.',opts:[['댓글',1],['답장',0,'답장은 편지나 문자에 다시 보내는 거예요. 앱 글 밑에 쓰는 건 "댓글".'],['대답',0,'대답은 질문에 말로 하는 거예요. 글 밑에 쓰는 건 "댓글".']]},
   {w:'비밀',ask:'아무도 몰라요. 선배하고 저만 알아요. 이건 ___이에요.',opts:[['비밀',1],['소문',0,'소문은 다들 아는 이야기예요. 둘만 알면 "비밀".'],['비빔',0,'하하, 비빔은 섞는 거예요. 비빔밥처럼! 말하지 않는 이야기는 "비밀".']]},
  ],
  daonB:[
@@ -683,10 +683,11 @@ const NPC={
  yeondu:{name:'연두',zone:'yard',x:9,y:10,dir:'left',look:LOOK.yeondu,
   hide:()=>!sideHere(),status:()=>null,proxy:()=>NPC.minseo,
   talk:()=>SIDE.cinema[3]},
- dohyeon:{name:'도현',zone:'hall',x:10,y:8,dir:'left',look:LOOK.dohyeon,banmal:1,
+ dohyeon:{name:'도현',zone:'hall',x:16,y:6,dir:'left',look:LOOK.dohyeon,banmal:1,
   hide:()=>!sideHere(),status:()=>null,
   script:()=>sideScene('exam'),talk:()=>SIDE.exam[3]},
- jian:{name:'지안',zone:'library',x:9,y:4,dir:'left',look:LOOK.jian,
+ jian:{name:'지안',zone:'library',x:9,y:4,dir:'left',pos:()=>lunchT()?[13,9]:[9,4],  // at lunch by the window, not between the shelves
+ look:LOOK.jian,
   hide:()=>!sideHere(),status:()=>null,proxy:()=>NPC.xL1,
   talk:()=>SIDE.comic[3]},
 
@@ -730,7 +731,7 @@ const NPC={
    Q.daonB[1],
    {say:'괜찮은 척 말고. 진짜 괜찮아야지.',face:'angry'},
    {say:'오늘 방과 후에 다 같이 노래방 가서 연습하자.'},
-   {say:'학교 앞 {코인 노래방|코인 노래방}, 큰 방이야. 정문 건너편.'},
+   {say:'학교 앞 {코인 노래방|코인 노래방}, 큰 방이야. 편의점 옆.'},
    {say:'신발장 옆 문으로 나가. 늦으면 벌금이야.'},
    {who:'…',sfx:'bell',say:'점심시간 끝. 오후 수업이 시작됐어요.',black:1},  // class time is a time cut: over black, not over the 방송실
    {expand:()=>classTime(CLASS,['국어','영어'])},
@@ -1135,10 +1136,12 @@ look:LOOK.hanT,
  xM2:{name:'2학년 학생',zone:'cafe',x:22,y:3,dir:'up',look:LOOK.xM2,banmal:1,
   hide:()=>!!f().toNR,
   talk:()=>[{say:'자판기에서 뭐 뽑을까?'},{say:'다 맛있어 보여. 고민된다.',face:'think'}]},
- xB1:{name:'준서',zone:'hall',x:24,y:3,dir:'right',look:LOOK.xB1,banmal:1,
+ xB1:{name:'준서',zone:'hall',x:24,y:3,dir:'right',pos:()=>f().secret?[7,6]:[24,3],  // Tuesday: elsewhere in the hall
+ look:LOOK.xB1,banmal:1,
   hide:()=>!sideHere(),status:()=>null,
   script:()=>sideScene('novel'),talk:()=>SIDE.novel[3]},
- xB2:{name:'건우',zone:'hall',x:25,y:3,dir:'left',look:LOOK.xB2,banmal:1,
+ xB2:{name:'건우',zone:'hall',x:25,y:3,dir:'left',pos:()=>f().secret?[8,6]:[25,3],
+ look:LOOK.xB2,banmal:1,
   hide:()=>!sideHere(),status:()=>null,proxy:()=>NPC.xB1,
   talk:()=>SIDE.novel[3]},
  xW:{name:'2학년 학생',zone:'hall',x:13,y:8,dir:'down',look:LOOK.xW,banmal:1,
@@ -1163,7 +1166,8 @@ look:LOOK.hanT,
    :f().aired?[{say:'방송 들으면서 공부했어.'},{say:'이상하게 집중이 잘 되더라.'}]:null,
   talk:()=>[{say:'…논술 맞춤법 틀리면 감점이래.'},{say:'고3은 띄어쓰기도 무서워.'}]},
 
- xL1:{name:'시우',zone:'library',x:8,y:4,dir:'right',look:LOOK.xL1,
+ xL1:{name:'시우',zone:'library',x:8,y:4,dir:'right',pos:()=>lunchT()?[12,9]:[8,4],
+ look:LOOK.xL1,
   hide:()=>!sideHere(),status:()=>null,
   script:()=>sideScene('comic'),talk:()=>SIDE.comic[3]},
  xL2:{name:'2학년 학생',zone:'library',x:4,y:9,dir:'down',look:LOOK.xL2,banmal:1,
@@ -1188,14 +1192,14 @@ look:LOOK.xT1,
 const FOLLOW={name:'남궁찬',look:LOOK.chan,when:()=>!!f().letter&&!f().juice,
  talk:()=>f().oldSpelling?[{say:'매점! 급식실 안에! 범인은 이모야!',face:'happy'}]:[{say:'복숭아… 복숭아… 누굴까?',face:'think'},{say:'일단 정 선생님한테 가자.'}]};
 
-const INTRO=[{who:'…',say:'하리의 첫 방송 뒤, 방송실이 밝아졌어요.'},{who:'…',say:'월요일 아침. 구름이 벌써 기계 앞에 있어요.',cam:[5,3]}];
+const INTRO=[{who:'…',say:'하리의 첫 방송 뒤, 방송실이 밝아졌어요.',black:1},{who:'…',say:'월요일 아침. 구름이 벌써 기계 앞에 있어요.',black:0,cam:[5,3]}];  // over black, then the room as it says who's there
 const DONE=[{expand:()=>wrapUp()},{say:'방송이 끝나자 교무실 마이크로 교장 선생님 방송이 나와요.',set:()=>{f().quiet=1}},'"학부모회에서 방송실을 심화반 교실로 쓰자고 했습니다."','"축제 날 방송, 학부모님들과 {운영위원회|운영위원회}도 함께 듣습니다."','"방송실 일은 축제가 끝나고 회의에서 정합니다."',{say:'그 순간, 방송 기계에서 펑! 연기가 나요.',set:()=>{f().smoke=1}},'다섯 명이 아무 말도 못 하고 서로 쳐다봐요.',{say:'3교시 끝!',set:()=>{f().ended=1}},'방송실 복습 노트북에서 단어를 다시 볼 수 있어요.'];
 
 /* what the 운동장 clock shows: Monday morning, lunch (from the rumor), 방과 후, the next morning, its lunch (the 사연 코너) */
 const clock=()=>{const F=f();return F.done?[12,50]:F.juice?[12,30]:F.secret?[8,20]:F.toNR?[4,30]:F.rumor||F.boxed?[12,40]:[8,30]};
 function questText(){
  const F=f();
- if(F.done)return !F.ended?'방송실 · 구름 마무리 멘트':dueWords().length?'3교시 끝 · 방송실 복습 노트북':'3교시 끝! · 4교시로 가요';
+ if(F.done)return !F.ended?'방송실 · 구름 마무리 멘트':dueWords().length?'3교시 끝! · 복습은 방송실 노트북에서':'3교시 끝! · 4교시로 가요';
  if(!F.plan)return '방송실 · 구름이랑 얘기하기';
  if(!F.formGot)return '교무실 · 등록 신청서 받기';
  if(!F.signed5)return '도서관 · 찬 이름 받기';
@@ -1207,7 +1211,7 @@ function questText(){
  if(!F.interrupt)return '학교 앞 · 코인 노래방 연습';
  if(!F.apology)return '노래방 · 다온이랑 얘기하기';
  if(!F.secret)return '노래방 · 구름 얘기 듣기';
- if(!F.letter)return '방송실 · 사연함 열기';
+ if(!F.letter)return '방송실 · 하리랑 사연함 열기';
  if(!F.oldSpelling)return '교무실 · 편지 보여 주기';
  if(!F.juice)return '급식실 매점 · 이모 만나기';
  if(!F.aired)return '방송실 · 하리한테 주스 주기';
