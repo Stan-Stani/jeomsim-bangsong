@@ -767,9 +767,11 @@ const SIDE={
   ],
  ],
 };
+/* the repeat after the last scene; 도현's friend is back once the broadcast is over */
+const sideRepeat=key=>key==='exam'&&f().live?[{who:'도현',say:'방송 잘 들었어. 친구도 재밌었대.',look:LOOK.dohyeon,face:'happy'}]:SIDE[key][3];
 function sideScene(key){
  const t=sideTime(),flag='side_'+key+'_'+t,lines=SIDE[key][t];
- if(f()[flag])return t===2?SIDE[key][3]:[lines[lines.length-1]];
+ if(f()[flag])return t===2?sideRepeat(key):[lines[lines.length-1]];
  return lines.map((s,i)=>i===lines.length-1?{...s,set:()=>{f()[flag]=1}}:s);
 }
 
@@ -1312,8 +1314,9 @@ const NPC={
   status:()=>null,script:()=>sideScene('puppet'),talk:()=>SIDE.puppet[3]},
  xC:{name:'건우',zone:'hall',x:3,y:7,dir:'left',look:LOOK.geonu,banmal:1,
   status:()=>null,proxy:()=>NPC.xB,talk:()=>SIDE.puppet[3]},
- xD:{name:'도현',zone:'hall',x:16,y:8,dir:'down',look:LOOK.dohyeon,banmal:1,
-  status:()=>null,script:()=>sideScene('exam'),talk:()=>SIDE.exam[3]},
+ xD:{name:'도현',zone:'hall',x:16,y:8,dir:'down',pos:()=>f().festAM?[22,7]:[16,8],  // festival day: by the hall doors with his friend
+ look:LOOK.dohyeon,banmal:1,
+  status:()=>null,script:()=>sideScene('exam'),talk:()=>sideRepeat('exam')},
  xE:{name:'1학년 학생',zone:'hall',x:19,y:1,dir:'up',look:LOOK.xE,
   hide:()=>!f().promise||!!f().clue,
   talk:()=>[{say:'축제 순서표 보는 중이에요.'},{say:'방송부는 두 시! 맞죠?',face:'happy'}]},

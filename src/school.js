@@ -714,7 +714,7 @@ function quizLine(fallback,id){
   return [...pre,q]}};
 }
 /* Legs for someone sitting sideways on the 운동장 bench ('n', a two-tile bench seen from above), facing right: the lap runs
-   over the seat and the shins hang past its right edge. A chair look (see drawSeated): the bottom 7 rows draw over the sitter, who sits 3px up (drop -3) so the lap meets them. */
-const BENCH_LEGS={art:{pal:{P:'#5A5F6E',p:'#474B58',S:'#2A2C33'},back:7,drop:-3,
+   over the seat, the knee bends at its right edge, the shins hang down, and the shoes rest on the ground (a soft shadow); the lap's top row catches the light, as in Stardew's seated sprites. A chair look (see drawSeated): the bottom 7 rows draw over the sitter, who sits 3px up (drop -3) so the lap meets them. */
+const BENCH_LEGS={art:{pal:{L:'#737989',P:'#5A5F6E',p:'#474B58',S:'#2A2C33',s:'#00000030'},back:7,drop:-3,
  down:['................','................','................','................','................','................','................','................','................',
-  '....PPPPPPPPPP..','....ppppppppPP..','............PP..','............pP..','............SSS.','................','................']}};
+  '....LLLLLLLLL...','....PPPPPPPPPP..','............PP..','............pP..','............SSS.','...........ssss.','................']}};
