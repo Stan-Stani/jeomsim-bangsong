@@ -6,9 +6,7 @@
  {talk:'guard',shotBefore:'02b-yard-gate'},
  // Optional stories leave the main route and teaching inventory alone.
  {check:()=>{window.__sideMain=JSON.stringify([state.badges,state.items,C.questText()]);return C.WORDS.length===20},msg:'side stories add no taught words'},
- {talk:'xBench1',shotSay:{text:'소개팅',name:'side1-morning-bench'}},
- {talk:'xSoc1'},{talk:'xSenior'},{talk:'xNotice'},
- {check:()=>['bench','soccer','senior','notice'].every(k=>state.f['side_'+k+'_0'])&&JSON.stringify([state.badges,state.items,C.questText()])===window.__sideMain,msg:'all four morning visits are optional and exposure only'},
+ {check:()=>['xBench1','xSoc1','xSenior','xNotice'].every(k=>C.NPC[k].hide()),msg:'side-story students are in class during the late morning'},
  {bump:['hall','R']},
  {talk:'mathT'},{talk:'musicT'},  // the other teachers at their desks (수학 선생님 points to 정 선생님's seat)
  {talk:'jung',wrong:true,shotBefore:'03-teachers-office',shotChoice:'03a-teacher-question',shotTap:'03b-tap-word'},
@@ -45,7 +43,10 @@
  {check:()=>{cancel();const g=$('gloss').hidden&&!$('panel').hidden;cancel();return g&&$('panel').hidden},msg:'B closes the word help, then the 일지'},
  {check:()=>{const seen=[];for(let i=0;i<4&&!$('noteChip').hidden;i++){seen.push($('noteChip').dataset.k);$('noteChip').click();cancel()}return seen.join()==='geodeun,lge'&&$('noteChip').hidden},msg:'the other new 문법 노트 (-거든, then -ㄹ게) wait their turn on the chip'},
  {check:()=>{window.__sideMain=JSON.stringify([state.badges,state.items,C.questText()]);return true},msg:'before optional lunch visits'},
- {talk:'xBench2',shotSay:{text:'좋아요가',name:'side1-lunch-post'}},
+ {talk:'xBench1',shotSay:{text:'소개팅',name:'side1-lunch-bench'}},
+ {talk:'xSoc1'},{talk:'xSenior'},{talk:'xNotice'},
+ {check:()=>['bench','soccer','senior','notice'].every(k=>state.f['side_'+k+'_0'])&&JSON.stringify([state.badges,state.items,C.questText()])===window.__sideMain,msg:'all four first lunch visits are optional and exposure only'},
+ {talk:'xBench2',shotSay:{text:'문자하면',name:'side1-lunch-post'}},
  {talk:'xSoc2'},{talk:'xSenior'},{talk:'xNotice',shotSay:{text:'주저',name:'side1-lunch-help'}},
  {check:()=>['bench','soccer','senior','notice'].every(k=>state.f['side_'+k+'_1'])&&JSON.stringify([state.badges,state.items,C.questText()])===window.__sideMain,msg:'all four lunch visits work through friends too; no badges, items or quest changes'},
  {bump:['hall','Q']},

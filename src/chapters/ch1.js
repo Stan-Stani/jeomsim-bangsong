@@ -475,30 +475,30 @@ const JONGNYE=()=>[
 const lunchT=()=>!!f().lunch&&!f().deal;            // lunch break: yard, hall and 급식실 are busy
 const classT=()=>!f().lunch||(!!f().deal&&!f().crew3); // lessons and 종례: classmates in their seats
 /* Optional exposure scenes: no questions, awards, items, journal notes or quest changes.
-   Morning is walkable before sitting; lessons hide these students. Each current-time scene stands alone,
-   so a missed earlier visit never replays out of time. Only the last spoken line records that visit. */
-const sideTime=()=>f().crew3?2:f().lunch?1:0;
-const sideHere=()=>!f().seated||lunchT()||!!f().crew3;
+   The late morning is class time, so these students are out only at lunch (a first visit, then a second) and after
+   종례. A missed visit never replays out of time. Only the last spoken line records that visit. */
+const sideTime=key=>f().crew3?2:f()['side_'+key+'_0']?1:0;
+const sideHere=()=>lunchT()||!!f().crew3;
 const SIDE={
  bench:[
   [
    {who:'연두',say:'민서야, 문자 아직이야? 소개팅 오늘이잖아.',look:LOOK.xBench2},
    {who:'민서',say:'몰라… 네가 소개시켜 준 오빠, 연상이라 더 떨려.',look:LOOK.xBench1,face:'think'},
-   {who:'연두',say:'꺄, 끝나면 썰 풀어 줘!',look:LOOK.xBench2,face:'happy'},
-   {who:'민서',say:'앗, 선배… 들으셨어요? 저 1학년 민서예요.',look:LOOK.xBench1,face:'surprised'},
-   {who:'민서',say:'뭐라고 문자하면 좋을까요?',look:LOOK.xBench1},
-   {who:'나',say:'이렇게 써 봐. "몇 시에 만날까요?"'},
-   {who:'민서',say:'인사부터 해야겠어요! …에잇, 썼다 지웠다만 하네요.',look:LOOK.xBench1},
-  ],
-  [
-   {who:'민서',say:'선배, 저 여태 남자친구를 사귄 적이 없어요.',look:LOOK.xBench1},
-   {who:'민서',say:'남친 생기면 뭔가 달라질까요?',look:LOOK.xBench1,face:'think'},
-   {who:'민서',say:'연애는 드라마로만 봐서 약간 무서워요.',look:LOOK.xBench1},
    {who:'연두',say:'어젯밤 드라마 봤어? 남자가 벽에 손을 쿵! 벽쿵!',look:LOOK.xBench2},
-   {who:'…',say:'연두가 나무에 손을 짚고 혼자 연기해요.'},
+   {who:'…',say:'연두가 벤치를 손으로 짚고 혼자 연기해요.'},
    {who:'연두',say:'손목 잡고 벽으로 밀어붙이더라. "당신, 나만 봐요."',look:LOOK.xBench2},
    {who:'연두',say:'지그시 보다가 머리를 쓰다듬고… 키스까지! 여자는 싫다는데!',look:LOOK.xBench2},
    {who:'민서',say:'그건 싫겠다. 다정한 이미지였는데, 그 장면은 별로야.',look:LOOK.xBench1},
+   {who:'연두',say:'꺄, 소개팅 끝나면 썰 풀어 줘!',look:LOOK.xBench2,face:'happy'},
+   {who:'민서',say:'앗, 선배… 들으셨어요? 저 1학년 민서예요.',look:LOOK.xBench1,face:'surprised'},
+  ],
+  [
+   {who:'민서',say:'선배, 아까 다 들으셨죠? 뭐라고 문자하면 좋을까요?',look:LOOK.xBench1},
+   {who:'나',say:'이렇게 써 봐. "몇 시에 만날까요?"'},
+   {who:'민서',say:'인사부터 해야겠어요! …에잇, 썼다 지웠다만 하네요.',look:LOOK.xBench1},
+   {who:'민서',say:'사실 저 여태 남자친구를 사귄 적이 없어요.',look:LOOK.xBench1},
+   {who:'민서',say:'남친 생기면 뭔가 달라질까요?',look:LOOK.xBench1,face:'think'},
+   {who:'민서',say:'연애는 드라마로만 봐서 약간 무서워요.',look:LOOK.xBench1},
    {who:'민서',say:'연애 조언 글이에요. "쓰니야, 싫으면 싫다고 해도 돼."',look:LOOK.xBench1},
    {who:'나',say:'네 마음이 제일 중요해.'},
    {who:'민서',say:'네. 싫은 건 분명히 말하려고요.',look:LOOK.xBench1},
@@ -563,7 +563,7 @@ const SIDE={
    {who:'준서',say:'알았어. 나도 말하고 나니 좀 이상하네.',look:LOOK.xSoc1},
   ],
   [
-   {who:'준서',say:'점심엔 2반 대 3반이야! 너도 낄래?',look:LOOK.xSoc1},
+   {who:'준서',say:'이따 2반 대 3반이야! 너도 낄래?',look:LOOK.xSoc1},
    {who:'건우',say:'넌 3반이지? 준서랑 같은 편이네.',look:LOOK.xSoc2},
    {who:'준서',say:'내가 공에 미쳤거든. 공만 봐!',look:LOOK.xSoc1},
    {who:'건우',say:'내 말이. 골대도 좀 봐라.',look:LOOK.xSoc2},
@@ -592,7 +592,7 @@ const SIDE={
    {who:'시우',say:'3학년 선배가 저를 찾았대요. 제 이름까지 알고요.',look:LOOK.xNotice},
    {who:'시우',say:'무슨 일일까요? 좀 무서워요.',look:LOOK.xNotice,face:'sad'},
    {who:'나',say:'아직 무슨 일인지 모르잖아. 같이 물어보자.'},
-   {who:'시우',say:'네. 지금은 수업이라, 점심에 오신대요.',look:LOOK.xNotice},
+   {who:'시우',say:'네. 밥 먹고 여기로 오신대요.',look:LOOK.xNotice},
    {who:'나',say:'만약 무서우면 선생님께 같이 가자.'},
    {who:'시우',say:'네. 혼자 기다리기보다는 낫겠어요.',look:LOOK.xNotice},
   ],
@@ -627,7 +627,7 @@ const SIDE={
  ],
 };
 function sideScene(key){
- const t=sideTime(),flag='side_'+key+'_'+t,lines=SIDE[key][t];
+ const t=sideTime(key),flag='side_'+key+'_'+t,lines=SIDE[key][t];
  if(f()[flag])return t===2?SIDE[key][3]:[lines[lines.length-1]];
  return lines.map((s,i)=>i===lines.length-1?{...s,set:()=>{f()[flag]=1}}:s);
 }
@@ -933,10 +933,10 @@ const NPC={
  xSoc2:{name:'건우',zone:'yard',x:21,y:7,dir:'left',look:LOOK.xSoc2,banmal:1,
   hide:()=>!sideHere(),status:()=>null,proxy:()=>NPC.xSoc1,
   talk:()=>SIDE.soccer[3]},
- xBench1:{name:'민서',zone:'yard',x:8,y:10,dir:'right',look:LOOK.xBench1,
+ xBench1:{name:'민서',zone:'yard',x:7,y:8,dir:'right',look:LOOK.xBench1,sit:1,
   hide:()=>!sideHere(),status:()=>null,
   script:()=>sideScene('bench'),talk:()=>SIDE.bench[3]},
- xBench2:{name:'연두',zone:'yard',x:9,y:10,dir:'left',look:LOOK.xBench2,
+ xBench2:{name:'연두',zone:'yard',x:7,y:9,dir:'right',look:LOOK.xBench2,sit:1,
   hide:()=>!sideHere(),status:()=>null,proxy:()=>NPC.xBench1,
   talk:()=>SIDE.bench[3]},
  xHome1:{name:'2학년 학생',zone:'yard',x:8,y:11,dir:'right',look:LOOK.xHome1,banmal:1,

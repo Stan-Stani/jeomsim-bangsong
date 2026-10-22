@@ -808,9 +808,9 @@ const NPC={
   talk:()=>f().promise?[{say:'무대는 운동장이에요. 여기는 연습만 해요.'}]
    :[{say:'점심시간엔 체육관이 댄스 동아리 거예요.'},{say:'농구는 축제 끝나고 해요.'}]},
 
- minseo:{name:'민서',zone:'yard',x:8,y:10,dir:'right',look:LOOK.minseo,
+ minseo:{name:'민서',zone:'yard',x:7,y:8,dir:'right',sit:1,look:LOOK.minseo,
   status:()=>null,script:()=>sideScene('drama'),talk:()=>SIDE.drama[3]},
- yeondu:{name:'연두',zone:'yard',x:9,y:10,dir:'left',look:LOOK.yeondu,
+ yeondu:{name:'연두',zone:'yard',x:7,y:9,dir:'right',sit:1,look:LOOK.yeondu,
   status:()=>null,proxy:()=>NPC.minseo,talk:()=>SIDE.drama[3]},
  /* ---------- 방송실, day one ---------- */
  gureumA:{name:'백구름',zone:'bcast',x:5,y:3,dir:'up',look:LOOK.gureum,badge:['절박하다'],banmal:1,

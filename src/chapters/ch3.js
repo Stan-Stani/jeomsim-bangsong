@@ -674,10 +674,10 @@ const NPC={
    :lunchT()?[{say:'창밖 봐. 1학년들 축구한다.'}]:[{say:'전학생, 이제 학교 익숙해?'}]}},
 
  /* Returning side cast; friends open the same scene and share visit flags. */
- minseo:{name:'민서',zone:'yard',x:8,y:10,dir:'right',look:LOOK.minseo,
+ minseo:{name:'민서',zone:'yard',x:7,y:8,dir:'right',sit:1,look:LOOK.minseo,
   hide:()=>!sideHere(),status:()=>null,
   script:()=>sideScene('cinema'),talk:()=>SIDE.cinema[3]},
- yeondu:{name:'연두',zone:'yard',x:9,y:10,dir:'left',look:LOOK.yeondu,
+ yeondu:{name:'연두',zone:'yard',x:7,y:9,dir:'right',sit:1,look:LOOK.yeondu,
   hide:()=>!sideHere(),status:()=>null,proxy:()=>NPC.minseo,
   talk:()=>SIDE.cinema[3]},
  dohyeon:{name:'도현',zone:'hall',x:16,y:6,dir:'left',look:LOOK.dohyeon,banmal:1,

@@ -26,7 +26,7 @@ for(const CH of ctx.CHAPTERS){
    const vs=[].concat(typeof th==='function'?th(0,0):th).filter(Boolean);
    for(const v of vs){if(typeof v!=='string')E(`${id} things "${c}" gives a non-string`);else if(/[A-Za-z]/.test(v)||v.length>60)E(`${id} things "${c}" line is English or too long: ${v}`)}}
   for(const k of Object.keys(Z.spots||{})){const [x,y]=k.split(',').map(Number);if(walk(Z,x,y))E(`${id} spot ${k} is on a walkable tile`)}
-  for(const k of Z.npcs){const n=C.NPC[k];if(!n){E('no npc '+k);continue}if(n.zone!==id)E(`npc ${k} zone ${n.zone}≠${id}`);if(!walk(Z,n.x,n.y)&&!n.proxy)E(`npc ${k} on unwalkable ${n.x},${n.y}`);if(n.chat&&(!C.NPC[n.chat]||C.NPC[n.chat].zone!==id))E(`npc ${k} chats with ${n.chat}, who isn't in ${id}`)}  // a proxy (e.g. a table) may stand on furniture
+  for(const k of Z.npcs){const n=C.NPC[k];if(!n){E('no npc '+k);continue}if(n.zone!==id)E(`npc ${k} zone ${n.zone}≠${id}`);if(!walk(Z,n.x,n.y)&&!n.proxy&&!n.sit)E(`npc ${k} on unwalkable ${n.x},${n.y}`);if(n.chat&&(!C.NPC[n.chat]||C.NPC[n.chat].zone!==id))E(`npc ${k} chats with ${n.chat}, who isn't in ${id}`)}  // a proxy (e.g. a table) may stand on furniture
  }
  if(!Object.values(C.ZONES).some(Z=>Object.values(Z.legend).some(L=>L.tile==='terminal'||L.term)))E('no review computer anywhere (a terminal tile, or a legend entry with term:1)');
  // review asks a word's own questions; gram:1 ones (척, -대, -다 보니 asked under some word) don't count, so each word needs one that isn't
