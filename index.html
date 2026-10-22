@@ -1075,6 +1075,11 @@ function quizLine(fallback,id){
   if(id){(state.quizAt||(state.quizAt={}))[id]={b:beats(),ask:q.ask};save()}
   return [...pre,q]}};
 }
+/* Legs for someone sitting sideways on the 운동장 bench ('n', a two-tile bench seen from above), facing right: the lap runs
+   over the seat and the shins hang past its right edge. A chair look (see drawSeated): the bottom 7 rows draw over the sitter, who sits 3px up (drop -3) so the lap meets them. */
+const BENCH_LEGS={art:{pal:{P:'#5A5F6E',p:'#474B58',S:'#2A2C33'},back:7,drop:-3,
+ down:['................','................','................','................','................','................','................','................','................',
+  '....PPPPPPPPPP..','....ppppppppPP..','............PP..','............pP..','............SSS.','................','................']}};
 </script>
 <script>
 CHAPTERS.push({id:'ch1',n:'1교시',title:'전학생',place:'운동장 · 교무실 · 2학년 3반 · 급식실 · 방송실 · 교장실',words:20,save:'banghu-ch1',color:'#B8433A',
@@ -2012,10 +2017,10 @@ const NPC={
  xSoc2:{name:'건우',zone:'yard',x:21,y:7,dir:'left',look:LOOK.xSoc2,banmal:1,
   hide:()=>!sideHere(),status:()=>null,proxy:()=>NPC.xSoc1,
   talk:()=>SIDE.soccer[3]},
- xBench1:{name:'민서',zone:'yard',x:7,y:8,dir:'right',look:LOOK.xBench1,sit:1,
+ xBench1:{name:'민서',zone:'yard',x:7,y:8,dir:'right',look:LOOK.xBench1,sit:1,chair:BENCH_LEGS,
   hide:()=>!sideHere(),status:()=>null,
   script:()=>sideScene('bench'),talk:()=>SIDE.bench[3]},
- xBench2:{name:'연두',zone:'yard',x:7,y:9,dir:'right',look:LOOK.xBench2,sit:1,
+ xBench2:{name:'연두',zone:'yard',x:7,y:9,dir:'right',look:LOOK.xBench2,sit:1,chair:BENCH_LEGS,
   hide:()=>!sideHere(),status:()=>null,proxy:()=>NPC.xBench1,
   talk:()=>SIDE.bench[3]},
  xHome1:{name:'2학년 학생',zone:'yard',x:8,y:11,dir:'right',look:LOOK.xHome1,banmal:1,
@@ -3960,10 +3965,10 @@ const NPC={
    :lunchT()?[{say:'창밖 봐. 1학년들 축구한다.'}]:[{say:'전학생, 이제 학교 익숙해?'}]}},
 
  /* Returning side cast; friends open the same scene and share visit flags. */
- minseo:{name:'민서',zone:'yard',x:7,y:8,dir:'right',sit:1,look:LOOK.minseo,
+ minseo:{name:'민서',zone:'yard',x:7,y:8,dir:'right',sit:1,chair:BENCH_LEGS,look:LOOK.minseo,
   hide:()=>!sideHere(),status:()=>null,
   script:()=>sideScene('cinema'),talk:()=>SIDE.cinema[3]},
- yeondu:{name:'연두',zone:'yard',x:7,y:9,dir:'right',sit:1,look:LOOK.yeondu,
+ yeondu:{name:'연두',zone:'yard',x:7,y:9,dir:'right',sit:1,chair:BENCH_LEGS,look:LOOK.yeondu,
   hide:()=>!sideHere(),status:()=>null,proxy:()=>NPC.minseo,
   talk:()=>SIDE.cinema[3]},
  dohyeon:{name:'도현',zone:'hall',x:16,y:6,dir:'left',look:LOOK.dohyeon,banmal:1,
@@ -5389,9 +5394,9 @@ const NPC={
   talk:()=>f().promise?[{say:'무대는 운동장이에요. 여기는 연습만 해요.'}]
    :[{say:'점심시간엔 체육관이 댄스 동아리 거예요.'},{say:'농구는 축제 끝나고 해요.'}]},
 
- minseo:{name:'민서',zone:'yard',x:7,y:8,dir:'right',sit:1,look:LOOK.minseo,
+ minseo:{name:'민서',zone:'yard',x:7,y:8,dir:'right',sit:1,chair:BENCH_LEGS,look:LOOK.minseo,
   status:()=>null,script:()=>sideScene('drama'),talk:()=>SIDE.drama[3]},
- yeondu:{name:'연두',zone:'yard',x:7,y:9,dir:'right',sit:1,look:LOOK.yeondu,
+ yeondu:{name:'연두',zone:'yard',x:7,y:9,dir:'right',sit:1,chair:BENCH_LEGS,look:LOOK.yeondu,
   status:()=>null,proxy:()=>NPC.minseo,talk:()=>SIDE.drama[3]},
  /* ---------- 방송실, day one ---------- */
  gureumA:{name:'백구름',zone:'bcast',x:5,y:3,dir:'up',look:LOOK.gureum,badge:['절박하다'],banmal:1,
@@ -6366,7 +6371,7 @@ globalThis.GRAMMAR_NOTES={
 </script>
 <script>
 /* This build (version.json): v = a hash of the game, t = when this version first appeared. */
-globalThis.BUILD={"v": "ffdeed8c", "t": "2026-10-21T23:52Z"};
+globalThis.BUILD={"v": "e1919283", "t": "2026-10-22T00:17Z"};
 </script>
 <script>
 /* GENERATED from walk-engine/engine.js (bad0ebc) — do not edit here; edit walk-engine and run its sync.sh. */

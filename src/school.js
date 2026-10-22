@@ -713,3 +713,8 @@ function quizLine(fallback,id){
   if(id){(state.quizAt||(state.quizAt={}))[id]={b:beats(),ask:q.ask};save()}
   return [...pre,q]}};
 }
+/* Legs for someone sitting sideways on the 운동장 bench ('n', a two-tile bench seen from above), facing right: the lap runs
+   over the seat and the shins hang past its right edge. A chair look (see drawSeated): the bottom 7 rows draw over the sitter, who sits 3px up (drop -3) so the lap meets them. */
+const BENCH_LEGS={art:{pal:{P:'#5A5F6E',p:'#474B58',S:'#2A2C33'},back:7,drop:-3,
+ down:['................','................','................','................','................','................','................','................','................',
+  '....PPPPPPPPPP..','....ppppppppPP..','............PP..','............pP..','............SSS.','................','................']}};
