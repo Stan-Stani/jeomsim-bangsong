@@ -68,6 +68,8 @@ const DICT={
  '의외':{k:'생각 못 한 일이라서 좀 놀라워요.',e:'unexpected, surprising'},
  '식판':{k:'급식을 담는 큰 접시. 칸이 있어요.',e:'(school) meal tray'},
  '생일턱':{k:'생일인 사람이 친구들한테 밥이나 간식을 사 주는 것.',e:'a birthday treat (the birthday person treats friends)'},
+ /* tap-a-word senses pinned by {shown|key} markup in this chapter's lines (dictionary audit) */
+ '나':{k:'자기 자신을 편하게 부르는 말. 내가, 난.',e:'I, me (plain)'}, '내 말이':{k:'내 생각도 똑같다는 말.',e:"that's what I'm saying, exactly"}, '데리고 가다':{k:'사람이나 동물과 함께 가다.',e:'to take (someone) along'},  /* {난|나}: 난 = 나는, not 나다 */
 };
 /* sounds-alike / looks-alike words, used when a listening question is built */
 const CONFUSE={'반장':['반찬','교장'],'교장':['교실','공장'],'종례':['조례','종이'],'소문나다':['소리 나다','소원'],'지우개':['지우다','지붕'],'줍다':['춥다','주다'],
@@ -530,11 +532,11 @@ const SIDE={
    {who:'도현',say:'응. 폰은 주머니에 넣었어.',look:LOOK.xSenior},
    {who:'도현',say:'시험 말고는 이렇다 할 얘기도 없네.',look:LOOK.xSenior},
    {who:'나',say:'저는 첫날부터 벌금 오백 원 냈어요.'},
-   {who:'도현',say:'하하. 난 머릿속에서 시험만 다시 봤어.',look:LOOK.xSenior},
+   {who:'도현',say:'하하. {난|나} 머릿속에서 시험만 다시 봤어.',look:LOOK.xSenior},
    {who:'도현',say:'점심도 시험 시간이나 다름없었지.',look:LOOK.xSenior},
    {who:'도현',say:'얘기하니까 좀 풀어지네. 고마워.',look:LOOK.xSenior,face:'happy'},
    {who:'도현',say:'친구가 내 청소를 대신해 줬거든.',look:LOOK.xSenior},
-   {who:'도현',say:'난 내일 그 친구 대신 청소하려고.',look:LOOK.xSenior},
+   {who:'도현',say:'{난|나} 내일 그 친구 대신 청소하려고.',look:LOOK.xSenior},
   ],
   [
    {who:'도현',say:'엄마한테 성적표 보냈어.',look:LOOK.xSenior},
@@ -550,7 +552,7 @@ const SIDE={
  ],
  soccer:[
   [
-   {who:'준서',say:'어, 전학생! 난 2학년 준서야.',look:LOOK.xSoc1},
+   {who:'준서',say:'어, 전학생! {난|나} 2학년 준서야.',look:LOOK.xSoc1},
    {who:'준서',say:'공 찾으러 나왔다가 건우한테 잡혔어.',look:LOOK.xSoc1},
    {who:'준서',say:'어제 정문에서 패싸움이 났거든!',look:LOOK.xSoc1},
    {who:'건우',say:'쟤 또 시작이다. 허언증 아니냐?',look:LOOK.xSoc2},
@@ -564,7 +566,7 @@ const SIDE={
    {who:'준서',say:'이따 2반 대 3반이야! 너도 낄래?',look:LOOK.xSoc1},
    {who:'건우',say:'넌 3반이지? 준서랑 같은 편이네.',look:LOOK.xSoc2},
    {who:'준서',say:'내가 공에 미쳤거든. 공만 봐!',look:LOOK.xSoc1},
-   {who:'건우',say:'내 말이. 골대도 좀 봐라.',look:LOOK.xSoc2},
+   {who:'건우',say:'{내 말이|내 말이}. 골대도 좀 봐라.',look:LOOK.xSoc2},
    {who:'나',say:'그런데 어제 싸움 얘기는 진짜야?'},
    {who:'준서',say:'어… 공부터 차고 말할게.',look:LOOK.xSoc1},
   ],
@@ -618,7 +620,7 @@ const SIDE={
    {who:'시우',say:'언제부터 사람하고 거리를 뒀을까요.',look:LOOK.xNotice},
    {who:'나',say:'서두를 필요 없어. 네가 편한 만큼만.'},
    {who:'시우',say:'어쨌든 오늘은 물어보길 잘했어요.',look:LOOK.xNotice,face:'happy'},
-   {who:'시우',say:'선생님이 교무실까지 데리고 가 주셨어요.',look:LOOK.xNotice},
+   {who:'시우',say:'선생님이 교무실까지 {데리고 가|데리고 가다} 주셨어요.',look:LOOK.xNotice},
   ],
   [
    {who:'시우',say:'다음에 힘들면 혼자 참지 않고 말할래요.',look:LOOK.xNotice},

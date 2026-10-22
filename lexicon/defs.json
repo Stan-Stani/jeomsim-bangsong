@@ -1052,8 +1052,8 @@
 "k": "무엇에 둘러 감아져요."
 },
 "감다": {
-"e": "to close (one's eyes)",
-"k": "눈을 닫아요."
+"e": "to close (one's eyes); to wind, wrap (tape, a wire)",
+"k": "눈을 닫아요 · 테이프나 줄을 둘둘 돌려요."
 },
 "감독": {
 "e": "director, supervisor, coach",
@@ -1422,8 +1422,8 @@
 "k": "'것을'의 짧은 말."
 },
 "걸다": {
-"e": "to pick (a fight); to hang",
-"k": "싸움이나 말을 먼저 시작해요."
+"e": "to hang; to pick (a fight); (말을) to talk to, strike up",
+"k": "물건을 매달아요 · 싸움이나 말을 먼저 시작해요."
 },
 "걸리다": {
 "e": "to hang, get caught or stuck; to catch (a disease); to take (time); to get caught doing something",
@@ -3378,8 +3378,8 @@
 },
 "끼": null,
 "끼다": {
-"e": "to join in; to put on (gloves, a ring)",
-"k": "여럿이 하는 일에 함께 들어가요. · 장갑이나 반지를 손에 넣어요."
+"e": "to join in; to put on (gloves, a ring); to fold (one's arms)",
+"k": "여럿이 하는 일에 함께 들어가요 · 장갑이나 반지를 손에 넣어요 · 팔짱을 껴요."
 },
 "끼어들다": {
 "e": "to butt in, interrupt",
@@ -3414,8 +3414,8 @@
 "k": "하나가 여러 개로 갈라져요."
 },
 "나다": {
-"e": "to occur, break (down)",
-"k": "생겨요. 일어나요."
+"e": "to come out (a sound, smell, sweat, tears, smoke); to happen; (고장 나다) to break down",
+"k": "나와요, 생겨요. 소리가 나요 · 냄새가 나요 · 큰일 나요 · 고장 났어요."
 },
 "나도 모르게": {
 "e": "without realizing",
@@ -3668,8 +3668,8 @@
 "k": "사람을 강제로 데려가요."
 },
 "낫다": {
-"e": "to heal, recover",
-"k": "병이나 상처가 좋아져요."
+"e": "to heal, recover; to be better (than)",
+"k": "병이나 상처가 좋아져요 · 다른 것보다 더 좋아요."
 },
 "낮": {
 "e": "daytime",
@@ -3696,8 +3696,8 @@
 "k": "올해 다음 해."
 },
 "내다": {
-"e": "to pay; to put out",
-"k": "돈을 줘요. · 밖으로 보여요."
+"e": "to pay; to hand in; to make (a sound), give off; to set (a quiz question)",
+"k": "돈을 줘요 · 숙제를 줘요 · 소리를 내요 · 문제를 내요."
 },
 "내던지다": {
 "e": "to throw away, give up",
@@ -4272,8 +4272,8 @@
 "k": "연락한 이유를 말할 때 하는 말."
 },
 "다리": {
-"e": "leg",
-"k": "몸 아래쪽, 서거나 걸을 때 쓰는 부분이에요."
+"e": "leg; bridge",
+"k": "몸 아래쪽, 서거나 걸을 때 쓰는 부분이에요 · 강이나 길 위로 건너가는 길."
 },
 "다브룩스": {
 "e": "Davrux — character name",
@@ -5409,8 +5409,8 @@
 "k": "그런 것 같아요."
 },
 "등": {
-"e": "lamp; back",
-"k": "불빛을 내는 것. · 몸의 등"
+"e": "lamp; back; place, rank (1등 = first place)",
+"k": "불빛을 내는 것 · 몸의 등 · 순서. 1등은 제일 잘한 사람."
 },
 "등나무": {
 "e": "wisteria; Agatha — a person's name",
@@ -5497,8 +5497,8 @@
 "k": "상대가 쓴 기술을 똑같이 써요."
 },
 "따르다": {
-"e": "to obey, follow",
-"k": "말이나 뒤를 쫓아 해요."
+"e": "to follow; to pour",
+"k": "말이나 뒤를 쫓아 해요 · 컵에 물을 부어요."
 },
 "딱": {
 "e": "exactly, just right",
@@ -5702,8 +5702,8 @@
 "k": "해가 하늘로 올라오다(뜨다)."
 },
 "뜨다": {
-"e": "to float; to rise",
-"k": "하늘이나 물 위에 있어요. · 해가 올라와요"
+"e": "to float; to rise; (on a screen) to come up",
+"k": "하늘이나 물 위에 있어요 · 해가 올라와요 · 화면에 글이 나와요."
 },
 "뜬금없이": {
 "e": "out of the blue",
@@ -6322,8 +6322,8 @@
 "k": "다른 사람한테 일을 부탁해요."
 },
 "맡다": {
-"e": "to take charge",
-"k": "일을 책임지고 해요. · 냄새를 맡다"
+"e": "to take charge; to save (a seat); to smell",
+"k": "일을 책임지고 해요 · 자리를 잡아 놓아요 · 코로 냄새를 맡아요."
 },
 "매": {
 "e": "beating, whipping",
@@ -8703,8 +8703,8 @@
 "k": "연한 빨간색."
 },
 "불": {
-"e": "fire",
-"k": "뜨겁게 타는 것."
+"e": "fire; light (of a lamp, a light)",
+"k": "뜨겁게 타는 것 · 램프나 전등의 빛. 불을 켜요."
 },
 "불가": {
 "e": "impossible",
@@ -9073,8 +9073,8 @@
 "k": "빈틈없이 가득해요. 빼곡해요."
 },
 "빼다": {
-"e": "to pull out, draw back",
-"k": "안에 있던 것을 밖으로 꺼내요. 뒤로 물려요."
+"e": "to take out; to leave out",
+"k": "안에 있던 것을 밖으로 꺼내요 · 같이 안 하게 해요. \"저는 빼 주세요.\""
 },
 "빼앗다": {
 "e": "to take away",
@@ -9965,8 +9965,8 @@
 "k": "도둑질해서 쫓겨난 아로 사람이에요."
 },
 "세우다": {
-"e": "to stand up; to park",
-"k": "서게 해요 · 멈추게 해요."
+"e": "to stand up; to put up (a booth, a tent); to park",
+"k": "서게 해요 · 천막이나 부스를 만들어 놓아요 · 차를 멈추게 해요."
 },
 "세월": {
 "e": "time, years",
@@ -11140,8 +11140,8 @@
 "k": "인터넷에 글을 쓴 사람."
 },
 "쓰다": {
-"e": "to use; write; bitter",
-"k": "사용해요 · 글을 써요 · 맛이 써요."
+"e": "to write; to use; to wear (a hat); bitter",
+"k": "글을 써요 · 사용해요 · 모자를 써요 · 맛이 써요."
 },
 "쓰다듬다": {
 "e": "to pat, stroke",
@@ -12406,8 +12406,8 @@
 "k": "도서관에서 책을 읽는 방."
 },
 "열리다": {
-"e": "to be opened",
-"k": "닫힌 것이 열어져요."
+"e": "to be opened; (fruit) to grow on a plant",
+"k": "닫힌 것이 열려요 · 나무나 화분에 열매가 생겨요."
 },
 "열매": {
 "e": "fruit, berry",
@@ -12518,7 +12518,10 @@
 "e": "house next door",
 "k": "바로 옆에 있는 집."
 },
-"예": null,
+"예": {
+"e": "example (예: = e.g.)",
+"k": "보기. \"예:\" 다음에 보기가 나와요."
+},
 "예문": {
 "e": "example sentence",
 "k": "단어를 보여 주는 문장."
@@ -12720,8 +12723,8 @@
 "k": "헤러시 나라의 아콘이에요."
 },
 "올리다": {
-"e": "to raise, lift",
-"k": "아래에서 위로 옮겨요."
+"e": "to raise, lift; to post (online)",
+"k": "아래에서 위로 옮겨요 · 인터넷에 글이나 그림을 올려요."
 },
 "올챙이": {
 "e": "tadpole",
@@ -15666,8 +15669,8 @@
 "k": "몸에 가지고 있어요."
 },
 "지다": {
-"e": "to become; to lose",
-"k": "\"-어지다\": 그렇게 돼요 · 경기에서 져요."
+"e": "to lose; to become (-아/어지다); (the sun) to set",
+"k": "경기에서 져요 · \"-어지다\": 그렇게 돼요 · 해가 져요."
 },
 "지도": {
 "e": "map",
@@ -17449,8 +17452,8 @@
 "k": "무게 단위, 1000킬로그램."
 },
 "통": {
-"e": "container; can",
-"k": "물건을 넣는 둥근 그릇."
+"e": "container; (counter) letters",
+"k": "물건을 넣는 그릇 · 편지를 세는 말. 편지 두 통."
 },
 "통과": {
 "e": "passing through",
@@ -17718,8 +17721,8 @@
 "k": "여유가 없고 힘들어요."
 },
 "판": {
-"e": "board; plate",
-"k": "넓고 평평한 물건."
+"e": "board; (a game) a round",
+"k": "넓고 평평한 물건 · 게임을 한 번 하는 것. \"한 판 할래?\""
 },
 "판결": {
 "e": "judgment",
@@ -18073,8 +18076,8 @@
 "k": "땅에서 자라는 작은 초록색 식물이에요."
 },
 "풀다": {
-"e": "to solve; to relieve, release; to untie",
-"k": "문제의 답을 찾아요 · 긴장이나 막힌 것을 없애요 · 묶인 것을 끌러요."
+"e": "to solve; to relieve, release; to untie; (썰을) to tell (a story)",
+"k": "문제의 답을 찾아요 · 긴장이나 막힌 것을 없애요 · 묶인 것을 끌러요 · 이야기를 다 해 줘요."
 },
 "풀리다": {
 "e": "to come undone",
@@ -20338,5 +20341,21 @@
 "후배": {
 "e": "junior (at school or work)",
 "k": "나보다 늦게 들어온 사람."
+},
+"도(온도)": {
+"e": "degree (temperature)",
+"k": "온도를 세는 말. 물은 0도에서 얼어요."
+},
+"-(으)ㄹ 수도 있다": {
+"e": "might, could (it is possible)",
+"k": "그럴 수 있을 때. 늦을 수도 있어."
+},
+"서가": {
+"e": "bookshelves, stacks (in a library)",
+"k": "도서관에서 책을 꽂아 두는 곳."
+},
+"-다며": {
+"e": "I heard that …, right? (checking hearsay)",
+"k": "들은 말이 맞는지 물을 때. 노래했다며?"
 }
 }
