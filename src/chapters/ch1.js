@@ -479,7 +479,7 @@ const classT=()=>!f().lunch||(!!f().deal&&!f().crew3); // lessons and 종례: cl
 /* Optional exposure scenes: no questions, awards, items, journal notes or quest changes.
    The late morning is class time, so these students are out only at lunch (a first visit, then a second) and after
    종례. A missed visit never replays out of time. Only the last spoken line records that visit. */
-const sideTime=key=>f().crew3?2:f()['side_'+key+'_0']?1:0;
+const sideTime=key=>f().crew3?2:f()['side_'+key+'_0']&&(key!=='notice'||f().gotNotice)?1:0;  // 시우's part 1 waits for 도현 to finish lunch: by the time the 방송실 notice is in hand
 const sideHere=()=>lunchT()||!!f().crew3;
 const SIDE={
  bench:[
