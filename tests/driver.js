@@ -182,7 +182,7 @@ window.__play=async function(steps){
      if(s.shot)await shot(s.shot);const w=[...$('talkList').querySelectorAll('.w')].sort((a,b)=>b.textContent.length-a.textContent.length)[0];w.click();await wait(150);
      check(!$('gloss').hidden,'tapping a word in the log opens the dictionary: '+w.textContent);if(s.shot)await shot(s.shot+'-tap');await key('x');await key('x');check($('talkPanel').hidden,'B closes the log')}
    else if(s.start){$('startBtn').click();await wait(200);check(!$('startPanel').hidden,'START opens the menu');
-     check($('startPanel').querySelectorAll('.mi').length===10,'menu has 대화 · 사전 · 교시 고르기 · 나 꾸미기 · 읽기 · 소리 · 듣기 문제 · 쓰기 문제 · 문제 알리기 · 디버그');if(s.shot)await shot(s.shot);
+     check($('startPanel').querySelectorAll('.mi').length===11,'menu has 대화 · 사전 · 교시 고르기 · 나 꾸미기 · 읽기 · 소리 · 듣기 문제 · 쓰기 문제 · 음악 · 문제 알리기 · 디버그');if(s.shot)await shot(s.shot);
      await key('x');check($('startPanel').hidden,'B closes the menu');
      $('startBtn').click();await wait(120);$('tapBtn').click();await wait(200);check($('startPanel').hidden&&!$('tapPanel').hidden,'a menu item closes the menu and opens its panel');await key('x');check(!$('startPanel').hidden,'closing it goes back to the menu');await key('x')}
    else if(s.taps){$('tapBtn').click();await wait(250);const rows=[...$('tapList').querySelectorAll('.tp')];

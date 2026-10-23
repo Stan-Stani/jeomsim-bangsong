@@ -176,6 +176,8 @@ canvas{display:block;width:100%;height:auto;image-rendering:pixelated;image-rend
 .mo{font-family:var(--body);font-size:.88rem;font-weight:600;border:2px solid var(--seam);background:transparent;color:var(--ink);border-radius:6px;padding:5px 9px;cursor:pointer}
 .mo.sw{width:30px;height:30px;padding:0;border-radius:50%}.mo.on{border-color:var(--ink);box-shadow:0 0 0 2px var(--amber)}
 .games{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:4px}.games span{font-size:.8rem;opacity:.7;width:100%}.games a{font-weight:700;font-size:.92rem;color:inherit;border:2px dashed currentColor;border-radius:8px;padding:5px 10px;text-decoration:none;opacity:.85}
+.credit{font-size:.75rem;opacity:.6;margin-top:8px}
+.vol{display:flex;align-items:center;gap:10px;margin:8px 0 4px;font-size:.85rem}.vol span{opacity:.8;white-space:nowrap}.vol input{flex:1;accent-color:var(--accent,#E8952B)}
 .mgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .mi{font-family:var(--body);font-weight:700;font-size:1.05rem;padding:14px 10px;border-radius:8px;border:2px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
 .mi.wide{grid-column:1/-1}.mi small{font-weight:400;opacity:.75;margin-left:6px}
@@ -2143,7 +2145,8 @@ const VARIANTS={
 const TILES={...SCHOOL_TILES,...VARIANTS,
 };
 const PLAYER=LOOK.player;
-return {WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,seatPulled,seatPulledN};  // the school's desks and tables ask these whether a chair is pulled out
+const MUSIC='audio/cafe-alps.m4a';  // the whole 교시 (src: ~/Developer/music, CafeAlps)
+return {MUSIC,WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,seatPulled,seatPulledN};  // the school's desks and tables ask these whether a chair is pulled out
 }});
 </script>
 <script>
@@ -3289,7 +3292,8 @@ const TILES={...SCHOOL_TILES,...VARIANTS,
 };
 const PLAYER=LOOK.player;
 const term={name:'복습 노트북'};  // the 방송실 laptop (1교시 reviews in a paper 복습 노트); earlier 교시' due words show from the start (walk-engine aff7b40)
-return {WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,seatPulled,seatPulledN,term};  // the school's desks and tables ask these whether a chair is pulled out
+const MUSIC='audio/throb.m4a';  // the whole 교시 (src: ~/Developer/music, Throb)
+return {MUSIC,WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,seatPulled,seatPulledN,term};  // the school's desks and tables ask these whether a chair is pulled out
 }});
 </script>
 <script>
@@ -3724,7 +3728,7 @@ const ZONES={...SCHOOL({open:['cafe','hall2','music','library','bcast','nr','cla
    'r':'반납 수레예요. 책이 높이 쌓였어요.',
    'p':'화분이에요. 도서부가 매일 물을 줘요.'},
   npcs:['chanLib','jungLib','lib','reader','xL1','jian','xL2']}}}),
- nr:{name:'코인 노래방',reg:'COIN KARAOKE',
+ nr:{name:'코인 노래방',music:'audio/saturday-night.m4a',reg:'COIN KARAOKE',
   legend:{'#':{tile:'nrWall'},'.':{tile:'karaokeFloor',walk:1},'d':{tile:'nrGlass',walk:1},'D':{tile:'nrExitDoor',walk:1},'V':{tile:'screen'},'L':{tile:'nrSpk'},
    'J':{tile:'nrBooth'},'o':{tile:'nrSofa'},'a':{tile:'nrTable'},'m':{tile:'coinBox'},'k':{tile:'nrCounter'}},
   map:[
@@ -4589,7 +4593,8 @@ const TILES={...SCHOOL_TILES,...VARIANTS,
 };
 const PLAYER=LOOK.player;
 const term={name:'복습 노트북'};  // the 방송실 laptop (1교시 reviews in a paper 복습 노트)
-return {WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,term};
+const MUSIC='audio/kings-bounty.m4a';  // the whole 교시 but the 노래방, which plays its own (src: ~/Developer/music, KingsBounty)
+return {MUSIC,WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,term};
 }});
 </script>
 <script>
@@ -6119,12 +6124,13 @@ const term={name:'복습 노트북',  // the 방송실 laptop (1교시 reviews i
  due:(n,k)=>{const d=dueWords(),old=d.filter(w=>!WORDS.includes(w)).length;
   return `복습할 단어가 ${n}개 있어요.`+(k<n?` 이번에는 ${k}개만 해요.`:'')+(old&&old===d.length?' 다 1~3교시 단어예요.':old?' 1~3교시 단어도 있어요.':'')},
  allWords:n=>[`단어 ${n}개를 다 모았어요!`,'다시 맞힐수록 ★가 늘어나요. 사람들이 또 물어볼 거예요.']};
-return {WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,PHOTOS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,term};
+const MUSIC='audio/legend-of.m4a';  // the whole 교시 (src: ~/Developer/music, LegendOf)
+return {MUSIC,WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,PHOTOS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,term};
 }});
 </script>
 <script>
 /* Settings for the shared engine (walk-engine): this game's names, storage prefix and default player. */
-var GAME={prefix:'banghu',title:'점심 방송',log:'단어 일지',
+var GAME={prefix:'banghu',music:'kimlinkku (Free Music Loop Pack)',title:'점심 방송',log:'단어 일지',
  /* spaced review: due again after 2 story beats or 5 minutes, then 5 beats or 20 minutes (★ within one 교시); later levels are
     hours and days, and one shared record lets a later 교시 bring earlier words back (class time, the notebook, the last round) */
  srs:{start:1,gap:[0,5*60e3,20*60e3,4*3600e3,24*3600e3,3*24*3600e3],beats:[0,2,5],shared:1},
@@ -6385,10 +6391,10 @@ globalThis.GRAMMAR_NOTES={
 </script>
 <script>
 /* This build (version.json): v = a hash of the game, t = when this version first appeared. */
-globalThis.BUILD={"v": "5692b19c", "t": "2026-10-23T00:42Z"};
+globalThis.BUILD={"v": "a8837cbd", "t": "2026-10-23T02:13Z"};
 </script>
 <script>
-/* GENERATED from walk-engine/engine.js (0a50690) — do not edit here; edit walk-engine and run its sync.sh. */
+/* GENERATED from walk-engine/engine.js (2751ddf) — do not edit here; edit walk-engine and run its sync.sh. */
 /* =====================================================================
    Engine: tiles, movement, zones, dialogue, spaced review, speech, saving.
    ===================================================================== */
@@ -7103,7 +7109,7 @@ function walkAt(n,t){ // → [x,y,dir,frame] while walking, null when arrived
  return [ax+(bx-ax)*f,ay+(by-ay)*f,dir,f<.5?(i%2?1:2):0];
 }
 let last=performance.now();
-function loop(t){const dt=Math.min(50,t-last);last=t;if(Z){update(dt,t);render(t)}requestAnimationFrame(loop)}
+function loop(t){const dt=Math.min(50,t-last);last=t;if(Z){update(dt,t);render(t);if(t-musicT>500){musicT=t;updateMusic()}}requestAnimationFrame(loop)}  // music follows the room and the story twice a second
 
 /* ---------- dialogue ---------- */
 let dlg=null,typing=null,pending=null,sel=0;
@@ -8101,7 +8107,33 @@ function skipTalk(){
  $('skipBtn').addEventListener('click',e=>{e.stopPropagation();skipTalk()});
  $('backBtn').addEventListener('click',stepBack);
 })();
-$('sndBtn').addEventListener('click',()=>{soundOn=!soundOn;store.set(KEY('sound'),soundOn?'1':'0');updateSound();sfx('ok')});
+$('sndBtn').addEventListener('click',()=>{soundOn=!soundOn;store.set(KEY('sound'),soundOn?'1':'0');updateSound();sfx('ok');updateMusic()});
+/* ---------- music ---------- */
+/* A looping track per room (zone music:) or per chapter (MUSIC), a path or a function of the story so far; '' or null is quiet.
+   Only games whose game.js names a music credit (GAME.music) get the 음악 toggle and the credit line in the menu.
+   소리 off silences music too. Browsers hold audio until the first tap or key, so a blocked start retries then. */
+let musicOn=store.get(KEY('music'))!=='0',bgm=null,bgmSrc='',musicT=0,musicVol=+(store.get(KEY('musicVol'))??30);
+if(!(musicVol>=0&&musicVol<=100))musicVol=30;
+function updateMusic(){
+ if(!G.music)return;
+ let m=Z?('music' in Z?Z.music:C.MUSIC):null;if(typeof m==='function')m=m();m=(soundOn&&musicOn&&m)||'';
+ if(m===bgmSrc)return;bgmSrc=m;
+ if(bgm){bgm.pause();bgm=null}
+ if(!m)return;bgm=new Audio(m);bgm.loop=true;bgm.volume=musicVol/100;bgm.play().catch(()=>{});
+}
+if(G.music){
+ const b=document.createElement('button');b.className='mi toggle';b.id='musicBtn';b.textContent='음악';
+ const upd=()=>b.setAttribute('aria-pressed',String(musicOn));upd();menuAdd(b);
+ b.addEventListener('click',()=>{musicOn=!musicOn;store.set(KEY('music'),musicOn?'1':'0');upd();sfx('ok');updateMusic()});
+ const v=document.createElement('label');v.className='vol';v.innerHTML='<span>음악 크기</span><input type="range" min="0" max="100" step="5" aria-label="음악 크기">';  // the volume (Android and desktop: iPhones ignore it, use the side buttons)
+ const r=v.querySelector('input');r.value=musicVol;$('startPanel').querySelector('.mgrid').after(v);
+ r.addEventListener('input',()=>{musicVol=+r.value;store.set(KEY('musicVol'),String(musicVol));if(bgm)bgm.volume=musicVol/100;
+  if(!musicOn&&musicVol>0){musicOn=true;store.set(KEY('music'),'1');upd();updateMusic()}});  // moving the slider while 음악 is off turns it back on
+ const g=document.querySelector('.startsheet .games');if(g){const c=document.createElement('div');c.className='credit';c.textContent='음악 · '+G.music;g.after(c)}
+ const wake=()=>{if(bgm&&bgm.paused&&!document.hidden)bgm.play().catch(()=>{})};
+ addEventListener('pointerdown',wake,true);addEventListener('keydown',wake,true);
+ document.addEventListener('visibilitychange',()=>{if(!bgm)return;if(document.hidden)bgm.pause();else wake()});
+}
 {const b=document.createElement('button');b.className='mi toggle';b.id='writeBtn';b.textContent=writeStep?'쓰기 문제 · 단계별':'쓰기 문제';  // 쓰기 문제 on/off (every game); 단계별 = the ladder (?write=step)
  const upd=()=>b.setAttribute('aria-pressed',String(writeOn));upd();menuAdd(b);
  b.addEventListener('click',()=>{writeOn=!writeOn;store.set(KEY('write'),writeOn?(writeStep?'step':'1'):'0');upd();sfx('ok');toast(writeOn?'★ 단어는 직접 써요.':'쓰기 문제를 껐어요. 보기에서 골라요.')})}

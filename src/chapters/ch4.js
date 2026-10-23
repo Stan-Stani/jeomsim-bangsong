@@ -1524,5 +1524,6 @@ const term={name:'복습 노트북',  // the 방송실 laptop (1교시 reviews i
  due:(n,k)=>{const d=dueWords(),old=d.filter(w=>!WORDS.includes(w)).length;
   return `복습할 단어가 ${n}개 있어요.`+(k<n?` 이번에는 ${k}개만 해요.`:'')+(old&&old===d.length?' 다 1~3교시 단어예요.':old?' 1~3교시 단어도 있어요.':'')},
  allWords:n=>[`단어 ${n}개를 다 모았어요!`,'다시 맞힐수록 ★가 늘어나요. 사람들이 또 물어볼 거예요.']};
-return {WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,PHOTOS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,term};
+const MUSIC='audio/legend-of.m4a';  // the whole 교시 (src: ~/Developer/music, LegendOf)
+return {MUSIC,WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,PHOTOS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,term};
 }});

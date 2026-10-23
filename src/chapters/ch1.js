@@ -1059,5 +1059,6 @@ const VARIANTS={
 const TILES={...SCHOOL_TILES,...VARIANTS,
 };
 const PLAYER=LOOK.player;
-return {WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,seatPulled,seatPulledN};  // the school's desks and tables ask these whether a chair is pulled out
+const MUSIC='audio/cafe-alps.m4a';  // the whole 교시 (src: ~/Developer/music, CafeAlps)
+return {MUSIC,WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,seatPulled,seatPulledN};  // the school's desks and tables ask these whether a chair is pulled out
 }});

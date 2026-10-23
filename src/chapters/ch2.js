@@ -1140,5 +1140,6 @@ const TILES={...SCHOOL_TILES,...VARIANTS,
 };
 const PLAYER=LOOK.player;
 const term={name:'복습 노트북'};  // the 방송실 laptop (1교시 reviews in a paper 복습 노트); earlier 교시' due words show from the start (walk-engine aff7b40)
-return {WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,seatPulled,seatPulledN,term};  // the school's desks and tables ask these whether a chair is pulled out
+const MUSIC='audio/throb.m4a';  // the whole 교시 (src: ~/Developer/music, Throb)
+return {MUSIC,WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,seatPulled,seatPulledN,term};  // the school's desks and tables ask these whether a chair is pulled out
 }});

@@ -429,7 +429,7 @@ const ZONES={...SCHOOL({open:['cafe','hall2','music','library','bcast','nr','cla
    'r':'반납 수레예요. 책이 높이 쌓였어요.',
    'p':'화분이에요. 도서부가 매일 물을 줘요.'},
   npcs:['chanLib','jungLib','lib','reader','xL1','jian','xL2']}}}),
- nr:{name:'코인 노래방',reg:'COIN KARAOKE',
+ nr:{name:'코인 노래방',music:'audio/saturday-night.m4a',reg:'COIN KARAOKE',
   legend:{'#':{tile:'nrWall'},'.':{tile:'karaokeFloor',walk:1},'d':{tile:'nrGlass',walk:1},'D':{tile:'nrExitDoor',walk:1},'V':{tile:'screen'},'L':{tile:'nrSpk'},
    'J':{tile:'nrBooth'},'o':{tile:'nrSofa'},'a':{tile:'nrTable'},'m':{tile:'coinBox'},'k':{tile:'nrCounter'}},
   map:[
@@ -1294,5 +1294,6 @@ const TILES={...SCHOOL_TILES,...VARIANTS,
 };
 const PLAYER=LOOK.player;
 const term={name:'복습 노트북'};  // the 방송실 laptop (1교시 reviews in a paper 복습 노트)
-return {WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,term};
+const MUSIC='audio/kings-bounty.m4a';  // the whole 교시 but the 노래방, which plays its own (src: ~/Developer/music, KingsBounty)
+return {MUSIC,WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,term};
 }});
