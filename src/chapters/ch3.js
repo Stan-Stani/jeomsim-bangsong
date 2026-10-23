@@ -1294,6 +1294,6 @@ const TILES={...SCHOOL_TILES,...VARIANTS,
 };
 const PLAYER=LOOK.player;
 const term={name:'복습 노트북'};  // the 방송실 laptop (1교시 reviews in a paper 복습 노트)
-const MUSIC='audio/kings-bounty.m4a';  // the whole 교시 but the 노래방, which plays its own (src: ~/Developer/music, KingsBounty)
+const MUSIC='audio/cafe-alps.m4a';  // the whole 교시 but the 노래방, which plays its own; as in 1교시 and 2교시 (src: ~/Developer/music, CafeAlps)
 return {MUSIC,WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,term};
 }});
