@@ -591,10 +591,10 @@ const SIDE={
    {who:'시우',say:'저… 전학 온 선배죠? 저는 1학년 시우예요.',look:LOOK.xNotice,face:'think'},
    {who:'시우',say:'3학년 선배가 저를 찾았대요. 제 이름까지 알고요.',look:LOOK.xNotice},
    {who:'시우',say:'무슨 일일까요? 좀 무서워요.',look:LOOK.xNotice,face:'sad'},
-   {who:'나',say:'아직 무슨 일인지 모르잖아. 같이 물어보자.'},
+   {who:'나',say:'아직 무슨 일인지 모르잖아. 직접 물어봐.'},
    {who:'시우',say:'네. 밥 먹고 여기로 오신대요.',look:LOOK.xNotice},
-   {who:'나',say:'만약 무서우면 선생님께 같이 가자.'},
-   {who:'시우',say:'네. 혼자 기다리기보다는 낫겠어요.',look:LOOK.xNotice},
+   {who:'나',say:'만약 무서우면 선생님께 말해.'},
+   {who:'시우',say:'네. 여기서 기다려 볼게요.',look:LOOK.xNotice},
   ],
   [
    {who:'시우',say:'아까는 무서웠는데 용기 내서 물어봤어요.',look:LOOK.xNotice},
