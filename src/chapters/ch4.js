@@ -697,7 +697,7 @@ const SIDE={
    {who:'민서',say:'저희가 끝을 새로 써 보려고요.',look:LOOK.minseo},
   ],
   [
-   {who:'민서',say:'소개팅한 분이랑은 가끔 연락해요.',look:LOOK.minseo},
+   {who:'민서',say:'소개팅했던 분이랑은 가끔 연락해요.',look:LOOK.minseo},
    {who:'민서',say:'오늘은 연두랑 축제 보기로 했어요.',look:LOOK.minseo},
    {who:'민서',say:'고양이 드라마 끝을 저희가 새로 썼어요.',look:LOOK.minseo},
    {who:'연두',say:'주인공은 멀리서 기다려요.',look:LOOK.yeondu},
@@ -1148,7 +1148,8 @@ const NPC={
   hide:()=>!!f().clue,
   talk:()=>[{say:'무대 만드는 중이에요! 토요일까지요.',face:'happy'},{say:'선배네 방송부도 여기서 해요?'},{who:'…',say:'망치 소리가 쾅쾅. 아주 열심히 해요.'}]},
 
- daonS:{name:'오다온',zone:'yard',x:16,y:6,dir:'right',look:LOOK.daon,badge:['방법','쫓겨나다'],banmal:1,
+ /* after the show (done: 오후 네 시, two hours on) the club and the 교장 have come down off the stage into the crowd: DONE's 4 p.m. line moves them over black; x/y keep them there after a reload */
+ daonS:{name:'오다온',zone:'yard',get x(){return f().done?25:16},get y(){return f().done?6:6},dir:'right',look:LOOK.daon,badge:['방법','쫓겨나다'],banmal:1,
   hide:()=>!f().clue,
   get after(){const F=f();
    if(F.done)return pick([['시간은 내가 지켰어. 일 초도 안 늦었어.'],['교장 선생님이 복숭아라니. 아직도 안 믿겨.'],['회의만 잘 끝나면, 월요일부터 매일 점심 방송이야.'],['찬이 벌금은 아직이야. 도망가도 받을 거야.']]);
@@ -1165,7 +1166,7 @@ const NPC={
    {say:'방송 잘하면 안 쫓겨나. 그게 방법이야.',face:'happy',set:()=>{f().ready=1}}]:null,
   talk:()=>[]},
 
- gureumS:{name:'백구름',zone:'yard',x:18,y:5,dir:'down',look:LOOK.gureum,badge:['절박하다','회로','부모님','약속'],banmal:1,
+ gureumS:{name:'백구름',zone:'yard',get x(){return f().done?26:18},get y(){return f().done?6:5},dir:'down',look:LOOK.gureum,badge:['절박하다','회로','부모님','약속'],banmal:1,
   hide:()=>!f().clue,
   get after(){return pick([['월요일 점심에도 방송할 거야. 매일.'],['교장 선생님이 복숭아… 아직도 꿈 같아.']])},
   status:()=>!f().ready?'wait':!f().live?'todo':undefined,
@@ -1218,7 +1219,7 @@ const NPC={
    return null},
   talk:()=>[]},
 
- hariS:{name:'유하리',zone:'yard',x:20,y:5,dir:'down',look:LOOK.hari,sing:()=>!!f().singing,  // notes during her festival song
+ hariS:{name:'유하리',zone:'yard',get x(){return f().done?27:20},get y(){return f().done?7:5},dir:'down',look:LOOK.hari,sing:()=>!!f().singing,  // notes during her festival song
   
   hide:()=>!f().clue,
   script:()=>f().done?pickNew('hari',[  // after the show: a different one each talk
@@ -1230,7 +1231,7 @@ const NPC={
    :[{say:'선배… 사람이 너무 많아요.',face:'sad'},{say:'그래도 할게요. 딱 한 곡이 아니라, 두 곡.',face:'think'}],
   talk:()=>[]},
 
- chanS:{name:'남궁찬',zone:'yard',x:21,y:6,dir:'left',look:LOOK.chan,banmal:1,
+ chanS:{name:'남궁찬',zone:'yard',get x(){return f().done?26:21},get y(){return f().done?8:6},dir:'left',look:LOOK.chan,banmal:1,
   hide:()=>!f().clue,
   script:()=>f().done?pickNew('chan',[  // after the show: a different one each talk
     [{say:'내 추리는 반만 틀렸어. 복숭아는 맞았잖아!',face:'happy'},{say:'…매점 이모한테는 비밀이야.'}],
@@ -1267,7 +1268,7 @@ const NPC={
    :[{say:'드디어 오늘이네요. 떨려요?'},{say:'떨려도 괜찮아요. 맨 앞에서 들을게요.',face:'happy'}],
   talk:()=>[]},
 
- principalS:{name:PR,zone:'yard',x:21,y:8,dir:'up',look:LOOK.principal,badge:['심화반','표정','꿈','이루다','합격하다'],
+ principalS:{name:PR,zone:'yard',get x(){return f().done?24:21},get y(){return f().done?9:8},dir:'up',look:LOOK.principal,badge:['심화반','표정','꿈','이루다','합격하다'],
   hide:()=>!f().live,
   get after(){return pick([['여기는 느티고 방송부. 다음 주에도 들을게요.'],['오랜만에 마이크를 잡았어요. 떨렸어요.']])},
   talk:()=>[
@@ -1387,7 +1388,7 @@ const INTRO=[{who:'…',say:'축제 사흘 전. 방송실에 탄 냄새가 나�
 const DONE=[{expand:()=>wrapUp()},{say:'구름 엄마도 축제 방송을 들었대요.',set:()=>{f().quiet=1}},{say:'"목소리 좋더라." 구름이 그 말을 세 번 했어요.',grammar:'deora'},  // the epilogue: festival night, then time cuts over black (Monday's 운영위, winter, spring)
  {say:'월요일. 운영위원회 회의가 끝났어요.',black:1},'방송실은 그대로. 심화반은 3층 창고를 치워서 써요.',
  {say:'겨울. 태식 선배가 대학에 합격했어요.'},'그 소식은 점심 방송으로 들었어요.','봄. 사연함에 새 쪽지가 있어요.',
- '교장 선생님 글씨가 아니에요.','"새 학기 사연 있어요. —복숭아 2호"','4교시 끝!',{say:'다시 축제 날, 오후 네 시예요.',black:0},'방송실 복습 노트북에서 단어를 다시 볼 수 있어요.'];
+ '교장 선생님 글씨가 아니에요.','"새 학기 사연 있어요. —복숭아 2호"','4교시 끝!',{say:'다시 축제 날, 오후 네 시예요.',move:[{npc:'daonS',to:[25,6]},{npc:'gureumS',to:[26,6]},{npc:'hariS',to:[27,7]},{npc:'chanS',to:[26,8]},{npc:'principalS',to:[24,9]}]},{say:'방송실 복습 노트북에서 단어를 다시 볼 수 있어요.',black:0}];  // the jump back to 4 p.m. is a time cut too: still over black; the yard comes back on the next line
 
 /* what the 운동장 clock shows (its hands; the 'C' line says the same): lunch, 방과 후, the festival day's hours */
 const clock=()=>{const F=f();return F.done?[4,0]:F.live?[2,5]:F.clue?[1,50]:F.promise?[10,0]:F.counsel?[5,0]:[12,30]};

@@ -52,7 +52,7 @@
  {check:()=>state.f.live,msg:'on air'},
  {check:()=>state.badges.length===C.WORDS.length-3,msg:'all but the finale words'},
  {talk:'principalS',wrong:true,shotSay:{text:'제가 복숭아',name:'18-reveal'}},
- {check:()=>{const [x,y]=npcPos(C.NPC.principalS);return !C.NPC.principalS.walk&&x===19&&y===5},msg:'the 교장 stands at the mic on the stage (not on the steps)'},
+ {check:()=>state.f.done&&[['principalS',24,9],['daonS',25,6],['gureumS',26,6],['hariS',27,7],['chanS',26,8]].every(([k,x,y])=>{const [a,b]=npcPos(C.NPC[k]);return a===x&&b===y}),msg:'back at 오후 네 시 (two hours on), the 교장 and the club have come down off the stage into the crowd'},
  {check:()=>state.f.done&&state.items.includes('앨범 사진'),msg:'chapter done; the album photo stays in the bag (shown, not handed over)'},
  {check:()=>state.badges.length===C.WORDS.length,msg:'all words collected'},
  {talk:'chanS'},

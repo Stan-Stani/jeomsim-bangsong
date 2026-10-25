@@ -508,7 +508,7 @@ const sideHere=()=>!f().toNR||!!f().secret;
 const SIDE={
  cinema:[
   [
-   {who:'민서',say:'선배, 오늘 소개팅한 분이랑 영화관에 가기로 했어요.',look:LOOK.minseo},
+   {who:'민서',say:'선배, 소개팅했던 분이랑 오늘 영화관에 가기로 했어요.',look:LOOK.minseo},
    {who:'민서',say:'생각만 해도 두근두근해요.',look:LOOK.minseo,face:'happy'},
    {who:'연두',say:'어제 본 영화는 로맨틱하더라. 운명 같은 만남!',look:LOOK.yeondu},
    {who:'민서',say:'저는 운명보다, 편하게 얘기할 수 있으면 좋겠어요.',look:LOOK.minseo},
@@ -517,7 +517,7 @@ const SIDE={
    {who:'민서',say:'너 인소 너무 많이 봤다. …저도 가끔씩 읽긴 해요.',look:LOOK.minseo},
   ],
   [
-   {who:'민서',say:'선배, 소개팅한 분이랑 영화 약속이 미뤄졌어요.',look:LOOK.minseo,face:'sad'},
+   {who:'민서',say:'선배, 소개팅했던 분이랑 영화 약속이 미뤄졌어요.',look:LOOK.minseo,face:'sad'},
    {who:'민서',say:'"다름이 아니라, 일이 생겨서요."',look:LOOK.minseo},
    {who:'민서',say:'이렇게 연락이 왔어요.',look:LOOK.minseo},
    {who:'연두',say:'엥, 혹시 까인 거야?',look:LOOK.yeondu,face:'surprised'},
@@ -1138,11 +1138,11 @@ look:LOOK.hanT,
  xM2:{name:'2학년 학생',zone:'cafe',x:22,y:3,dir:'up',look:LOOK.xM2,banmal:1,
   hide:()=>!!f().toNR,
   talk:()=>[{say:'자판기에서 뭐 뽑을까?'},{say:'다 맛있어 보여. 고민된다.',face:'think'}]},
- xB1:{name:'준서',zone:'hall',x:24,y:3,dir:'right',pos:()=>f().secret?[7,6]:f().rumor?[22,7]:[24,3],  // Tuesday: elsewhere in the hall
+ xB1:{name:'준서',zone:'hall',x:24,y:3,dir:'right',pos:()=>f().secret?[7,6]:f().rumor?[24,6]:[24,3],  // Tuesday: elsewhere in the hall; Monday lunch: beside 찬's spot (22,7), never on it
  look:LOOK.xB1,banmal:1,
   hide:()=>!sideHere(),status:()=>sideNew('novel'),
   script:()=>sideScene('novel'),talk:()=>SIDE.novel[3]},
- xB2:{name:'건우',zone:'hall',x:25,y:3,dir:'left',pos:()=>f().secret?[8,6]:f().rumor?[23,7]:[25,3],
+ xB2:{name:'건우',zone:'hall',x:25,y:3,dir:'left',pos:()=>f().secret?[8,6]:f().rumor?[25,6]:[25,3],
  look:LOOK.xB2,banmal:1,
   hide:()=>!sideHere(),status:()=>null,proxy:()=>NPC.xB1,
   talk:()=>SIDE.novel[3]},

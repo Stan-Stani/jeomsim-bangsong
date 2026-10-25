@@ -514,7 +514,7 @@ const sideTime=()=>f().nextDay?2:f().afterSchool?1:0;
 const SIDE={
  meeting:[
   [
-   {who:'민서',say:'선배, 오늘 소개팅한 그분 또 만나기로 했어요.',look:LOOK.minseo},
+   {who:'민서',say:'선배, 소개팅했던 그분 오늘 또 만나기로 했어요.',look:LOOK.minseo},
    {who:'민서',say:'아직도 인사말부터 연습해요.',look:LOOK.minseo,face:'think'},
    {who:'연두',say:'어떻게 인사할 건데?',look:LOOK.yeondu},
    {who:'민서',say:'"안녕하세요!" 말고는 생각이 안 나.',look:LOOK.minseo},
@@ -531,7 +531,7 @@ const SIDE={
    {who:'연두',say:'맞아. 인사 연습 하자. "안녕!" 하고 "{잘 가|잘 가}!"',look:LOOK.yeondu},
   ],
   [
-   {who:'민서',say:'어제 소개팅한 분이랑 좋아하는 노래 얘기했어요.',look:LOOK.minseo,face:'happy'},
+   {who:'민서',say:'소개팅했던 분이랑 어제 좋아하는 노래 얘기했어요.',look:LOOK.minseo,face:'happy'},
    {who:'민서',say:'한마디 하니까 대화가 이어졌어요.',look:LOOK.minseo},
    {who:'민서',say:'다음에도 짧게 만나기로 했어요.',look:LOOK.minseo},
    {who:'연두',say:'인사 연습한 거 써먹었어?',look:LOOK.yeondu},
@@ -561,7 +561,7 @@ const SIDE={
    {who:'준서',say:'큰 고양이는 공 가방 그림이었어.',look:LOOK.junseo},
    {who:'준서',say:'누가 가방 들고 뛰어서 놀랐어.',look:LOOK.junseo},
    {who:'준서',say:'물어보는 애들한테도 그림이라고 말해 줬어.',look:LOOK.junseo},
-   {who:'나',say:'어제 슛 연습은 좀 했어?'},
+   {who:'나',say:'어제 공은 좀 찼어?'},
    {who:'준서',say:'응. 공은 고양이보다 더 멀리 갔어.',look:LOOK.junseo},
   ],
   [{who:'준서',say:'고양이는 가방에, 공은 체육관에.',look:LOOK.junseo}],
