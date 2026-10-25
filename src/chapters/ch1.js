@@ -483,11 +483,13 @@ const classT=()=>!f().lunch||(!!f().deal&&!f().crew3); // lessons and 종례: cl
    종례. A missed visit never replays out of time. Only the last spoken line records that visit.
    The second visit waits for lunch to move on: the next step after the first (eating with 찬, then the 방송실 notice), and
    도현's and 시우's wait for the notice in any case (도현 has eaten by then, and 시우 has asked him). A first visit heard after
-   the notice has no step left before 종례, so its second waits until you leave the room and come back. */
+   the notice has no step left before 종례, so its second waits until you leave the room and come back. The two yard scenes
+   (민서·연두, 준서·건우) also open on coming back to the yard: lunch's errands keep you in the hall, so a step alone can pass unseen. */
 const lunchStep=()=>f().gotNotice?2:f().metChan?1:0;
 function sideReady(key){
  const F=f(),at=F['side_'+key+'_at'];if(at==null)return true;  // a save from before the wait: as it was
- const need=Math.max(at+1,key==='senior'||key==='notice'?2:0);
+ if(key==='bench'||key==='soccer')return lunchStep()>at||!!F['side_'+key+'_back'];  // the yard is off lunch's path: back in the yard after a while counts too
+ const need=Math.max(at+1,2);
  return need<=2?lunchStep()>=need:!!F['side_'+key+'_back'];
 }
 const sideTime=key=>f().crew3?2:f()['side_'+key+'_0']&&sideReady(key)?1:0;
