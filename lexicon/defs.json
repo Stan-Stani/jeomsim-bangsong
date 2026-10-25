@@ -20357,5 +20357,17 @@
 "-다며": {
 "e": "I heard that …, right? (checking hearsay)",
 "k": "들은 말이 맞는지 물을 때. 노래했다며?"
+},
+"수다": {
+"k": "쓸데없이 길게 하는 이야기.",
+"e": "chatter, small talk"
+},
+"수다 떨다": {
+"k": "친구하고 가볍게 오래 이야기하다.",
+"e": "to chat, gab"
+},
+"소개팅하다": {
+"k": "소개받은 사람을 처음 만나다.",
+"e": "to go on a blind date"
 }
 }

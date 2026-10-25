@@ -514,7 +514,7 @@ const sideTime=()=>f().nextDay?2:f().afterSchool?1:0;
 const SIDE={
  meeting:[
   [
-   {who:'민서',say:'선배, 오늘 그분 또 만나기로 했어요.',look:LOOK.minseo},
+   {who:'민서',say:'선배, 오늘 소개팅한 그분 또 만나기로 했어요.',look:LOOK.minseo},
    {who:'민서',say:'아직도 인사말부터 연습해요.',look:LOOK.minseo,face:'think'},
    {who:'연두',say:'어떻게 인사할 건데?',look:LOOK.yeondu},
    {who:'민서',say:'"안녕하세요!" 말고는 생각이 안 나.',look:LOOK.minseo},
@@ -524,14 +524,14 @@ const SIDE={
   [
    {who:'민서',say:'선배, 만나기 전에 질문 하나만요.',look:LOOK.minseo},
    {who:'민서',say:'드라마에선 막 번호를 따잖아요.',look:LOOK.minseo},
-   {who:'민서',say:'저도 그렇게 어필해야 하나요?',look:LOOK.minseo,face:'think'},
-   {who:'나',say:'이미 번호 알잖아. 편하게 얘기해.'},
+   {who:'민서',say:'번호는 주고받았는데, 저도 그렇게 어필해야 하나요?',look:LOOK.minseo,face:'think'},
+   {who:'나',say:'그럼 어필 말고 편하게 얘기해.'},
    {who:'연두',say:'드라마에선 벌써 뽀뽀할 때인데!',look:LOOK.yeondu},
    {who:'민서',say:'드라마는 드라마고. {난|나} 얘기부터.',look:LOOK.minseo},
-   {who:'연두',say:'맞아, 천천히 해. {잘 가|잘 가}!',look:LOOK.yeondu},
+   {who:'연두',say:'맞아. 인사 연습 하자. "안녕!" 하고 "{잘 가|잘 가}!"',look:LOOK.yeondu},
   ],
   [
-   {who:'민서',say:'어제는 좋아하는 노래 얘기했어요.',look:LOOK.minseo,face:'happy'},
+   {who:'민서',say:'어제 소개팅한 분이랑 좋아하는 노래 얘기했어요.',look:LOOK.minseo,face:'happy'},
    {who:'민서',say:'한마디 하니까 대화가 이어졌어요.',look:LOOK.minseo},
    {who:'민서',say:'다음에도 짧게 만나기로 했어요.',look:LOOK.minseo},
    {who:'연두',say:'인사 연습한 거 써먹었어?',look:LOOK.yeondu},
@@ -543,10 +543,10 @@ const SIDE={
   [
    {who:'준서',say:'이번엔 큰 고양이를 봤어.',look:LOOK.junseo},
    {who:'준서',say:'체육관에 사람만 한 고양이!',look:LOOK.junseo,face:'surprised'},
-   {who:'준서',say:'근데 가방이 시야를 가렸어.',look:LOOK.junseo},
+   {who:'준서',say:'근데 지나가는 애들이 시야를 가렸어.',look:LOOK.junseo},
    {who:'나',say:'그건 말도 안 되잖아.'},
    {who:'준서',say:'귀만 겨우 봐서 확신은 못 해.',look:LOOK.junseo,face:'think'},
-   {who:'준서',say:'이번엔 확인하고 얘기할게.',look:LOOK.junseo},
+   {who:'준서',say:'다른 애들한테 말하기 전에 확인할게.',look:LOOK.junseo},
   ],
   [
    {who:'준서',say:'뭐야, 고양이가 아니라 그림이네!',look:LOOK.junseo,face:'surprised'},
@@ -560,7 +560,7 @@ const SIDE={
   [
    {who:'준서',say:'큰 고양이는 공 가방 그림이었어.',look:LOOK.junseo},
    {who:'준서',say:'누가 가방 들고 뛰어서 놀랐어.',look:LOOK.junseo},
-   {who:'준서',say:'들은 애들한테도 바로 말했어.',look:LOOK.junseo},
+   {who:'준서',say:'물어보는 애들한테도 그림이라고 말해 줬어.',look:LOOK.junseo},
    {who:'나',say:'어제 슛 연습은 좀 했어?'},
    {who:'준서',say:'응. 공은 고양이보다 더 멀리 갔어.',look:LOOK.junseo},
   ],
@@ -589,7 +589,7 @@ const SIDE={
   [
    {who:'지안',say:'시우야, 오늘도 같이 책 볼까?',look:LOOK.jian},
    {who:'시우',say:'응. 오늘은 내가 대사 읽을게.',look:LOOK.siu},
-   {who:'나',say:'어제보다 목소리가 크네.'},
+   {who:'나',say:'지안이랑 있으니까 목소리가 크네.'},
    {who:'시우',say:'친구 앞이라 좀 편해졌어요.',look:LOOK.siu,face:'happy'},
   ],
   [{who:'시우',say:'지안이랑 다음 권도 읽으려고요.',look:LOOK.siu}],
@@ -600,6 +600,7 @@ function sideScene(key){
  if(f()[flag])return t===2?SIDE[key][3]:[lines[lines.length-1]];
  return lines.map((s,i)=>i===lines.length-1?{...s,set:()=>{f()[flag]=1}}:s);
 }
+const sideNew=key=>f()['side_'+key+'_'+sideTime()]?undefined:'side';  // the grey bubble while this period's visit is unheard
 
 const NPC={
  gureum:{name:'백구름',zone:'bcast',x:5,y:3,dir:'up',look:LOOK.gureum,badge:['기회','놓치다'],banmal:1,
@@ -971,18 +972,18 @@ const NPC={
     and after the finale talks about it. The 음악실 and the 분식집 stay as the scenes describe them. ---------- */
  xA:{name:'민서',zone:'hall',x:18,y:2,dir:'right',look:LOOK.minseo,
   hide:()=>!!f().afterSchool,
-  script:()=>sideScene('meeting'),talk:()=>[]},
+  status:()=>sideNew('meeting'),script:()=>sideScene('meeting'),talk:()=>[]},
  xB:{name:'연두',zone:'hall',x:19,y:2,dir:'left',look:LOOK.yeondu,
   hide:()=>!!f().afterSchool,
   proxy:()=>NPC.xA,status:()=>null,talk:()=>[]},
  xSenior:{name:'시우',zone:'hall',x:12,y:8,dir:'right',look:LOOK.siu,
   hide:()=>!!f().nextDay,
-  script:()=>sideScene('comic'),talk:()=>[]},
+  status:()=>sideNew('comic'),script:()=>sideScene('comic'),talk:()=>[]},
  sideJian:{name:'지안',zone:'hall',x:13,y:8,dir:'left',look:LOOK.jian,
   proxy:()=>f().nextDay?NPC.xI:NPC.xSenior,status:()=>null,talk:()=>[]},
  xWin:{name:'준서',zone:'hall',x:20,y:8,dir:'down',look:LOOK.junseo,banmal:1,
   hide:()=>!!f().afterSchool,
-  script:()=>sideScene('cat'),talk:()=>[]},
+  status:()=>sideNew('cat'),script:()=>sideScene('cat'),talk:()=>[]},
  xClean:{name:'청소 아주머니',zone:'hall',x:22,y:7,dir:'left',look:LOOK.cleaner,
   hide:()=>!f().afterSchool||!!f().nextDay,
   talk:()=>[{say:'학생, 아직 집에 안 갔어요?'},{say:'방송실은 늦게까지 불이 켜져 있네요.'}]},
@@ -991,7 +992,7 @@ const NPC={
   talk:()=>[{say:'선배, 안녕히 계세요!'},{say:'저는 학원이요. 벌써 늦었어요!',face:'surprised'}]},
  xF:{name:'민서',zone:'hall',x:18,y:2,dir:'right',look:LOOK.minseo,
   hide:()=>!f().nextDay,
-  script:()=>sideScene('meeting'),talk:()=>[]},
+  status:()=>sideNew('meeting'),script:()=>sideScene('meeting'),talk:()=>[]},
  xG:{name:'연두',zone:'hall',x:19,y:2,dir:'left',look:LOOK.yeondu,
   hide:()=>!f().nextDay,
   proxy:()=>NPC.xF,status:()=>null,talk:()=>[]},
@@ -1001,10 +1002,10 @@ const NPC={
   talk:()=>[{say:'선배, 스피커에서 무슨 소리 나요?'},{say:'지지직… 아, 기대돼요.'}]},
  xI:{name:'시우',zone:'hall',x:12,y:8,dir:'right',look:LOOK.siu,
   hide:()=>!f().nextDay,
-  script:()=>sideScene('comic'),talk:()=>[]},
+  status:()=>sideNew('comic'),script:()=>sideScene('comic'),talk:()=>[]},
  xJ:{name:'준서',zone:'hall',x:23,y:7,dir:'down',look:LOOK.junseo,banmal:1,
   hide:()=>!f().nextDay,
-  script:()=>sideScene('cat'),talk:()=>[]},
+  status:()=>sideNew('cat'),script:()=>sideScene('cat'),talk:()=>[]},
 
  /* the 급식실 at lunch (first day, next day, after the broadcast): 매점 이모 and students eating. No badges, no teaching. */
  caImo:{name:'매점 이모',zone:'cafe',x:18,y:1,dir:'down',look:LOOK.caImo,
@@ -1034,14 +1035,14 @@ const NPC={
    :[{say:'지금은 농구부 연습 시간이에요.'},{say:'구경은 괜찮아요. 공 조심해요!'}]},
  xBall1:{name:'준서',zone:'gym',x:2,y:6,dir:'left',look:LOOK.junseo,banmal:1,
   hide:()=>!f().afterSchool||!!f().nextDay,
-  script:()=>sideScene('cat'),talk:()=>[]},
+  status:()=>sideNew('cat'),script:()=>sideScene('cat'),talk:()=>[]},
  xBall2:{name:'건우',zone:'gym',x:4,y:4,dir:'left',look:LOOK.geonu,banmal:1,
   hide:()=>!f().afterSchool||!!f().nextDay,
   proxy:()=>NPC.xBall1,status:()=>null,talk:()=>[]},
 
  xS1:{name:'민서',zone:'street',x:3,y:3,dir:'right',look:LOOK.minseo,  // beside the lamp post; keep the sidewalk open
   hide:()=>!f().afterSchool||!!f().nextDay,
-  script:()=>sideScene('meeting'),talk:()=>[]},
+  status:()=>sideNew('meeting'),script:()=>sideScene('meeting'),talk:()=>[]},
  xS2:{name:'연두',zone:'street',x:4,y:3,dir:'left',look:LOOK.yeondu,
   hide:()=>!f().afterSchool||!!f().nextDay,
   proxy:()=>NPC.xS1,status:()=>null,talk:()=>[]},

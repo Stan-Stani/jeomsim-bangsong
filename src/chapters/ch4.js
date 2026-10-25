@@ -697,7 +697,9 @@ const SIDE={
    {who:'민서',say:'저희가 끝을 새로 써 보려고요.',look:LOOK.minseo},
   ],
   [
-   {who:'민서',say:'선배, 저희가 쓴 끝이에요.',look:LOOK.minseo},
+   {who:'민서',say:'소개팅한 분이랑은 가끔 연락해요.',look:LOOK.minseo},
+   {who:'민서',say:'오늘은 연두랑 축제 보기로 했어요.',look:LOOK.minseo},
+   {who:'민서',say:'고양이 드라마 끝을 저희가 새로 썼어요.',look:LOOK.minseo},
    {who:'연두',say:'주인공은 멀리서 기다려요.',look:LOOK.yeondu},
    {who:'민서',say:'실은 고양이가 먼저 왔어요.',look:LOOK.minseo},
    {who:'연두',say:'"만져도 돼?" 하고 물어봐요.',look:LOOK.yeondu},
@@ -728,12 +730,12 @@ const SIDE={
    {who:'준서',say:'하하. 그건 인형 대사로 쓰자.',look:LOOK.junseo},
   ],
   [
-   {who:'준서',say:'인형극 끝도 다 만들었어.',look:LOOK.junseo},
-   {who:'준서',say:'왕자님은 떡볶이를 나눠 줘.',look:LOOK.junseo},
+   {who:'준서',say:'인형극 마지막 장면 보여 줄게.',look:LOOK.junseo},
+   {who:'준서',say:'"자, 다 같이 먹자!" 왕자님이 떡볶이를 나눠 줘.',look:LOOK.junseo},
    {who:'건우',say:'그 종이 왕자님, 개멋지다!',look:LOOK.geonu,face:'happy'},
    {who:'준서',say:'종이 왕관도 씌워 줬어.',look:LOOK.junseo},
-   {who:'건우',say:'사람 소문보다 이런 얘기가 좋아.',look:LOOK.geonu},
-   {who:'준서',say:'나도. 여기선 떡볶이도 안 식어.',look:LOOK.junseo},
+   {who:'건우',say:'나도 저 인형한테 떡볶이 받고 싶다.',look:LOOK.geonu},
+   {who:'준서',say:'줄 서. 여기선 떡볶이도 안 식어.',look:LOOK.junseo},
   ],
   [
    {who:'준서',say:'다음 인형은 순대 모양이야.',look:LOOK.junseo},
@@ -742,14 +744,15 @@ const SIDE={
  exam:[
   [
    {who:'도현',say:'이번 시험은 답 칸 안 밀렸어.',look:LOOK.dohyeon},
-   {who:'나',say:'선배, 친구들이랑 공부하셨죠?'},
-   {who:'도현',say:'응. 모르는 건 서로 물어봤어.',look:LOOK.dohyeon},
+   {who:'나',say:'요즘은 어떻게 공부하세요?'},
+   {who:'도현',say:'친구들이랑 모르는 걸 서로 물어봐.',look:LOOK.dohyeon},
    {who:'도현',say:'범생 흉내는 이제 안 내려고.',look:LOOK.dohyeon},
    {who:'도현',say:'모르면 뭐든 물어보면 되더라.',look:LOOK.dohyeon},
    {who:'도현',say:'근데 점수는 아직 안 나왔어.',look:LOOK.dohyeon},
   ],
   [
    {who:'도현',say:'성적표가 나왔어. 조금 올랐어.',look:LOOK.dohyeon},
+   {who:'도현',say:'엄마한테도 보냈어. 이번엔 바로.',look:LOOK.dohyeon},
    {who:'나',say:'잘됐네요. 오늘도 학원 가세요?'},
    {who:'도현',say:'응. 내 발 좀 봐.',look:LOOK.dohyeon},
    {who:'도현',say:'학원 안 가려는 발의 몸부림이야.',look:LOOK.dohyeon},
@@ -761,7 +764,7 @@ const SIDE={
    {who:'도현',say:'안내에 "가족 동반 환영"이래.',look:LOOK.dohyeon},
    {who:'도현',say:'부모님은 바쁘셔서 친구랑 왔어.',look:LOOK.dohyeon},
    {who:'도현',say:'혼자 볼 때보다 훨씬 편해.',look:LOOK.dohyeon,face:'happy'},
-   {who:'도현',say:'서로 모르는 부스도 알려 주고.',look:LOOK.dohyeon},
+   {who:'도현',say:'재밌는 부스가 있으면 서로 알려 주고.',look:LOOK.dohyeon},
    {who:'도현',say:'시험 얘기는 오늘 하루 쉬려고.',look:LOOK.dohyeon},
   ],
   [
@@ -776,6 +779,7 @@ function sideScene(key){
  if(f()[flag])return t===2?sideRepeat(key):[lines[lines.length-1]];
  return lines.map((s,i)=>i===lines.length-1?{...s,set:()=>{f()[flag]=1}}:s);
 }
+const sideNew=key=>f()['side_'+key+'_'+sideTime()]?null:'side';  // the grey bubble while this period's visit is unheard
 
 const NPC={
  /* ---------- 2학년 3반, the 급식실 and the 체육관: lunch on day one and festival morning (closed after school and during the show).
@@ -813,7 +817,7 @@ const NPC={
    :[{say:'점심시간엔 체육관이 댄스 동아리 거예요.'},{say:'농구는 축제 끝나고 해요.'}]},
 
  minseo:{name:'민서',zone:'yard',x:7,y:8,dir:'right',sit:1,chair:BENCH_LEGS,look:LOOK.minseo,
-  status:()=>null,script:()=>sideScene('drama'),talk:()=>SIDE.drama[3]},
+  status:()=>sideNew('drama'),script:()=>sideScene('drama'),talk:()=>SIDE.drama[3]},
  yeondu:{name:'연두',zone:'yard',x:7,y:9,dir:'right',sit:1,chair:BENCH_LEGS,look:LOOK.yeondu,
   status:()=>null,proxy:()=>NPC.minseo,talk:()=>SIDE.drama[3]},
  /* ---------- 방송실, day one ---------- */
@@ -1313,12 +1317,12 @@ const NPC={
   talk:()=>[{say:'축제 사흘 남았어!'},{say:'우리 반은 떡볶이 팔아. 꼭 와.'}]},
  /* Returning side cast keep these existing hall positions; they are here in all three periods. */
  xB:{name:'준서',zone:'hall',x:2,y:7,dir:'right',look:LOOK.junseo,banmal:1,
-  status:()=>null,script:()=>sideScene('puppet'),talk:()=>SIDE.puppet[3]},
+  status:()=>sideNew('puppet'),script:()=>sideScene('puppet'),talk:()=>SIDE.puppet[3]},
  xC:{name:'건우',zone:'hall',x:3,y:7,dir:'left',look:LOOK.geonu,banmal:1,
   status:()=>null,proxy:()=>NPC.xB,talk:()=>SIDE.puppet[3]},
  xD:{name:'도현',zone:'hall',x:16,y:8,dir:'down',pos:()=>f().festAM?[22,7]:[16,8],  // festival day: by the hall doors with his friend
  look:LOOK.dohyeon,banmal:1,
-  status:()=>null,script:()=>sideScene('exam'),talk:()=>sideRepeat('exam')},
+  status:()=>sideNew('exam'),script:()=>sideScene('exam'),talk:()=>sideRepeat('exam')},
  xE:{name:'1학년 학생',zone:'hall',x:19,y:1,dir:'up',look:LOOK.xE,
   hide:()=>!f().promise||!!f().clue,
   talk:()=>[{say:'축제 순서표 보는 중이에요.'},{say:'방송부는 두 시! 맞죠?',face:'happy'}]},
