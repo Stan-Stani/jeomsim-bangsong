@@ -318,8 +318,10 @@ const ZONES=SCHOOL({open:['class','cafe','bcast'],zones:{
  yard:{
   things:{'C':()=>f().crew3?'시계가 네 시를 가리켜요. 하교 시간이에요.':f().deal?'시계가 세 시 오십 분이에요. 곧 종례예요.':f().lunch?'시계가 열두 시 반이에요. 점심시간!':'시계가 아홉 시 십오 분이에요. 지각이에요!',
    'G':()=>f().done?nextChapterAsk('정문이에요. 오늘은 끝!'):'정문이에요. 아직 집에 갈 시간이 아니에요.'},
+  greet:()=>{sideBack('yard')},
   npcs:['guard','xLate','xSoc1','xSoc2','xBench1','xBench2','xHome1','xHome2']},
- hall:{locks:{class:()=>!f().metTeacher&&'2학년 3반. 아직 담임 선생님을 못 만났어요.',
+ hall:{greet:()=>{sideBack('hall')},
+  locks:{class:()=>!f().metTeacher&&'2학년 3반. 아직 담임 선생님을 못 만났어요.',
    cafe:()=>!f().lunch&&'급식실 문이 닫혀 있어요. 아직 점심시간이 아니에요.',
    bcast:()=>!f().metChan&&(hasItem(NOTE)?'방송실… 배가 꼬르륵. 점심부터 먹어요.':'"방송실". 문이 잠겨 있어요.')},
   things:{'N':['게시판: "축제는 다음 주 토요일! 반마다 하나씩 준비해요."','게시판: "중간고사 등수는 교무실 앞에."','게시판 구석에 "방송부 부원 모집" 종이가 찢어져 있어요.'],
@@ -478,8 +480,19 @@ const lunchT=()=>!!f().lunch&&!f().deal;            // lunch break: yard, hall a
 const classT=()=>!f().lunch||(!!f().deal&&!f().crew3); // lessons and 종례: classmates in their seats
 /* Optional exposure scenes: no questions, awards, items, journal notes or quest changes.
    The late morning is class time, so these students are out only at lunch (a first visit, then a second) and after
-   종례. A missed visit never replays out of time. Only the last spoken line records that visit. */
-const sideTime=key=>f().crew3?2:f()['side_'+key+'_0']&&(key!=='notice'||f().gotNotice)?1:0;  // 시우's part 1 waits for 도현 to finish lunch: by the time the 방송실 notice is in hand
+   종례. A missed visit never replays out of time. Only the last spoken line records that visit.
+   The second visit waits for lunch to move on: the next step after the first (eating with 찬, then the 방송실 notice), and
+   도현's and 시우's wait for the notice in any case (도현 has eaten by then, and 시우 has asked him). A first visit heard after
+   the notice has no step left before 종례, so its second waits until you leave the room and come back. */
+const lunchStep=()=>f().gotNotice?2:f().metChan?1:0;
+function sideReady(key){
+ const F=f(),at=F['side_'+key+'_at'];if(at==null)return true;  // a save from before the wait: as it was
+ const need=Math.max(at+1,key==='senior'||key==='notice'?2:0);
+ return need<=2?lunchStep()>=need:!!F['side_'+key+'_back'];
+}
+const sideTime=key=>f().crew3?2:f()['side_'+key+'_0']&&sideReady(key)?1:0;
+const sideNew=key=>sideHere()&&!f()['side_'+key+'_'+sideTime(key)]?'side':null;  // the grey bubble: a visit not yet heard
+const sideBack=zone=>{const F=f();[['bench','yard'],['soccer','yard'],['senior','hall'],['notice','hall']].forEach(([k,z])=>{if(z===zone&&F['side_'+k+'_0'])F['side_'+k+'_back']=1})};  // entering the room again (a zone greet)
 const sideHere=()=>lunchT()||!!f().crew3;
 const SIDE={
  bench:[
@@ -627,7 +640,7 @@ const SIDE={
 function sideScene(key){
  const t=sideTime(key),flag='side_'+key+'_'+t,lines=SIDE[key][t];
  if(f()[flag])return t===2?SIDE[key][3]:[lines[lines.length-1]];
- return lines.map((s,i)=>i===lines.length-1?{...s,set:()=>{f()[flag]=1}}:s);
+ return lines.map((s,i)=>i===lines.length-1?{...s,set:()=>{f()[flag]=1;if(t===0)f()['side_'+key+'_at']=lunchStep()}}:s);
 }
 const NPC={
  guard:{name:'박 경비 아저씨',zone:'yard',x:17,y:12,dir:'left',look:LOOK.guard,
@@ -927,14 +940,14 @@ const NPC={
   talk:()=>[{say:'헉, 선배도 지각이에요?',face:'surprised'},{say:'오늘 버스 진짜 늦었죠?'},{say:'반장한테 걸리면 벌금이에요. 빨리 가요!'}]},
  xSoc1:{name:'준서',zone:'yard',x:17,y:7,dir:'right',pos:()=>f().crew3?[14,10]:[17,7],  // after 종례: by the path to the gate
  look:LOOK.xSoc1,banmal:1,
-  hide:()=>!sideHere(),status:()=>null,
+  hide:()=>!sideHere(),status:()=>sideNew('soccer'),
   script:()=>sideScene('soccer'),talk:()=>SIDE.soccer[3]},
  xSoc2:{name:'건우',zone:'yard',x:21,y:7,dir:'left',pos:()=>f().crew3?[15,10]:[21,7],
  look:LOOK.xSoc2,banmal:1,
   hide:()=>!sideHere(),status:()=>null,proxy:()=>NPC.xSoc1,
   talk:()=>SIDE.soccer[3]},
  xBench1:{name:'민서',zone:'yard',x:7,y:8,dir:'right',look:LOOK.xBench1,sit:1,chair:BENCH_LEGS,
-  hide:()=>!sideHere(),status:()=>null,
+  hide:()=>!sideHere(),status:()=>sideNew('bench'),
   script:()=>sideScene('bench'),talk:()=>SIDE.bench[3]},
  xBench2:{name:'연두',zone:'yard',x:7,y:9,dir:'right',look:LOOK.xBench2,sit:1,chair:BENCH_LEGS,
   hide:()=>!sideHere(),status:()=>null,proxy:()=>NPC.xBench1,
@@ -955,14 +968,14 @@ const NPC={
   talk:()=>[{say:'나는 매점 먼저. 바나나우유 사야 돼.'},{say:'오늘은 하필 늦었어. 다 팔렸겠다.',face:'sad'}]},
  xNotice:{name:'시우',zone:'hall',x:19,y:1,dir:'up',pos:()=>f().crew3?[6,6]:[19,1],  // after 종례: beside the 교무실 door (not on its step), where 정 선생님 took him
  look:LOOK.xNotice,
-  hide:()=>!sideHere(),status:()=>null,
+  hide:()=>!sideHere(),status:()=>sideNew('notice'),
   script:()=>sideScene('notice'),talk:()=>SIDE.notice[3]},
  xWin:{name:'2학년 학생',zone:'hall',x:21,y:8,dir:'down',look:LOOK.xWin,banmal:1,
   hide:()=>!lunchT(),
   talk:()=>[{say:'창밖에 느티나무 봐. 진짜 크지?'},{say:'나도 처음 보고 엄청 놀랐어.'}]},
  xSenior:{name:'도현',zone:'hall',x:10,y:8,dir:'left',pos:()=>f().crew3?[3,8]:[10,8],  // after 종례: at the shoe lockers, on his way to 학원
  look:LOOK.xSenior,banmal:1,
-  hide:()=>!sideHere(),status:()=>null,
+  hide:()=>!sideHere(),status:()=>sideNew('senior'),
   script:()=>sideScene('senior'),talk:()=>SIDE.senior[3]},
  xBye:{name:'1학년 학생',zone:'hall',x:8,y:7,dir:'down',look:LOOK.xBye,
   hide:()=>!f().crew3||!!f().done,
