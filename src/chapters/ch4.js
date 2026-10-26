@@ -87,7 +87,7 @@ const BANK=[
  {w:'생초보',ask:'저 수영은 처음이에요. 완전 ___예요.',opts:[['생초보',1],['선배',0,'선배는 먼저 시작한 사람이에요. 완전 처음이면 "생초보".']]},
  {w:'빡빡하다',ask:'학원이 다섯 개라서 일정이 너무 ___.',opts:[['빡빡해요',1],['넓어요',0,'넓다는 공간이 클 때예요. 시간에 여유가 없으면 "빡빡해요".']]},
  /* grammar: -(으)면 되다 (that is all it takes) · -다(가) 보니(까) (as I kept doing, I found) */
- {w:'방법',gram:1,ask:'어렵지 않아요. 이 버튼만 ___.',opts:[['누르면 돼요',1],['누르다 보니',0,'"-다 보니"는 계속 하다가 알게 된 일이에요. 이것만 하면 충분하면 "누르면 돼요".']]},
+ {w:'방법',gram:1,ask:'어렵지 않아요. 이 버튼만 ___.',opts:[['누르면 돼요',1],['누르다 보니',0,'"-다 보니"는 계속 하다가 알게 된 일이에요. 이것만 하면 될 때는 "누르면 돼요".']]},
  {w:'약속',gram:1,ask:'약속 장소? 그냥 학교 앞으로 ___.',opts:[['오면 돼',1],['오다 보니까',0,'"-다 보니까"는 하다가 생긴 일이야. 그것만 하면 될 때는 "오면 돼".']]},
  {w:'동네',gram:1,ask:'처음엔 길을 몰랐는데, 매일 ___ 동네를 다 알게 됐어요.',opts:[['걷다 보니',1],['걸으면 돼서',0,'"-면 되다"는 "그것만 하면 돼요"예요. 하다가 바뀌었으면 "걷다 보니".']]},
  {w:'기술',gram:1,ask:'매일 ___ 기술이 늘었어요.',opts:[['연습하다 보니까',1],['연습하면 돼요',0,'"-면 돼요"는 방법을 알려 {줄|주다(도움)} 때예요. 하다가 늘었으면 "연습하다 보니까".']]},
@@ -102,7 +102,7 @@ const Q={ // NPC questions, kept here so review can reuse them. who:'나' = the 
  daon:[
   {w:'쫓겨나다',ask:'이대로면 우리가 방송실에서 ___.',opts:[['쫓겨나',1],['쫓아내',0,'쫓아내다는 내가 누구를 내보내는 거야. 우리가 나가야 되면 "쫓겨나".'],['쫓아가',0,'쫓아가다는 뒤를 따라 뛰어가는 거야. 우리가 나가야 되면 "쫓겨나".']]},
   {w:'방법',ask:'그러니까 기계를 고칠 ___을 찾아야 돼.',opts:[['방법',1],['방학',0,'방학은 학교를 쉬는 때야. 어떻게 할지는 "방법".'],['방송',0,'방송은 고친 다음에 하는 거야. 어떻게 고칠지는 "방법".']]},
-  {w:'방법',gram:1,ask:'어렵지 않아. 선배한테 부탁만 ___.',opts:[['하면 돼',1],['하다 보니',0,'"-다 보니"는 하다가 알게 된 거야. 그것만 하면 충분하면 "하면 돼".'],['하기 전에',0,'"-기 전에"는 하기 전이야. 그것만 하면 충분하면 "하면 돼".']]},
+  {w:'방법',gram:1,ask:'어렵지 않아. 선배한테 부탁만 ___.',opts:[['하면 돼',1],['하다 보니',0,'"-다 보니"는 하다가 알게 된 거야. 그것만 하면 될 때는 "하면 돼".'],['하기 전에',0,'"-기 전에"는 하기 전이야. 그것만 하면 될 때는 "하면 돼".']]},
  ],
  jung:[
   {w:'상담',who:'…',ask:'선배 얼굴이 어두워요. 진로 ___ 중인 것 같아요.',opts:[['상담',1],['상대',0,'상대는 같이 경기하는 사람이에요. 선생님한테 고민을 말하면 "상담".'],['농담',0,'농담은 웃기려고 하는 말이에요. 선생님한테 고민을 말하면 "상담".']]},
@@ -141,7 +141,7 @@ const Q={ // NPC questions, kept here so review can reuse them. who:'나' = the 
   {w:'표정',who:'…',ask:'교장 선생님 ___이 잠깐 슬퍼 보여요.',opts:[['표정',1],['포장',0,'포장은 선물을 싸는 거예요. 얼굴에 보이는 기분은 "표정".'],['표준',0,'표준은 기준이 되는 거예요. 얼굴에 보이는 기분은 "표정".']]},
  ],
  daonS:[
-  {w:'방법',gram:1,ask:'교장 선생님한테는 방송 끝나고 ___.',opts:[['여쭤보면 돼',1],['여쭤보다 보니',0,'"-다 보니"는 하다가 알게 된 일이야. 나중에 하면 충분하면 "여쭤보면 돼".'],['여쭤보러',0,'"-러"는 "가다, 오다" 앞에 써. 나중에 하면 충분하면 "여쭤보면 돼".']]},
+  {w:'방법',gram:1,ask:'교장 선생님한테는 방송 끝나고 ___.',opts:[['여쭤보면 돼',1],['여쭤보다 보니',0,'"-다 보니"는 하다가 알게 된 일이야. 여쭤보다는 "물어보다"의 높임말. 나중에 물어보면 될 때는 "여쭤보면 돼".'],['여쭤보러',0,'"-러"는 "가다, 오다" 앞에 써. 여쭤보다는 "물어보다"의 높임말. 나중에 물어보면 될 때는 "여쭤보면 돼".']]},
  ],
  live:[
   {w:'절박하다',ask:'사흘 전엔 그렇게 ___ 지금은 웃음이 나.',opts:[['절박했는데',1],['절박하면 돼서',0,'"-면 되다"는 그것만 하면 될 때야. 그때와 지금이 다르면 "절박했는데".'],['절박할게',0,'"{-ㄹ게|-(으)ㄹ게}"는 약속이야. "절박하다"는 약속할 수 없어. "절박했는데".']]},
@@ -884,7 +884,7 @@ const NPC={
   status:()=>!f().needFix?null:undefined,
   script:()=>{
    if(!f().needFix)return [{say:'방송실 기계가 고장 났다면서요? 큰일이네요.',face:'sad'},{say:'구름 학생이 아침부터 울상이에요.'}];
-   if(has('상담')&&!ads())return [{say:'학원은 동네 상가에 있어요.'},{say:'운동장으로 나가서 정문 밖으로 가 봐요.'}];
+   if(f().counsel&&has('상담')&&!ads())return [{say:'학원은 동네 상가에 있어요.'},{say:'운동장으로 나가서 정문 밖으로 가 봐요.'}];  // counsel, not only the word: closed before the bell, the talk must play on (it ends the school day)
    return null},
   talk:()=>{const t=[
    {who:'…',say:'교무실. 정 선생님이 3학년 선배랑 이야기하고 있어요.'},
@@ -903,9 +903,9 @@ const NPC={
    {say:'{방과 후|방과 후}에는 바로 학원에 가요.'},
    {say:'학원은 동네 {상가|상가}에 있어요. 정문 밖이에요.'},
    {say:'수업 끝나고 가 봐요. 무리하지 말고요.',award:['상담','대학','목표','평가','빡빡하다']},
-   {who:'…',sfx:'bell',say:'오후 수업이 시작됐어요.',black:1},  // class time is a time cut: over black, not over the 교무실
+   {who:'…',sfx:'bell',say:'오후 수업이 시작됐어요.',black:1,set:()=>{f().counsel=1}},  // class time is a time cut: over black, not over the 교무실. counsel goes here: the goal moves on with the day
    {expand:()=>classTime(CLASS,['국어','수학'])},
-   {who:'학교 종',say:'딩동댕동… 오후 수업이 다 끝났어요.',black:0,set:()=>{f().counsel=1},go:['class',11,11,'up']},  // the bell leaves you at your desk (as in 2교시 and 3교시; the room's door out works)
+   {who:'학교 종',say:'딩동댕동… 오후 수업이 다 끝났어요.',black:0,go:['class',11,11,'up']},  // the bell leaves you at your desk (as in 2교시 and 3교시; the room's door out works)
     {who:'…',say:'찬한테 문자가 왔어요. "포스터 들고 동네 상가 왔어! 하리도 있어. 빨리 와!"'}];
    // closed after 태식 walked out: pick up after his exit (replaying from the top would play his lines with him gone)
    return f().taesikOut?t.slice(t.findIndex(x=>x.set&&/꾸벅/.test(x.say))+1):t}},
@@ -1189,16 +1189,16 @@ const NPC={
     const cue=again=>[
      {who:'…',say:again?'반주가 처음부터 다시 흘러요.':'태식 선배가 반주를 틀어요. 피아노 전주가 흘러요.'},
      {who:'…',say:'♪ …전주가 끝나요. 하리가 나를 봐요.',choose:[['아직',on(still)],['조금 더',on(bit)],['🎙️ 지금!',on(()=>song)]]}];
-    const bit=()=>[  // a beat late: her first line is lost
+    let missed=0;  // the first miss plays its whole scene; after that one cue and the choice again (a tester sat through five lines per retry)
+    const retry=lines=>missed++?[{who:'…',say:'또 놓쳤어요. 구름이 작게 말해요. "전주 끝나면 바로 켜!"'},...cue(1).slice(1)]:[...lines,...cue(1)];
+    const bit=()=>retry([  // a beat late: her first line is lost
      {who:'…',say:'하리 노래 첫 부분이 마이크 없이 지나가요.'},
      {who:'유하리',say:'…어? 선배?',face:'surprised'},
-     {who:'오다온',say:'괜찮아. 시간 있어. 한 번 더!',face:'think'},
-     ...cue(1)];
-    const still=()=>[  // far too late: the yard hears only the 반주
+     {who:'오다온',say:'괜찮아. 시간 있어. 한 번 더!',face:'think'}]);
+    const still=()=>retry([  // far too late: the yard hears only the 반주
      {who:'…',say:'운동장에 반주만 들려요. 하리 입만 움직여요.'},
      {who:'남궁찬',say:'여러분, 하리 목소리는 마음으로 들으세요!',face:'happy'},
-     {who:'…',say:'운동장에 웃음이 터져요. 하리도 웃어요.'},
-     ...cue(1)];
+     {who:'…',say:'운동장에 웃음이 터져요. 하리도 웃어요.'}]);
     return [
     {who:'…',say:'오후 두 시. 운동장에 사람이 가득해요.'},
     {who:'오다온',say:'삼, 이, 일… 시작!'},
@@ -1471,15 +1471,10 @@ const VARIANTS={
  bed:(X,Y,x,y)=>{sandF(X,Y,x,y);r(X,Y+2,16,10,'#6E4A2E');r(X,Y+11,16,4,'#B5653A');r(X,Y+11,16,1,'#D07E52');r(X,Y+14,16,1,'#8A4A2A');const h=hash(x,y);
   [[2,4,'#F7D154'],[7,6,'#E86D8A'],[11,3,'#F7D154'],[13,7,'#FFFFFF'],[4,8,'#E86D8A']].forEach(([a,b,c],i)=>{if((h+i)%4){r(X+a,Y+b+1,1,2,'#3E8E3A');r(X+a-1,Y+b,3,1,c);r(X+a,Y+b-1,1,1,c)}});
   r(X+12,Y,1,8,'#6E4A2E');r(X+13,Y,3,3,BUNT[x%5])},  // festival flags in the flowerbed
- zelkova:(X,Y,x,y,t)=>{sandF(X,Y,x,y);const [ox,oy]=blockOrigin(x,y,'Y'),bx=X-(x-ox)*16,by=Y-(y-oy)*16,s=Math.sin(t/1400)*1.2;
-  inTile(X,Y,()=>{g.fillStyle='rgba(60,40,20,.18)';g.beginPath();g.ellipse(bx+32,by+58,28,6,0,0,Math.PI*2);g.fill();
-   r(bx+27,by+30,10,30,'#6E4A2E');r(bx+29,by+30,3,30,'#8A6040');r(bx+22,by+56,20,4,'#6E4A2E');r(bx+20,by+24,6,3,'#6E4A2E');r(bx+38,by+22,6,3,'#6E4A2E');})},  // festival lights in the tree
+ zelkova:(X,Y,x,y,t)=>{sandF(X,Y,x,y);const [ox,oy]=blockOrigin(x,y,'Y');zelkovaTrunk(X,Y,X-(x-ox)*16,Y-(y-oy)*16)},  // festival lights in the tree
  zelkovaTop:(X,Y,x,y,t)=>{const [ox,oy]=blockOrigin(x,y,'Y');if(x!==ox||y!==oy)return;  // the canopy: drawn once, over the characters, free to overhang the row above
-  const bx=X,by=Y,s=Math.sin(t/1400)*1.2;
-   disc(bx+32+s,by+25,27,'#256640');disc(bx+32+s,by+22,27,'#2F7A4E');disc(bx+18+s,by+28,15,'#2F7A4E');disc(bx+46+s,by+28,15,'#2F7A4E');
-   disc(bx+28+s,by+16,18,'#3F9460');disc(bx+44+s,by+20,10,'#3F9460');disc(bx+16+s,by+22,9,'#3F9460');
-   disc(bx+24+s,by+10,8,'#5DB070');disc(bx+40+s,by+12,6,'#5DB070');disc(bx+14+s,by+18,4,'#5DB070');
-   if(state.f.clue)for(let i=0;i<7;i++){const on=Math.floor(t/400+i)%2;disc(bx+10+i*7+s,by+30+(i%2)*3,1.5,on?'#FFE58A':'#C9A13A')}},  // …and in its crown
+  const bx=X,by=Y,s=Math.sin(t/1400)*1.2;zelkovaCrown(bx,by,s);
+   if(state.f.clue)for(let i=0;i<9;i++){const on=Math.floor(t/400+i)%2;disc(bx+-2+i*9+s,by+33+(i%2)*3,1.5,on?'#FFE58A':'#C9A13A')}},  // …and in its crown
 };
 const TILES={...SCHOOL_TILES,...VARIANTS,
  /* places outside the school: their own versions of tiles the school also has */

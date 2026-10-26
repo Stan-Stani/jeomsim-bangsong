@@ -19,6 +19,39 @@ function bldg(X,Y,x,y){r(X,Y,16,16,'#E9E1D0');if(y===0){r(X,Y+6,16,10,'#E9E1D0')
 function blockOrigin(x,y,ch){let ox=x,oy=y;while(at(ox-1,y)===ch)ox--;while(at(x,oy-1)===ch)oy--;return [ox,oy]}
 function inTile(X,Y,fn){g.save();g.beginPath();g.rect(X,Y,16,16);g.clip();fn();g.restore()}
 const disc=(cx,cy,rad,c)=>{g.fillStyle=c;g.beginPath();g.arc(cx,cy,rad,0,Math.PI*2);g.fill()};
+/* the 느티나무 (user's pick, 2026-10-25: mock-up C): an old 보호수 — grey bark with orange flakes on a stone ring, a short trunk that
+   forks low into four limbs, and a broad umbrella crown wider than tall. Drawn once into two small images: the trunk (under the
+   characters, clipped per tile) and the crown (over them, swaying). Both are placed from the 4×4 block's top-left (bx,by). */
+const ZEL={tx:-8,ty:8,cx:-26,cy:-20};  // where each image's corner sits from (bx,by)
+let zelArt=null;
+function zelkovaArt(){if(zelArt)return zelArt;
+ const mk=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c};
+ const T=mk(80,58),Cn=mk(116,66);let q;
+ const R=(x,y,w,h,c)=>{q.fillStyle=c;q.fillRect(Math.round(x),Math.round(y),w,h)};
+ const D=(cx,cy,rad,c)=>{for(let dy=-rad;dy<=rad;dy++){const hw=Math.round(Math.sqrt(rad*rad-dy*dy));R(cx-hw,cy+dy,hw*2,1,c)}};
+ const E=(cx,cy,rx,ry,c)=>{for(let dy=-ry;dy<=ry;dy++){const hw=Math.round(rx*Math.sqrt(1-(dy/ry)**2));R(cx-hw,cy+dy,hw*2,1,c)}};
+ const line=(x0,y0,x1,y1,w0,w1,c)=>{const n=Math.ceil(Math.max(Math.abs(x1-x0),Math.abs(y1-y0)));for(let k=0;k<=n;k++){const t=k/n,w=Math.round(w0+(w1-w0)*t);R(x0+(x1-x0)*t-w/2,y0+(y1-y0)*t,w,1,c)}};
+ // trunk image: (0,0) = (bx-8, by+8)
+ q=T.getContext('2d');const ox=8,oy=-8,B='#6A665A',Dk='#4A463C',L='#8A8676';
+ q.fillStyle='rgba(60,40,20,.18)';q.beginPath();q.ellipse(ox+32,oy+58,36,6,0,0,Math.PI*2);q.fill();
+ E(ox+32,oy+58,22,6,'#9A968C');E(ox+32,oy+57,20,5,'#B9B4A8');E(ox+32,oy+57,16,3,'#7A6A50');  // the stone ring and its earth
+ R(ox+22,oy+55,20,4,Dk);R(ox+19,oy+57,6,2,Dk);R(ox+40,oy+57,6,2,Dk);  // roots flaring into the ring
+ R(ox+26,oy+40,12,17,B);R(ox+25,oy+48,14,9,B);R(ox+28,oy+40,3,17,L);R(ox+35,oy+42,2,14,Dk);
+ [[30,46],[33,51],[27,52],[34,44]].forEach(([a,b])=>R(ox+a,oy+b,2,1,'#C08A5A'));  // bark flaking off orange
+ [[-22,-18],[-9,-29],[9,-29],[23,-17]].forEach(([dx,dy],i)=>{const x0=ox+29+i*2,y0=oy+42,mx=x0+dx*.45,my=y0+dy*.55;
+  line(x0,y0,mx,my,5,3,B);line(mx,my,x0+dx,y0+dy,3,1,B);line(x0-1,y0,mx-1,my,1,1,L);line(mx,my,mx+dx*.5+(dx<0?-4:4),my+dy*.35,1,1,Dk)});
+ R(ox+50,oy+48,9,6,'#F4F1E6');R(ox+50,oy+48,9,1,'#3E5A46');R(ox+51,oy+50,7,1,'#9AA3AD');R(ox+51,oy+52,5,1,'#9AA3AD');R(ox+54,oy+54,1,4,'#6E5A44');  // 보호수 sign
+ // crown image: (0,0) = (bx-26, by-20)
+ q=Cn.getContext('2d');const px=26,py=20,cx=px+32,cy=py+22,rx=42,ry=25,P=['#1C5034','#2A6E44','#43905A','#74B86A'];
+ let sd=23;const rnd=()=>(sd=(sd*16807)%2147483647)/2147483647;const pts=[];
+ for(let i=0;i<52;i++){const a=rnd()*Math.PI,d=Math.sqrt(rnd());pts.push([cx+Math.cos(a)*rx*d*(rnd()<.5?-1:1),cy-Math.sin(a)*ry*d+ry*.15,6+Math.round(rnd()*5)])}
+ pts.sort((p,o)=>p[1]-o[1]);
+ pts.forEach(([x,y,c])=>D(x,y+2,c,P[0]));pts.forEach(([x,y,c])=>D(x,y,c,P[1]));
+ pts.forEach(([x,y,c])=>{if(rnd()<.75)D(x-1,y-2,Math.max(1,c-2),P[2])});pts.forEach(([x,y,c])=>{if(rnd()<.45)D(x-2,y-3,Math.max(1,c-4),P[3])});
+ for(let i=0;i<30;i++){const a=rnd()*Math.PI,d=Math.sqrt(rnd());R(cx+Math.cos(a)*rx*d*(rnd()<.5?-1:1),cy-Math.sin(a)*ry*d,1,1,P[3])}
+ return zelArt={T,C:Cn}}
+function zelkovaTrunk(X,Y,bx,by){const a=zelkovaArt();inTile(X,Y,()=>g.drawImage(a.T,bx+ZEL.tx,by+ZEL.ty))}
+function zelkovaCrown(bx,by,s){g.drawImage(zelkovaArt().C,Math.round(bx+ZEL.cx+s),by+ZEL.cy)}
 function courtF(X,Y,x,y){r(X,Y,16,16,'#D6A466');for(let j=3;j<16;j+=4)r(X,Y+j,16,1,'#C99556');const h=hash(x,y);r(X+(h%12)+2,Y+(h%4)*4+1,3,1,'#E2B477');
  if(x>=2&&x<=21&&y>=2&&y<=9){const L='#F4F1E6';
   if(y===2)r(X,Y,16,1,L);if(y===9)r(X,Y+15,16,1,L);if(x===2)r(X,Y,1,16,L);if(x===21)r(X+15,Y,1,16,L);if(x===11)r(X+15,Y,1,16,L);if(x===12)r(X,Y,1,16,L);
@@ -176,14 +209,9 @@ const TILES={
   entrance:(X,Y,x,y)=>{r(X,Y,16,16,'#E9E1D0');r(X,Y+1,16,13,'#3E5E6E');r(X+1,Y+2,14,11,'#A9D8EC');r(X+2,Y+3,2,1,'#E6F6FC');const L=at(x-1,y)!=='E';r(L?X+15:X,Y+1,1,13,'#3E5E6E');r(L?X+12:X+3,Y+7,1,3,'#2B2E36');r(X,Y+14,16,2,'#C9C2B0')},
   bed:(X,Y,x,y)=>{r(X,Y+2,16,10,'#6E4A2E');r(X,Y+11,16,4,'#B5653A');r(X,Y+11,16,1,'#D07E52');r(X,Y+14,16,1,'#8A4A2A');const h=hash(x,y);
   [[2,4,'#F7D154'],[7,6,'#E86D8A'],[11,3,'#F7D154'],[13,7,'#FFFFFF'],[4,8,'#E86D8A']].forEach(([a,b,c],i)=>{if((h+i)%4){r(X+a,Y+b+1,1,2,'#3E8E3A');r(X+a-1,Y+b,3,1,c);r(X+a,Y+b-1,1,1,c)}})},
-  zelkova:(X,Y,x,y,t)=>{const [ox,oy]=blockOrigin(x,y,'Y'),bx=X-(x-ox)*16,by=Y-(y-oy)*16,s=Math.sin(t/1400)*1.2;
-  inTile(X,Y,()=>{g.fillStyle='rgba(60,40,20,.18)';g.beginPath();g.ellipse(bx+32,by+58,28,6,0,0,Math.PI*2);g.fill();
-   r(bx+27,by+30,10,30,'#6E4A2E');r(bx+29,by+30,3,30,'#8A6040');r(bx+22,by+56,20,4,'#6E4A2E');r(bx+20,by+24,6,3,'#6E4A2E');r(bx+38,by+22,6,3,'#6E4A2E');})},
-  zelkovaTop:(X,Y,x,y,t)=>{const [ox,oy]=blockOrigin(x,y,'Y');if(x!==ox||y!==oy)return;  // the canopy: drawn once, over the characters, free to overhang the row above
-  const bx=X,by=Y,s=Math.sin(t/1400)*1.2;
-   disc(bx+32+s,by+25,27,'#256640');disc(bx+32+s,by+22,27,'#2F7A4E');disc(bx+18+s,by+28,15,'#2F7A4E');disc(bx+46+s,by+28,15,'#2F7A4E');
-   disc(bx+28+s,by+16,18,'#3F9460');disc(bx+44+s,by+20,10,'#3F9460');disc(bx+16+s,by+22,9,'#3F9460');
-   disc(bx+24+s,by+10,8,'#5DB070');disc(bx+40+s,by+12,6,'#5DB070');disc(bx+14+s,by+18,4,'#5DB070')},
+  zelkova:(X,Y,x,y,t)=>{const [ox,oy]=blockOrigin(x,y,'Y');zelkovaTrunk(X,Y,X-(x-ox)*16,Y-(y-oy)*16)},
+  zelkovaTop:(X,Y,x,y,t)=>{const [ox,oy]=blockOrigin(x,y,'Y');if(x!==ox||y!==oy)return;  // the canopy: drawn once, over the characters, free to overhang the rows and columns around
+   zelkovaCrown(X,Y,Math.sin(t/1400)*1.2)},
   ybench:(X,Y,x,y)=>{const T=at(x,y-1)!=='n';r(X+4,Y+(T?2:0),9,T?14:12,'#B68350');for(let j=(T?4:2);j<16;j+=4)r(X+4,Y+j,9,1,'#9A6A3C');r(X+3,Y+(T?2:0),1,T?14:12,'#6E4A28');if(!T)r(X+4,Y+12,2,3,'#6E4A28')},
   goal:(X,Y,x,y)=>{const L=at(x-1,y)!=='g';for(let i=2;i<15;i+=3)r(X,Y+i,16,1,'#E6E2D6');for(let i=1;i<16;i+=3)r(X+i,Y+2,1,13,'#E6E2D6');
   r(X,Y+1,16,2,'#F7F7F2');r(L?X+1:X+13,Y+1,2,15,'#F7F7F2')},
@@ -605,7 +633,7 @@ const base=()=>({
    'e':x=>x<7?'문구점 문이에요. "잠깐 은행 다녀올게요"':'편의점 문이에요. 사람이 너무 많아요.',
    'h':['빨간 벽돌 벽이에요.','벽돌 사이에 작은 풀이 자라요.'],
    'A':x=>['학원 건물이에요. 층마다 학원 간판이 있어요.','창문마다 학생들이 보여요. 다 공부 중이에요.','"느티 수학 · 합격률 높은 학원"'][x%3],
-   'r':['차가 다니는 길이에요. 횡단보도로 건너요.','학원 버스가 쌩 지나가요.','길에 노란 줄이 있어요.'],
+   'r':['차가 다니는 길이에요. 횡단보도로 건너요.','학원 버스가 쌩 지나가요.','노란 줄 너머는 차도예요. 횡단보도로 건너요.'],
    'l':'가로등이에요. 아직 불이 꺼져 있어요.',
    't':['가로수예요. 잎이 반짝여요.','나무 밑에 고양이가 자고 있어요.'],
    'B':['버스 정류장이에요. "학원가 방향"','정류장 의자예요. 아무도 안 앉아 있어요.'],
@@ -690,6 +718,7 @@ globalThis.SIGN_TEXT=(X,Y,x,x0,x1,top,text,c)=>{const gs=[...text].map(ch=>GLYPH
  const tw=gs.reduce((n,g)=>n+(g?g[0].length:3),0)+GAP*(gs.length-1);let gx=Math.floor((W-tw)/2);
  for(const g of gs){if(g)g.forEach((row,j)=>{for(let i=0;i<row.length;i++)if(row[i]==='#'){const px=gx+i;if(px>=ox&&px<ox+16)r(X+px-ox,Y+top+j,1,1,c)}});gx+=(g?g[0].length:3)+GAP}};
 globalThis.SCHOOL_TILES=TILES;globalThis.SCHOOL_WALLISH=[...WALLISH];globalThis.SCHOOL_BASE=base;
+globalThis.zelkovaTrunk=zelkovaTrunk;globalThis.zelkovaCrown=zelkovaCrown;  // 4교시 draws the same tree with festival lights in it
 })();
 
 /* Someone who quizzes you on purpose ("문제 하나 낼게요": 매점 이모, 경비 아저씨, 분식집 아저씨): a word of yours that's due, graded like a
