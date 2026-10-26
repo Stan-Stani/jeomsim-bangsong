@@ -318,9 +318,8 @@ const ZONES=SCHOOL({open:['class','cafe','bcast'],zones:{
  yard:{
   things:{'C':()=>f().crew3?'시계가 네 시를 가리켜요. 하교 시간이에요.':f().deal?'시계가 세 시 오십 분이에요. 곧 종례예요.':f().lunch?'시계가 열두 시 반이에요. 점심시간!':'시계가 아홉 시 십오 분이에요. 지각이에요!',
    'G':()=>f().done?nextChapterAsk('정문이에요. 오늘은 끝!'):f().crew3?'정문이에요. 구름이 복도에서 기다려요.':'정문이에요. 아직 집에 갈 시간이 아니에요.'},
-  greet:()=>{sideBack('yard')},
   npcs:['guard','xLate','xSoc1','xSoc2','xBench1','xBench2','xHome1','xHome2']},
- hall:{greet:()=>{sideBack('hall')},
+ hall:{
   locks:{class:()=>!f().metTeacher&&'2학년 3반. 아직 담임 선생님을 못 만났어요.',
    cafe:()=>!f().lunch&&'급식실 문이 닫혀 있어요. 아직 점심시간이 아니에요.',
    bcast:()=>!f().metChan&&(hasItem(NOTE)?'방송실… 배가 꼬르륵. 점심부터 먹어요.':'"방송실". 문이 잠겨 있어요.')},
@@ -393,7 +392,7 @@ const LOOK={
  /* extras: background students (tie colour by year) and staff */
  xLate:{hair:'#2A2220',skin:'#E8C09C',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#3F7D5A',style:'spiky'},
  xSoc1:{hair:'#1E1A1C',skin:'#D29C76',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'short'},
- xSoc2:{hair:'#3A2A22',skin:'#E2B48C',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'spiky'},
+ xSoc2:{hair:'#3A2A22',skin:'#E2B48C',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#C9A13A',style:'spiky'},
  xBench1:{hair:'#2B1F1F',skin:'#F0CBAA',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#3F7D5A',style:'long',lashes:1,lips:'#D0808A'},
  xBench2:{hair:'#4A3226',skin:'#E6BC98',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#3F7D5A',style:'bob',lashes:1,lips:'#C97680'},
  xHome1:{hair:'#241E20',skin:'#DDAE88',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'bun',lashes:1,lips:'#C46E78'},
@@ -478,174 +477,6 @@ const JONGNYE=()=>[
 /* when the background extras are around (see the extras at the end of NPC) */
 const lunchT=()=>!!f().lunch&&!f().deal;            // lunch break: yard, hall and 급식실 are busy
 const classT=()=>!f().lunch||(!!f().deal&&!f().crew3); // lessons and 종례: classmates in their seats
-/* Optional exposure scenes: no questions, awards, items, journal notes or quest changes.
-   The late morning is class time, so these students are out only at lunch (a first visit, then a second) and after
-   종례. A missed visit never replays out of time. Only the last spoken line records that visit.
-   The second visit waits for lunch to move on: the next step after the first (eating with 찬, then the 방송실 notice), and
-   도현's and 시우's wait for the notice in any case (도현 has eaten by then, and 시우 has asked him). A first visit heard after
-   the notice has no step left before 종례, so its second waits until you leave the room and come back. The two yard scenes
-   (민서·연두, 준서·건우) also open on coming back to the yard: lunch's errands keep you in the hall, so a step alone can pass unseen. */
-const lunchStep=()=>f().gotNotice?2:f().metChan?1:0;
-function sideReady(key){
- const F=f(),at=F['side_'+key+'_at'];if(at==null)return true;  // a save from before the wait: as it was
- if(key==='bench'||key==='soccer')return lunchStep()>at||!!F['side_'+key+'_back'];  // the yard is off lunch's path: back in the yard after a while counts too
- const need=Math.max(at+1,2);
- return need<=2?lunchStep()>=need:!!F['side_'+key+'_back'];
-}
-const sideTime=key=>f().crew3?2:f()['side_'+key+'_0']&&sideReady(key)?1:0;
-const sideNew=key=>sideHere()&&!f()['side_'+key+'_'+sideTime(key)]?'side':null;  // the grey bubble: a visit not yet heard
-const sideBack=zone=>{const F=f();[['bench','yard'],['soccer','yard'],['senior','hall'],['notice','hall']].forEach(([k,z])=>{if(z===zone&&F['side_'+k+'_0'])F['side_'+k+'_back']=1})};  // entering the room again (a zone greet)
-const sideHere=()=>lunchT()||!!f().crew3;
-const SIDE={
- bench:[
-  [
-   {who:'연두',say:'민서야, 문자 아직이야? 소개팅 오늘이잖아.',look:LOOK.xBench2},
-   {who:'민서',say:'몰라… 네가 소개시켜 준 오빠, 연상이라 더 떨려.',look:LOOK.xBench1,face:'think'},
-   {who:'연두',say:'어젯밤 드라마 봤어? 벽쿵! 손목 잡고 벽으로 밀어붙이더라.',look:LOOK.xBench2},
-   {who:'연두',say:'"당신, 나만 봐요." 지그시 보다가 머리를 쓰다듬고 키스!',look:LOOK.xBench2},
-   {who:'민서',say:'으, 손목 잡고 밀어붙이는 건 별로야. 다정한 이미지였는데.',look:LOOK.xBench1},
-   {who:'연두',say:'꺄, 소개팅 끝나면 썰 풀어 줘!',look:LOOK.xBench2,face:'happy'},
-   {who:'민서',say:'앗, 선배… 들으셨어요? 저 1학년 민서예요.',look:LOOK.xBench1,face:'surprised'},
-  ],
-  [
-   {who:'민서',say:'선배, 아까 다 들으셨죠? 뭐라고 문자하면 좋을까요?',look:LOOK.xBench1},
-   {who:'나',say:'이렇게 써 봐. "몇 시에 만날까요?"'},
-   {who:'민서',say:'인사부터 해야겠어요! …에잇, 썼다 지웠다만 하네요.',look:LOOK.xBench1},
-   {who:'민서',say:'사실 저 여태 남자친구를 사귄 적이 없어요.',look:LOOK.xBench1},
-   {who:'민서',say:'남친 생기면 뭔가 달라질까요?',look:LOOK.xBench1,face:'think'},
-   {who:'민서',say:'연애는 드라마로만 봐서 약간 무서워요.',look:LOOK.xBench1},
-   {who:'민서',say:'연애 조언 글이에요. "쓰니야, 싫으면 싫다고 해도 돼."',look:LOOK.xBench1},
-   {who:'나',say:'네 마음이 제일 중요해.'},
-   {who:'민서',say:'네. 싫은 건 분명히 말하려고요.',look:LOOK.xBench1},
-  ],
-  [
-   {who:'민서',say:'선배! 방금 정문에서 인사했어요.',look:LOOK.xBench1,face:'happy'},
-   {who:'연두',say:'저도 같이 갔어요. 엄청 짧은 소개팅!',look:LOOK.xBench2},
-   {who:'민서',say:'제가 오늘은 짧게만 만나자고 했거든요.',look:LOOK.xBench1},
-   {who:'민서',say:'제 얘기를 끝까지 들어 줬어요.',look:LOOK.xBench1},
-   {who:'민서',say:'다정한 분일까요, 첫인상만 좋은 걸까요?',look:LOOK.xBench1,face:'think'},
-   {who:'나',say:'오늘 처음 봤으니까 천천히 알아 가.'},
-   {who:'민서',say:'네. 바로 남친이라고 부르진 않을래요.',look:LOOK.xBench1},
-   {who:'연두',say:'다음에 만나고 와서 또 얘기해 줘!',look:LOOK.xBench2},
-  ],
-  [
-   {who:'민서',say:'오늘은 제 마음부터 생각해 보려고요.',look:LOOK.xBench1},
-  ],
- ],
- senior:[
-  [
-   {who:'도현',say:'하아… 전국 모고를 완전히 망했어.',look:LOOK.xSenior,face:'sad'},
-   {who:'나',say:'모고가 모의고사예요?'},
-   {who:'도현',say:'응. …아, 혼잣말이었어. 나 3학년 도현이야.',look:LOOK.xSenior},
-   {who:'도현',say:'엄마 문자에 정신이 팔려서 책도 못 펴겠어.',look:LOOK.xSenior},
-   {who:'도현',say:'우리 반이 가장 우수한 반이라는데.',look:LOOK.xSenior},
-   {who:'도현',say:'교장 선생님도 자랑스럽다고 말씀하셨어.',look:LOOK.xSenior},
-   {who:'도현',say:'어휴, 성적표를 어떻게 보여 드리지.',look:LOOK.xSenior},
-  ],
-  [
-   {who:'나',say:'선배, 잠깐 얘기해도 돼요?'},
-   {who:'도현',say:'응. 폰은 주머니에 넣었어.',look:LOOK.xSenior},
-   {who:'도현',say:'시험 말고는 이렇다 할 얘기도 없네.',look:LOOK.xSenior},
-   {who:'나',say:'저는 첫날부터 벌금 오백 원 냈어요.'},
-   {who:'도현',say:'하하. {난|나} 머릿속에서 시험만 다시 봤어.',look:LOOK.xSenior},
-   {who:'도현',say:'점심도 시험 시간이나 다름없었지.',look:LOOK.xSenior},
-   {who:'도현',say:'얘기하니까 좀 풀어지네. 고마워.',look:LOOK.xSenior,face:'happy'},
-   {who:'도현',say:'친구가 내 청소를 대신해 줬거든.',look:LOOK.xSenior},
-   {who:'도현',say:'{난|나} 내일 그 친구 대신 청소하려고.',look:LOOK.xSenior},
-  ],
-  [
-   {who:'도현',say:'엄마한테 성적표 보냈어.',look:LOOK.xSenior},
-   {who:'도현',say:'앞으로 틀린 문제부터 다시 보겠다고.',look:LOOK.xSenior},
-   {who:'도현',say:'답이 왔어. "밥은 먹었니?"',look:LOOK.xSenior},
-   {who:'나',say:'걱정 많이 하셨나 봐요.'},
-   {who:'도현',say:'응. 그럼 이만. 학원 가기 전에 물 좀.',look:LOOK.xSenior},
-   {who:'…',say:'도현 선배가 빈 물병을 꺼내요.'},
-  ],
-  [
-   {who:'도현',say:'학원 가기 전에 여기서 잠깐 쉬려고.',look:LOOK.xSenior},
-  ],
- ],
- soccer:[
-  [
-   {who:'준서',say:'어, 전학생! {난|나} 2학년 준서야.',look:LOOK.xSoc1},
-   {who:'준서',say:'공 찾으러 나왔다가 건우한테 잡혔어.',look:LOOK.xSoc1},
-   {who:'준서',say:'어제 정문에서 패싸움이 났거든!',look:LOOK.xSoc1},
-   {who:'건우',say:'쟤 또 시작이다. 허언증 아니냐?',look:LOOK.xSoc2},
-   {who:'준서',say:'아니야! 너네 반 애들도 봤어!',look:LOOK.xSoc1},
-   {who:'건우',say:'하도 크게 말해서 죄다 쳐다봤겠지.',look:LOOK.xSoc2},
-   {who:'준서',say:'내가 놀라서 소리를 좀 질렀지.',look:LOOK.xSoc1},
-   {who:'건우',say:'소문으로 학교를 들쑤시지는 마.',look:LOOK.xSoc2},
-   {who:'준서',say:'알았어. 나도 말하고 나니 좀 이상하네.',look:LOOK.xSoc1},
-  ],
-  [
-   {who:'준서',say:'이따 2반 대 3반이야! 너도 낄래?',look:LOOK.xSoc1},
-   {who:'건우',say:'넌 3반이지? 준서랑 같은 편이네.',look:LOOK.xSoc2},
-   {who:'준서',say:'내가 공에 미쳤거든. 공만 봐!',look:LOOK.xSoc1},
-   {who:'건우',say:'{내 말이|내 말이}. 골대도 좀 봐라.',look:LOOK.xSoc2},
-   {who:'나',say:'그런데 어제 싸움 얘기는 진짜야?'},
-   {who:'준서',say:'어… 공부터 차고 말할게.',look:LOOK.xSoc1},
-  ],
-  [
-   {who:'준서',say:'어제 정문 패싸움 얘기 있잖아. 그거 사실…',look:LOOK.xSoc1},
-   {who:'준서',say:'떡볶이 줄에서 혼자 넘어진 거야.',look:LOOK.xSoc1},
-   {who:'준서',say:'넘어지면서 내 발하고 싸웠나 봐.',look:LOOK.xSoc1},
-   {who:'나',say:'그럼 패싸움이 아니라 혼자 넘어진 거네?'},
-   {who:'건우',say:'그야 네가 공만 보고 걸으니까! 이 화상아.',look:LOOK.xSoc2},
-   {who:'준서',say:'에휴, 나란 놈. 내가 멍청이지.',look:LOOK.xSoc1,face:'happy'},
-   {who:'건우',say:'넘어질 수도 있지. 다친 데는 없어?',look:LOOK.xSoc2},
-   {who:'준서',say:'넘어진 게 창피해서 괜히 싸움 얘기로 우리 반 얼굴에 먹칠했네.',look:LOOK.xSoc1},
-   {who:'준서',say:'소문 퍼뜨리는 짓은 그만할게.',look:LOOK.xSoc1},
-   {who:'건우',say:'들은 애들한테도 사실대로 말해 줘.',look:LOOK.xSoc2},
-   {who:'준서',say:'응. 떡볶이는 맛있었다고도 말할게.',look:LOOK.xSoc1},
-  ],
-  [
-   {who:'준서',say:'오늘은 공도 보고 발밑도 볼 거야.',look:LOOK.xSoc1},
-  ],
- ],
- notice:[
-  [
-   {who:'시우',say:'저… 전학 온 선배죠? 저는 1학년 시우예요.',look:LOOK.xNotice,face:'think'},
-   {who:'시우',say:'3학년 선배가 저를 찾았대요. 제 이름까지 알고요.',look:LOOK.xNotice},
-   {who:'시우',say:'무슨 일일까요? 좀 무서워요.',look:LOOK.xNotice,face:'sad'},
-   {who:'나',say:'아직 무슨 일인지 모르잖아. 직접 물어봐.'},
-   {who:'시우',say:'네. 밥 먹고 여기로 오신대요.',look:LOOK.xNotice},
-   {who:'나',say:'만약 무서우면 선생님께 말해.'},
-   {who:'시우',say:'네. 여기서 기다려 볼게요.',look:LOOK.xNotice},
-  ],
-  [
-   {who:'시우',say:'아까는 무서웠는데 용기 내서 물어봤어요.',look:LOOK.xNotice},
-   {who:'나',say:'잘했다. 선배가 뭐래?'},
-   {who:'시우',say:'제가 버스에서 내릴 때 돈을 떨어뜨렸대요.',look:LOOK.xNotice},
-   {who:'시우',say:'뒤에서 불렀는데 제가 못 들었대요.',look:LOOK.xNotice},
-   {who:'시우',say:'그래서 접은 지폐를 돌려주셨어요. 제 돈이었어요!',look:LOOK.xNotice,face:'happy'},
-   {who:'시우',say:'돈을 뺏으려는 줄 알았는데. 좀 미안했어요.',look:LOOK.xNotice},
-   {who:'나',say:'다행이다. 혼자 걱정 많이 했겠다.'},
-   {who:'시우',say:'마침 정 선생님도 지나가시다가 들으셨어요.',look:LOOK.xNotice},
-   {who:'시우',say:'교내에서 힘든 일이 있으면 언제든지 오래요. 주저 말고요.',look:LOOK.xNotice},
-   {who:'시우',say:'선배도 들어 주셔서 감사해요.',look:LOOK.xNotice},
-  ],
-  [
-   {who:'나',say:'시우야, 오늘 괜찮았어?'},
-   {who:'시우',say:'네. 사실 중학생 시절에 왕따였어요.',look:LOOK.xNotice},
-   {who:'시우',say:'따돌림을 당한 뒤로 선배들이 무서웠어요. 또 삥 뜯길까 봐요.',look:LOOK.xNotice},
-   {who:'시우',say:'유치원 때는 아무나 붙잡고 놀자고 했는데.',look:LOOK.xNotice},
-   {who:'시우',say:'초등생 때까지는 또래 친구도 많았어요.',look:LOOK.xNotice},
-   {who:'나',say:'서두를 필요 없어. 네가 편한 거리면 돼.'},
-   {who:'시우',say:'오늘 저를 찾던 3학년 선배한테 물어봤어요.',look:LOOK.xNotice},
-   {who:'시우',say:'제 돈을 돌려주려던 거였어요. 선생님도 들으셨고요.',look:LOOK.xNotice},
-   {who:'시우',say:'선생님이 교무실까지 {데리고 가|데리고 가다} 주셨어요.',look:LOOK.xNotice},
-   {who:'시우',say:'어쨌든 물어보길 잘했어요.',look:LOOK.xNotice,face:'happy'},
-  ],
-  [
-   {who:'시우',say:'다음에 힘들면 혼자 참지 않고 말할래요.',look:LOOK.xNotice},
-  ],
- ],
-};
-function sideScene(key){
- const t=sideTime(key),flag='side_'+key+'_'+t,lines=SIDE[key][t];
- if(f()[flag])return t===2?SIDE[key][3]:[lines[lines.length-1]];
- return lines.map((s,i)=>i===lines.length-1?{...s,set:()=>{f()[flag]=1;if(t===0)f()['side_'+key+'_at']=lunchStep()}}:s);
-}
 const NPC={
  guard:{name:'박 경비 아저씨',zone:'yard',x:17,y:12,dir:'left',look:LOOK.guard,
   script:()=>{const F=f();   // repeat lines follow the day: morning, lunch, 종례, 하교
@@ -942,20 +773,18 @@ const NPC={
  xLate:{name:'1학년 학생',zone:'yard',x:14,y:9,dir:'up',look:LOOK.xLate,
   hide:()=>!!f().metTeacher,
   talk:()=>[{say:'헉, 선배도 지각이에요?',face:'surprised'},{say:'오늘 버스 진짜 늦었죠?'},{say:'반장한테 걸리면 벌금이에요. 빨리 가요!'}]},
- xSoc1:{name:'준서',zone:'yard',x:17,y:7,dir:'right',pos:()=>f().crew3?[14,10]:[17,7],  // after 종례: by the path to the gate
- look:LOOK.xSoc1,banmal:1,
-  hide:()=>!sideHere(),status:()=>sideNew('soccer'),
-  script:()=>sideScene('soccer'),talk:()=>SIDE.soccer[3]},
- xSoc2:{name:'건우',zone:'yard',x:21,y:7,dir:'left',pos:()=>f().crew3?[15,10]:[21,7],
- look:LOOK.xSoc2,banmal:1,
-  hide:()=>!sideHere(),status:()=>null,proxy:()=>NPC.xSoc1,
-  talk:()=>SIDE.soccer[3]},
- xBench1:{name:'민서',zone:'yard',x:7,y:8,dir:'right',look:LOOK.xBench1,sit:1,chair:BENCH_LEGS,
-  hide:()=>!sideHere(),status:()=>sideNew('bench'),
-  script:()=>sideScene('bench'),talk:()=>SIDE.bench[3]},
- xBench2:{name:'연두',zone:'yard',x:7,y:9,dir:'right',look:LOOK.xBench2,sit:1,chair:BENCH_LEGS,
-  hide:()=>!sideHere(),status:()=>null,proxy:()=>NPC.xBench1,
-  talk:()=>SIDE.bench[3]},
+ xSoc1:{name:'2학년 학생',zone:'yard',x:17,y:7,dir:'right',look:LOOK.xSoc1,banmal:1,
+  hide:()=>!lunchT(),
+  talk:()=>[{say:'야, 전학생! 같이 공 찰래?'},{say:'점심시간은 짧아. 얼른 와.'}]},
+ xSoc2:{name:'3학년 선배',zone:'yard',x:21,y:7,dir:'left',look:LOOK.xSoc2,banmal:1,
+  hide:()=>!lunchT(),
+  talk:()=>[{say:'패스! …아, 하필 골대 맞았어!'},{say:'2학년이야? 축구 좋아해?'}]},
+ xBench1:{name:'1학년 학생',zone:'yard',x:8,y:10,dir:'right',look:LOOK.xBench1,
+  hide:()=>!lunchT(),
+  talk:()=>[{say:'선배, 안녕하세요!',face:'happy'},{say:'느티나무 밑이 제일 시원해요.'}]},
+ xBench2:{chat:'xBench1',name:'1학년 학생',zone:'yard',x:9,y:10,dir:'left',look:LOOK.xBench2,
+  hide:()=>!lunchT(),
+  talk:()=>[{say:'우리 둘이 동갑이에요. 당연하죠? 하하.'},{say:'밥 먹고 매일 여기서 얘기해요.'}]},
  xHome1:{name:'2학년 학생',zone:'yard',x:8,y:11,dir:'right',look:LOOK.xHome1,banmal:1,
   hide:()=>!f().crew3,
   talk:()=>[{say:'종례 끝! 이제 학원 가야 돼.'},{say:'지겹다… 너도 학원 다녀?'}]},
@@ -970,17 +799,15 @@ const NPC={
  xHall2:{chat:'xHall1',name:'2학년 학생',zone:'hall',x:3,y:7,dir:'left',look:LOOK.xHall2,banmal:1,
   hide:()=>!lunchT(),
   talk:()=>[{say:'나는 매점 먼저. 바나나우유 사야 돼.'},{say:'오늘은 하필 늦었어. 다 팔렸겠다.',face:'sad'}]},
- xNotice:{name:'시우',zone:'hall',x:19,y:1,dir:'up',pos:()=>f().crew3?[6,6]:[19,1],  // after 종례: beside the 교무실 door (not on its step), where 정 선생님 took him
- look:LOOK.xNotice,
-  hide:()=>!sideHere(),status:()=>sideNew('notice'),
-  script:()=>sideScene('notice'),talk:()=>SIDE.notice[3]},
+ xNotice:{name:'1학년 학생',zone:'hall',x:19,y:1,dir:'up',look:LOOK.xNotice,
+  hide:()=>!lunchT(),
+  talk:()=>[{say:'축제가 다음 달이래요! 설레요.',face:'happy'},{say:'선배네 반은 뭐 해요?'}]},
  xWin:{name:'2학년 학생',zone:'hall',x:21,y:8,dir:'down',look:LOOK.xWin,banmal:1,
   hide:()=>!lunchT(),
   talk:()=>[{say:'창밖에 느티나무 봐. 진짜 크지?'},{say:'나도 처음 보고 엄청 놀랐어.'}]},
- xSenior:{name:'도현',zone:'hall',x:10,y:8,dir:'left',pos:()=>f().crew3?[3,8]:[10,8],  // after 종례: at the shoe lockers, on his way to 학원
- look:LOOK.xSenior,banmal:1,
-  hide:()=>!sideHere(),status:()=>sideNew('senior'),
-  script:()=>sideScene('senior'),talk:()=>SIDE.senior[3]},
+ xSenior:{name:'3학년 선배',zone:'hall',x:10,y:8,dir:'left',look:LOOK.xSenior,banmal:1,
+  hide:()=>!lunchT(),
+  talk:()=>[{say:'2학년이지? 위층은 3학년 교실이야.'},{say:'조용히 다녀. 다들 모의고사 때문에 예민해.'}]},
  xBye:{name:'1학년 학생',zone:'hall',x:8,y:7,dir:'down',look:LOOK.xBye,
   hide:()=>!f().crew3||!!f().done,
   talk:()=>[{say:'선배, 안녕히 가세요!',face:'happy'},{say:'저는 버스 타요. 오늘은 안 늦을 거예요.'}]},

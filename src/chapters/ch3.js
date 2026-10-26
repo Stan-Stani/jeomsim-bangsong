@@ -373,7 +373,7 @@ const has=w=>state.badges.includes(w);
 /* ---------- zones ---------- */
 /* 느티고 (src/school.js): the 방송실, the 매점 (in the 급식실) and the 2층 (도서관, 음악실) are open; the 정문 leads to 학교 앞 once school's out. */
 const ZONES={...SCHOOL({open:['cafe','hall2','music','library','bcast','nr','class','gym'],gate:{to:'street',x:10,y:8,dir:'up',lock:()=>(!f().toNR||(f().secret&&!f().done))&&'학교가 끝나야 밖에 나갈 수 있어요.'},zones:{
- yard:{npcs:['minseo','yeondu'],locks:{gym:()=>!lunchT()&&(f().toNR&&!f().secret?'체육관이에요. 오늘은 문을 닫았어요.':'체육관이에요. 아침이라 아직 잠겨 있어요.')}},
+ yard:{locks:{gym:()=>!lunchT()&&(f().toNR&&!f().secret?'체육관이에요. 오늘은 문을 닫았어요.':'체육관이에요. 아침이라 아직 잠겨 있어요.')}},
  gym:{npcs:['gyPE','gyB1','gyB2']},  // open at lunch: basketball
  street:{things:{'B':'버스 정류장이에요. "다음 버스: 15분 후"'},  // 학교 앞 (src/school.js): the gate opens after school on day one (and after the ending); the 노래방 door is shut on day two
   locks:{nr:()=>f().secret&&'지금은 노래방 문이 닫혀 있어요.'},npcs:['guard','xT1','xT2','xT3','xT4']},
@@ -407,7 +407,7 @@ const ZONES={...SCHOOL({open:['cafe','hall2','music','library','bcast','nr','cla
    's':['신발장이에요. 실내화가 줄줄이 있어요.','신발장 하나에 "남궁찬" 이름표. 냄새가… 좀.'],
    'W':['창밖에 운동장하고 느티나무가 보여요.','창밖에서 새가 짹짹 울어요.'],
    'q':()=>f().done?'"방송실" 팻말이에요. "방송 중" 불이 꺼졌어요.':f().aired?'"방송실" 팻말. "방송 중" 불이 깜빡여요!':'"방송실" 팻말이에요. "방송 중" 불은 꺼져 있어요.'},
-  npcs:['dohyeon','jung','kimT','hanT','principal','daonBoard','chanRumor','kid','xB1','xB2','xW','xN2','xN3','xN4']},
+  npcs:['jung','kimT','hanT','principal','daonBoard','chanRumor','kid','xB1','xB2','xW','xN2','xN3','xN4']},
  cafe:{
   things:{'h':['과자하고 빵이 가득해요.','복숭아 주스가 한 줄 있어요. 분홍색이에요.','바나나우유는 벌써 다 팔렸어요.'],
    'm':'매점 계산대예요. "외상 안 돼요!"라고 쓰여 있어요.',
@@ -428,7 +428,7 @@ const ZONES={...SCHOOL({open:['cafe','hall2','music','library','bcast','nr','cla
    'c':x=>f().rumor&&!f().sawComments?'학생용 컴퓨터예요. 댓글 얘기는 오른쪽 위 책상, 도서부 학생한테 물어봐요.':['학생용 컴퓨터예요. 학교 앱 게시판이 떠 있어요.','컴퓨터 화면에 "게임 금지" 종이가 붙어 있어요.'][x%2],
    'r':'반납 수레예요. 책이 높이 쌓였어요.',
    'p':'화분이에요. 도서부가 매일 물을 줘요.'},
-  npcs:['chanLib','jungLib','lib','reader','xL1','jian','xL2']}}}),
+  npcs:['chanLib','jungLib','lib','reader','xL1','xL2']}}}),
  nr:{name:'코인 노래방',music:'audio/saturday-night.m4a',reg:'COIN KARAOKE',
   legend:{'#':{tile:'nrWall'},'.':{tile:'karaokeFloor',walk:1},'d':{tile:'nrGlass',walk:1},'D':{tile:'nrExitDoor',walk:1},'V':{tile:'screen'},'L':{tile:'nrSpk'},
    'J':{tile:'nrBooth'},'o':{tile:'nrSofa'},'a':{tile:'nrTable'},'m':{tile:'coinBox'},'k':{tile:'nrCounter'}},
@@ -464,10 +464,6 @@ const LOOK={
  clB:{hair:'#1F1A1C',skin:'#F0C9A8',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'long',lashes:1,lips:'#CC7680'},
  clC:{hair:'#5A3E2C',skin:'#E8BE98',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'spiky'},
  clD:{hair:'#2A2024',skin:'#D6A27C',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'bob',lashes:1,lips:'#C46E78'},
- minseo:{hair:'#2B1F1F',skin:'#F0CBAA',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#3F7D5A',style:'long',lashes:1,lips:'#D0808A'},
- yeondu:{hair:'#4A3226',skin:'#E6BC98',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#3F7D5A',style:'bob',lashes:1,lips:'#C97680'},
- dohyeon:{hair:'#18181B',skin:'#CF9A74',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#C9A13A',style:'short'},
- jian:{hair:'#3A2824',skin:'#E8BE9A',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#3F7D5A',style:'long',lashes:1,lips:'#D88A92'},
  principal:{hair:'#3A3436',hairHi:'#A9A5A8',skin:'#E3B898',shirt:'#7A3E54',pants:'#3A3340',style:'bun',coat:1,lashes:1,lips:'#A8505E'},
  player:{hair:'#2B2422',skin:'#E6BE9C',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'short'},
  gureum:{hair:'#3B2E2A',skin:'#E2B794',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#B8433A',style:'bob'},
@@ -500,153 +496,6 @@ const LOOK={
  xT4:{hair:'#262022',skin:'#C99470',shirt:'#2C3E63',pants:'#5A5F6E',belt:'#C9A13A',style:'spiky'},
 };
 const FINALE=()=>[{say:'보내 주신 사연, 잘 읽었어요.'},{say:'그리고… 복숭아 님, 누구세요?',face:'think',set:()=>{f().done=1},finale:1}];
-/* Optional exposure stories: Monday morning, Monday lunch, then Tuesday (including its lunch).
-   The school is empty after school on Monday. Each current-period visit stands alone if earlier ones
-   were missed. Only its last spoken line records the visit; no teaching, items or quest state. */
-const sideTime=()=>f().secret?2:f().rumor?1:0;
-const sideHere=()=>!f().toNR||!!f().secret;
-const SIDE={
- cinema:[
-  [
-   {who:'민서',say:'선배, 소개팅했던 분이랑 오늘 영화관에 가기로 했어요.',look:LOOK.minseo},
-   {who:'민서',say:'생각만 해도 두근두근해요.',look:LOOK.minseo,face:'happy'},
-   {who:'연두',say:'어제 본 영화는 로맨틱하더라. 운명 같은 만남!',look:LOOK.yeondu},
-   {who:'민서',say:'저는 운명보다, 편하게 얘기할 수 있으면 좋겠어요.',look:LOOK.minseo},
-   {who:'나',say:'그게 제일 중요하지.'},
-   {who:'연두',say:'왕자님 같은 사람은 없어도 돼? 인소처럼?',look:LOOK.yeondu},
-   {who:'민서',say:'너 인소 너무 많이 봤다. …저도 가끔씩 읽긴 해요.',look:LOOK.minseo},
-  ],
-  [
-   {who:'민서',say:'선배, 소개팅했던 분이랑 영화 약속이 미뤄졌어요.',look:LOOK.minseo,face:'sad'},
-   {who:'민서',say:'"다름이 아니라, 일이 생겨서요."',look:LOOK.minseo},
-   {who:'민서',say:'이렇게 연락이 왔어요.',look:LOOK.minseo},
-   {who:'연두',say:'엥, 혹시 까인 거야?',look:LOOK.yeondu,face:'surprised'},
-   {who:'민서',say:'아냐. 다음에 보자고 했어.',look:LOOK.minseo},
-   {who:'연두',say:'그렇다고 기다리기만 하지 말고, 보고 싶은 영화도 말해 봐.',look:LOOK.yeondu},
-   {who:'민서',say:'응. 그분도 내 생각을 물어봤어.',look:LOOK.minseo},
-   {who:'민서',say:'그런 성격이 마음에 들어요.',look:LOOK.minseo},
-  ],
-  [
-   {who:'민서',say:'어제는 연두랑 영화를 봤어요.',look:LOOK.minseo,face:'happy'},
-   {who:'연두',say:'기대한 키스신은 없더라.',look:LOOK.yeondu},
-   {who:'민서',say:'비록 영화는 짧았지만 재밌었어요.',look:LOOK.minseo},
-   {who:'연두',say:'넌 영화 고를 때 {눈이 높아|눈이 높다}.',look:LOOK.yeondu},
-   {who:'민서',say:'로맨틱한 환상보다 끝나고 연두랑 수다 떤 게 더 좋았어요.',look:LOOK.minseo},
-   {who:'민서',say:'다음 만남도 천천히 생각할래요.',look:LOOK.minseo},
-  ],
-  [
-   {who:'민서',say:'다음엔 제가 영화를 고를 거예요.',look:LOOK.minseo},
-  ],
- ],
- exam:[
-  [
-   {who:'도현',say:'내일 오후에 모의시험 봐.',look:LOOK.dohyeon},
-   {who:'도현',say:'중학교 땐 내가 수석이었거든.',look:LOOK.dohyeon},
-   {who:'도현',say:'지금은 만년 꼴찌 같아.',look:LOOK.dohyeon,face:'sad'},
-   {who:'나',say:'이번엔 어떻게 준비하세요?'},
-   {who:'도현',say:'지난번에 틀린 문제부터 다시 보고 있어.',look:LOOK.dohyeon},
-   {who:'도현',say:'지난번엔 애초에 답을 한 칸 밀려 썼거든.',look:LOOK.dohyeon,face:'sad'},
-   {who:'도현',say:'모범생인 척해도 이런다니까.',look:LOOK.dohyeon},
-   {who:'나',say:'이번엔 이름이랑 칸부터 보세요.'},
-  ],
-  [
-   {who:'도현',say:'내일 시험 장소를 잘못 봤어.',look:LOOK.dohyeon},
-   {who:'도현',say:'남고로 가야 되는 줄 알았잖아.',look:LOOK.dohyeon},
-   {who:'나',say:'우리 학교에서 보는 거 아니에요?'},
-   {who:'도현',say:'응. 작년 안내문에 낚였어.',look:LOOK.dohyeon},
-   {who:'도현',say:'그러니까 이동할 필요도 없어.',look:LOOK.dohyeon,face:'surprised'},
-   {who:'도현',say:'상황을 알고 나니 좀 낫다.',look:LOOK.dohyeon},
-   {who:'도현',say:'어떻게든 잠은 푹 자려고.',look:LOOK.dohyeon},
-  ],
-  [
-   {who:'도현',say:'오늘 오후 시험은 좀 덜 무서워.',look:LOOK.dohyeon},
-   {who:'도현',say:'친구 둘이 끝나고 같이 공부하재.',look:LOOK.dohyeon},
-   {who:'도현',say:'공동 노트도 만들기로 했어.',look:LOOK.dohyeon},
-   {who:'도현',say:'나 혼자 수석 될 생각만 했는데.',look:LOOK.dohyeon},
-   {who:'도현',say:'이젠 같이 틀린 문제 보려고.',look:LOOK.dohyeon},
-   {who:'나',say:'같이 할 친구가 있어서 다행이에요.'},
-   {who:'도현',say:'응. 모르는 걸 물어볼 수 있잖아.',look:LOOK.dohyeon,face:'happy'},
-  ],
-  [
-   {who:'도현',say:'시험 끝나면 셋이서 모일 거야.',look:LOOK.dohyeon},
-  ],
- ],
- novel:[
-  [
-   {who:'준서',say:'이번엔 소문 말고 소설을 썼어.',look:LOOK.xB1},
-   {who:'준서',say:'내가 쓴 남자 주인공 좀 봐.',look:LOOK.xB1},
-   {who:'준서',say:'낮에는 모범생, 밤에는 날라리!',look:LOOK.xB1,face:'happy'},
-   {who:'건우',say:'또 싸우는 얘기는 아니지?',look:LOOK.xB2},
-   {who:'준서',say:'아니, 떡볶이 가게를 지키는 얘기!',look:LOOK.xB1},
-   {who:'준서',say:'제목은 "떡볶이 왕자님"이야.',look:LOOK.xB1},
-   {who:'나',say:'제목만 들어도 배고프다.'},
-   {who:'건우',say:'박력은 넘치는데, 읽다 보면 배고프겠어.',look:LOOK.xB2},
-   {who:'준서',say:'유명한 작가가 될 것 같아.',look:LOOK.xB1},
-  ],
-  [
-   {who:'준서',say:'주인공 대사를 좀 고쳐야겠어.',look:LOOK.xB1},
-   {who:'준서',say:'"하! 넌 내 떡볶이를 질투하지?"',look:LOOK.xB1},
-   {who:'건우',say:'허, 떡볶이를 두고 저렇게 말해?',look:LOOK.xB2,face:'surprised'},
-   {who:'준서',say:'"시비 걸지 마. 떡볶이 식는다."',look:LOOK.xB1},
-   {who:'나',say:'주인공이 손님한테 시비 거는 거야?'},
-   {who:'건우',say:'왕재수처럼 말하는 주인공이네.',look:LOOK.xB2},
-   {who:'건우',say:'손님이 떡볶이도 안 먹고 도망가겠다.',look:LOOK.xB2},
-   {who:'준서',say:'다시 읽어 보니 좀 재수 없고 멍청해 보이네.',look:LOOK.xB1},
-   {who:'준서',say:'그럼 말 줄이고 떡볶이부터 주자.',look:LOOK.xB1},
-  ],
-  [
-   {who:'준서',say:'어제 소설을 어떻게 마무리했냐면…',look:LOOK.xB1},
-   {who:'준서',say:'주인공이 모두한테 떡볶이를 줘.',look:LOOK.xB1},
-   {who:'건우',say:'착해졌네. 그럼 문제없지.',look:LOOK.xB2},
-   {who:'준서',say:'혼자 떠들어대는 대사는 뺐어.',look:LOOK.xB1},
-   {who:'준서',say:'쓰다 보니 떡볶이 얘기만 남았어.',look:LOOK.xB1},
-   {who:'건우',say:'배고픈 정도가 장난 아니었구나.',look:LOOK.xB2},
-   {who:'준서',say:'결국 요리 소설이 됐어.',look:LOOK.xB1,face:'happy'},
-  ],
-  [
-   {who:'준서',say:'다음엔 순대 얘기도 써 볼까?',look:LOOK.xB1},
-  ],
- ],
- comic:[
-  [
-   {who:'시우',say:'선배, 지안이랑 만화 그려요.',look:LOOK.xL1},
-   {who:'지안',say:'저희가 같이 그린 첫 만화예요.',look:LOOK.jian},
-   {who:'시우',say:'제 아이디로 올려 보려고요.',look:LOOK.xL1},
-   {who:'지안',say:'친구를 집까지 바래다주는 얘기예요.',look:LOOK.jian},
-   {who:'시우',say:'중간에 빵집을 너무 많이 들러요.',look:LOOK.xL1},
-   {who:'지안',say:'빵도 친구니까요!',look:LOOK.jian,face:'happy'},
-   {who:'시우',say:'지안이는 이런 생각을 잘해요.',look:LOOK.xL1},
-  ],
-  [
-   {who:'시우',say:'선배, 큰일 날 뻔했어요.',look:LOOK.xL1,face:'sad'},
-   {who:'시우',say:'저장도 안 하고 창을 닫았어요.',look:LOOK.xL1},
-   {who:'지안',say:'안 날아갔어. 내가 저장했잖아.',look:LOOK.jian},
-   {who:'시우',say:'아, 그림은 남아 있구나. 다 헛짓거리가 된 줄 알았어.',look:LOOK.xL1},
-   {who:'나',say:'실수할 수도 있지. 그림은 있잖아.'},
-   {who:'지안',say:'우리 다시 열어서 보자.',look:LOOK.jian},
-  ],
-  [
-   {who:'지안',say:'어제는 만화 한 장을 올렸어요.',look:LOOK.jian},
-   {who:'시우',say:'저 혼자면 못 올렸을 거예요.',look:LOOK.xL1},
-   {who:'지안',say:'시우가 뜬금없이 웃더라고요.',look:LOOK.jian},
-   {who:'시우',say:'지안이가 빵 목소리를 냈거든요.',look:LOOK.xL1},
-   {who:'지안',say:'내가 읽어 주니까 끄덕거리더라.',look:LOOK.jian},
-   {who:'시우',say:'그냥 듣는 것도 재밌잖아.',look:LOOK.xL1},
-   {who:'지안',say:'다음엔 선배도 같이 봐 주세요.',look:LOOK.jian},
-   {who:'나',say:'좋아. 나도 끼워 줘.'},
-   {who:'시우',say:'저희 셋이요. 목소리는 작게요.',look:LOOK.xL1},
-  ],
-  [
-   {who:'시우',say:'오늘도 지안이랑 한 장 그릴래요.',look:LOOK.xL1},
-  ],
- ],
-};
-function sideScene(key){
- const t=sideTime(),flag='side_'+key+'_'+t,lines=SIDE[key][t];
- if(f()[flag])return t===2?SIDE[key][3]:[lines[lines.length-1]];
- return lines.map((s,i)=>i===lines.length-1?{...s,set:()=>{f()[flag]=1}}:s);
-}
-const sideNew=key=>f()['side_'+key+'_'+sideTime()]?null:'side';  // the grey bubble while this period's visit is unheard
 
 const NPC={
  /* ---------- the 체육관 at lunch and 2학년 3반 before class and at lunch (both days). No badges, no teaching. ---------- */
@@ -678,20 +527,6 @@ const NPC={
    :lunchT()?[{say:'창밖 봐. 1학년들 축구한다.'}]:[{say:'전학생, 이제 학교 익숙해?'}]}},
 
  /* Returning side cast; friends open the same scene and share visit flags. */
- minseo:{name:'민서',zone:'yard',x:7,y:8,dir:'right',sit:1,chair:BENCH_LEGS,look:LOOK.minseo,
-  hide:()=>!sideHere(),status:()=>sideNew('cinema'),
-  script:()=>sideScene('cinema'),talk:()=>SIDE.cinema[3]},
- yeondu:{name:'연두',zone:'yard',x:7,y:9,dir:'right',sit:1,chair:BENCH_LEGS,look:LOOK.yeondu,
-  hide:()=>!sideHere(),status:()=>null,proxy:()=>NPC.minseo,
-  talk:()=>SIDE.cinema[3]},
- dohyeon:{name:'도현',zone:'hall',x:16,y:6,dir:'left',pos:()=>f().rumor&&!f().secret?[14,8]:[16,6],  // lunch: somewhere else in the hall
- look:LOOK.dohyeon,banmal:1,
-  hide:()=>!sideHere(),status:()=>sideNew('exam'),
-  script:()=>sideScene('exam'),talk:()=>SIDE.exam[3]},
- jian:{name:'지안',zone:'library',x:9,y:4,dir:'left',pos:()=>lunchT()?[13,9]:[9,4],  // at lunch by the window, not between the shelves
- look:LOOK.jian,
-  hide:()=>!sideHere(),status:()=>null,proxy:()=>NPC.xL1,
-  talk:()=>SIDE.comic[3]},
 
  /* ---------- 방송실 ---------- */
  gureum:{name:'백구름',zone:'bcast',x:5,y:3,dir:'up',look:LOOK.gureum,banmal:1,badge:['뽑다'],
@@ -1138,14 +973,14 @@ look:LOOK.hanT,
  xM2:{name:'2학년 학생',zone:'cafe',x:22,y:3,dir:'up',look:LOOK.xM2,banmal:1,
   hide:()=>!!f().toNR,
   talk:()=>[{say:'자판기에서 뭐 뽑을까?'},{say:'다 맛있어 보여. 고민된다.',face:'think'}]},
- xB1:{name:'준서',zone:'hall',x:24,y:3,dir:'right',pos:()=>f().secret?[7,6]:f().rumor?[24,6]:[24,3],  // Tuesday: elsewhere in the hall; Monday lunch: beside 찬's spot (22,7), never on it
- look:LOOK.xB1,banmal:1,
-  hide:()=>!sideHere(),status:()=>sideNew('novel'),
-  script:()=>sideScene('novel'),talk:()=>SIDE.novel[3]},
- xB2:{name:'건우',zone:'hall',x:25,y:3,dir:'left',pos:()=>f().secret?[8,6]:f().rumor?[25,6]:[25,3],
- look:LOOK.xB2,banmal:1,
-  hide:()=>!sideHere(),status:()=>null,proxy:()=>NPC.xB1,
-  talk:()=>SIDE.novel[3]},
+ xB1:{name:'2학년 학생',zone:'hall',x:24,y:3,dir:'right',look:LOOK.xB1,banmal:1,
+  hide:()=>!!f().toNR,
+  script:()=>f().rumor?[{say:'방송부 그만둔대. 학교 앱에 올라왔어.'}]:null,  // the writer is anonymous: only 서지민 and you work out it was 찬
+  talk:()=>[{say:'중간고사 언제야? 다음 주?'}]},
+ xB2:{chat:'xB1',name:'2학년 학생',zone:'hall',x:25,y:3,dir:'left',look:LOOK.xB2,banmal:1,
+  hide:()=>!!f().toNR,
+  script:()=>f().rumor?[{say:'앱에 올라온 말은 반만 믿어.'},{say:'또 누가 오해한 거 아니야?',face:'think'}]:null,
+  talk:()=>[{say:'몰라. 알고 싶지 않아.',face:'sad'}]},
  xW:{name:'2학년 학생',zone:'hall',x:13,y:8,dir:'down',look:LOOK.xW,banmal:1,
   hide:()=>!!f().toNR,
   talk:()=>[{say:'오늘 하늘 진짜 맑다.'},{say:'이런 날 수업은 너무 답답해.'}]},
@@ -1168,10 +1003,9 @@ look:LOOK.hanT,
    :f().aired?[{say:'방송 들으면서 공부했어.'},{say:'이상하게 집중이 잘 되더라.'}]:null,
   talk:()=>[{say:'…논술 맞춤법 틀리면 감점이래.'},{say:'고3은 띄어쓰기도 무서워.'}]},
 
- xL1:{name:'시우',zone:'library',x:8,y:4,dir:'right',pos:()=>lunchT()?[12,9]:[8,4],
- look:LOOK.xL1,
-  hide:()=>!sideHere(),status:()=>sideNew('comic'),
-  script:()=>sideScene('comic'),talk:()=>SIDE.comic[3]},
+ xL1:{name:'1학년 학생',zone:'library',x:8,y:4,dir:'up',look:LOOK.xL1,
+  hide:()=>!!f().toNR&&!f().secret,
+  talk:()=>[{say:'독후감 쓸 책 찾는 중이에요.'},{say:'선배, 짧은 책 하나 추천해 주세요.'}]},
  xL2:{name:'2학년 학생',zone:'library',x:4,y:9,dir:'down',look:LOOK.xL2,banmal:1,
   hide:()=>!!f().toNR&&!f().secret,
   script:()=>f().rumor&&!f().secret?[{say:'쉿. 학교 앱 댓글 봤어? 다 방송부 얘기야.'}]:null,
