@@ -54,6 +54,7 @@ canvas{display:block;width:100%;height:auto;image-rendering:pixelated;image-rend
 .face{position:absolute;left:8px;top:8px;width:84px;height:84px;image-rendering:pixelated;image-rendering:crisp-edges;pointer-events:none;background:radial-gradient(circle at 50% 38%,#d3dce6,#8e9cb0);border-radius:6px}
 .dlg.hasface{padding-left:100px;min-height:100px}
 .who{display:flex;gap:8px;align-items:center;justify-content:space-between}
+.who>span:first-child{min-width:0;word-break:keep-all;line-height:1.25}  /* a long name ("2학년 학생", "한복순 교장 선생님") wraps between words, never mid-word, beside the buttons */
 .who .nm{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;color:var(--amber)}
 .who .tag{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;color:var(--glass);background:var(--cyan);border-radius:3px;padding:0 6px;margin-left:6px;white-space:nowrap;display:inline-block}
 .spk{flex:none;width:30px;height:26px;border-radius:5px;border:1px solid var(--glass-edge);background:var(--glass-2);color:var(--glass-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
@@ -194,21 +195,24 @@ body.talkopen .gloss{position:fixed;top:calc(env(safe-area-inset-top,0px) + 14px
 /* a phone on its side: D-pad left, the screen in the middle at full height, A/B right; title, goal and 일지 move to the side columns */
 @media (orientation:landscape) and (max-height:560px){
  .wrap{max-width:none;height:100vh;height:100dvh;padding:4px max(16px,env(safe-area-inset-right)) 4px max(16px,env(safe-area-inset-left));display:grid;
-  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);grid-template-rows:auto auto 1fr auto;grid-template-areas:"id screen log" "quest screen ." "dpad screen ab" "dpad screen start";gap:6px 18px}
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);grid-template-rows:auto auto 1fr auto;grid-template-areas:"id screen log" "quest screen ." "dpad screen ab" ". screen start";gap:6px 18px}
  header,.hbtns,.pad{display:contents}
  .id{grid-area:id;align-self:start}h1{font-size:1.25rem}
  .hbtns>*{grid-area:log;justify-self:end;align-self:start}
- .quest{grid-area:quest;align-self:start;align-items:flex-start;font-size:.74rem}
+ .quest{grid-area:quest;align-self:start;align-items:flex-start;font-size:.74rem;word-break:keep-all}
  .screen{grid-area:screen;height:calc(100dvh - 10px);box-sizing:border-box;align-self:center}
  #cv{width:auto;height:100%;max-width:none}
- .dpad{grid-area:dpad;align-self:end;justify-self:start}
- .ab{grid-area:ab;align-self:end;justify-self:end;margin-bottom:4px}
+ .dpad{grid-row:1/-1;grid-column:1;align-self:center;justify-self:start}  /* like a Game Boy Advance: D-pad and A/B at mid-height either side of the screen, START under A/B */
+ .ab{grid-row:1/-1;grid-column:3;align-self:center;justify-self:end}  /* both span the whole height, so they never stretch the rows (and push the screen down) */
  .startrow{grid-area:start;justify-self:end;padding:0 4px 10px 0}
- /* the screen is narrower than in portrait: a smaller portrait and text, and the speaker's name on one line (it wrapped letter by letter; now word by word) */
+}
+@media (orientation:landscape) and (max-height:300px){
+ /* only with the browser's bars showing (fullscreen gives the screen portrait's width, and portrait's sizes): a smaller portrait and text */
  .face{width:60px;height:60px}.dlg.hasface{padding-left:76px;min-height:72px}
  .txt{font-size:1rem}.choice,.tile{font-size:.92rem}
- .who>span:first-child{min-width:0;word-break:keep-all;line-height:1.25}
+ .dpad{align-self:end;grid-template-columns:repeat(3,46px);grid-template-rows:repeat(3,46px)}.ab{align-self:end;margin-bottom:40px}.ab button{width:54px;height:54px}  /* no room at mid-height under the title: low and a little smaller */
 }
+
 @media (prefers-reduced-motion: reduce){.notechip{animation:none}.more{animation:none}.fade{transition:none}.tile.bad{animation:none}.tile.hint{animation:none}}
 /* the phone screen: an app filling the game view (status bar + app header say "phone"); the D-pad and A/B stay below */
 #phonePanel{position:absolute;inset:0;z-index:4;display:flex;line-height:1.3}
