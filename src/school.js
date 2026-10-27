@@ -383,7 +383,7 @@ const base=()=>({
    'N':{tile:'notice'},'V':{tile:'classWin'},'R':{tile:'classDoor',walk:1},'P':{tile:'speaker'},
    'c':{tile:'cabinet',floor:'checkFloor'},'w':{tile:'water',floor:'checkFloor'},'p':{tile:'plant',floor:'checkFloor'},'k':{tile:'odesk',floor:'checkFloor'},'t':{tile:'trophy',floor:'checkFloor'},'K':{tile:'pdesk',over:1,floor:'checkFloor'},'o':{tile:'sofa',floor:'checkFloor'},'a':{tile:'lowTable',floor:'checkFloor'},
    's':{tile:'shoes'},'E':{tile:'exitDoor',walk:1},'S':{tile:'stairs',walk:1},'W':{tile:'hallWin'},'F':{tile:'cafDoor',walk:1},'Q':{tile:'bcDoor',walk:1},'q':{tile:'bcSign'},'m':{tile:'classSign'},
-   'g':{tile:'officePlate'},'j':{tile:'princPlate'},'u':{tile:'stairSign'}},
+   'g':{tile:'officePlate'},'j':{tile:'princPlate'},'u':{tile:'stairSign'},'b':{tile:'sayeonSlot'}},
   map:[
 "##################NN#VRm#P##",
 "#ccw.pcc#tt...tt#,,,,,,,,,,#",
@@ -394,10 +394,10 @@ const base=()=>({
 "#,,,,,,,,,,,,,,,,,,,,,,,,,,#",
 "#,,,,,,,,,,,,,,,,,,,,,,,,,,#",
 "#,,,,,,,,,,,,,,,,,,,,,,,,,,#",
-"#ssssEE#SSSuWWW#FF#WWWWqQQ##"],
+"#ssssEE#SSSuWWW#FF#WWWWqQQb#"],
   rooms:[[1,1,7,4,'교무실'],[9,1,15,4,'교장실'],[17,1,26,4,'복도 · 2학년 3반 앞'],[1,5,26,8,'1층 복도'],[15,7,18,8,'1층 복도 · 급식실 앞'],[22,6,26,8,'복도 끝 · 방송실 앞']],
   warps:{'5,9':{to:'yard',x:11,y:4,dir:'down'},'6,9':{to:'yard',x:12,y:4,dir:'down'},'22,0':{to:'class',x:18,y:11,dir:'up'},'16,9':{to:'cafe',x:10,y:1,dir:'down'},'17,9':{to:'cafe',x:11,y:1,dir:'down'},'24,9':{to:'bcast',x:7,y:1,dir:'down'},'25,9':{to:'bcast',x:8,y:1,dir:'down'},'8,9':{to:'hall2',x:8,y:8,dir:'up'},'9,9':{to:'hall2',x:9,y:8,dir:'up'},'10,9':{to:'hall2',x:10,y:8,dir:'up'}},
-  things:{'#':(x,y)=>y===0&&x<16?['하얀 벽이에요. 아래쪽은 초록색이에요.','깨끗한 벽이에요. 먼지 하나 없어요.']  // inside the 교무실 and the 교장실: no graffiti there
+  things:{'b':'벽에 작은 구멍이 있어요. "방송부 사연함". 편지를 넣는 곳이에요.','#':(x,y)=>y===0&&x<16?['하얀 벽이에요. 아래쪽은 초록색이에요.','깨끗한 벽이에요. 먼지 하나 없어요.']  // inside the 교무실 and the 교장실: no graffiti there
     :['하얀 벽이에요. 아래쪽은 초록색이에요.','벽에 "복도에서 뛰지 마세요" 종이가 있어요.','누가 벽에 작게 낙서했어요.'],
    'N':['게시판: "축제 다음 달! 반마다 하나씩 준비해요."','게시판: "중간고사 등수는 교무실 앞에."','게시판 구석에 "방송부 부원 모집" 종이가 찢어져 있어요.'],
    'V':['창문으로 2학년 3반 교실이 보여요.','교실 안에서 웃음소리가 들려요.'],
@@ -502,7 +502,7 @@ const base=()=>({
   legend:{'#':{tile:'wall'},'.':{tile:'oldFloor',walk:1},'D':{tile:'bcDoor',walk:1},'r':{tile:'rack'},'A':{tile:'onair'},'O':{tile:'poster'},'W':{tile:'streetWin'},
    'M':{tile:'mixer'},'i':{tile:'micStand',over:1},'s':{tile:'oldSofa'},'c':{tile:'tapeCart'},'x':{tile:'boxes'},'T':{tile:'notebook',term:1},'b':{tile:'sayeon'}},
   map:[
-"##rrrrADD#OO####",
+"##rrrrADD#OO#b##",
 "#..............W",
 "#..MMMM....i...W",
 "#..............W",
@@ -524,7 +524,8 @@ const base=()=>({
    'i':'마이크예요. "아, 아…"',
    's':['낡은 소파예요. 앉으면 먼지가 펑!','소파 밑에 과자 봉지가 있어요.'],
    'c':'옛날 녹음기예요. 테이프가 걸려 있어요.',
-   'x':['상자에 "축제 1998"이라고 쓰여 있어요.','상자 안에 전선이 가득해요.','상자가 무거워요. 안 움직여요.']}},
+   'x':['상자에 "축제 1998"이라고 쓰여 있어요.','상자 안에 전선이 가득해요.','상자가 무거워요. 안 움직여요.'],
+   'b':'방송부 사연함이에요. 복도 벽 구멍으로 편지가 떨어져요.'}},
 
  music:{name:'음악실',reg:'MUSIC ROOM',floor:'wood',
   legend:{'#':{tile:'wall'},'.':{tile:'wood',walk:1},'D':{tile:'musicDoor',walk:1},'M':{tile:'staffBoard'},'J':{tile:'portraits'},'W':{tile:'sideWin'},
@@ -660,7 +661,7 @@ const CLOSED={hall:'학교 건물이에요.',hall2:'2층 계단이에요. 지금
  library:'도서관이에요. 문이 잠겨 있어요.',yard:'운동장이에요.',
  street:'학교 앞이에요.',bunsik:'분식집이에요. 지금은 들어갈 일이 없어요.',nr:'코인 노래방이에요. 지금은 들어갈 일이 없어요.',hagwon:'학원 건물이에요. 지금은 들어갈 일이 없어요.'};
 /* spec: {open:[zone ids the 교시 uses; yard and hall are always open], gate:{to,x,y,dir,lock} (the 정문 leads out),
-   zones:{id:{things,spots,npcs,locks:{toZone:fn},legend,paint:[[x,y,'chars']],rooms,dark,slow}}} */
+   zones:{id:{things,spots,npcs,locks:{toZone:fn},legend,paint:[[x,y,'chars']],notYet:['x,y'],rooms,dark,slow}}} */
 globalThis.SCHOOL=function(spec){
  spec=spec||{};const open=new Set(['yard','hall',...(spec.open||[])]),B=base(),out={};
  for(const id in B){
@@ -668,6 +669,7 @@ globalThis.SCHOOL=function(spec){
   for(const w of Object.values(z.warps)){const lk=o.locks&&o.locks[w.to];if(lk)w.lock=lk;else if(!open.has(w.to)&&!w.lock)w.lock=()=>CLOSED[w.to]}
   if(id==='yard'&&spec.gate){const g=spec.gate;z.legend.G={tile:'gate',walk:1};delete z.things.G;[11,12].forEach((x,i)=>{z.warps[x+',13']={to:g.to,x:g.x+i,y:g.y,dir:g.dir||'down',lock:g.lock}})}
   if(o.legend)Object.assign(z.legend,o.legend);
+  if(o.notYet)z.notYet=o.notYet;  // squares a later 교시 fills that this one deliberately leaves out (validate.mjs's fixture check)
   if(o.paint){z.painted=[];for(const [x,y,str] of o.paint){const row=z.map[y];z.map[y]=row.slice(0,x)+str+row.slice(x+str.length);for(let i=0;i<str.length;i++)z.painted.push((x+i)+','+y)}}
   for(const c in z.things)if(!z.map.some(row=>row.includes(c)))delete z.things[c];  /* painted over */
   if(o.rooms)z.rooms=o.rooms;

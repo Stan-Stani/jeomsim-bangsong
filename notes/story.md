@@ -14,6 +14,11 @@ and a notice from the 교장: five members by the 축제 and a broadcast on fest
 심화반 classroom. Teachers now make announcements from the 교무실 PA, so the room looks unneeded; the 학부모회 wants it.
 
 Running goal (4 chapters): rebuild the lunchtime broadcast and go live at the 축제.
+Calendar (owner, 2026-10-26): the 축제 is a month away on day one, so the club has time to grow close and the school time to come
+to love the broadcasts. 1교시 = day one; 2교시 = the next two days (the first lunch broadcast); then three weeks pass over black
+(songs every lunch, more students listening); 3교시 = Monday and Tuesday of festival week; 4교시 = three days before, through the
+Saturday festival. Lines before 3교시 say the festival is 다음 달; from 3교시 on it's 이번 주 토요일. Nothing in 3교시 calls the first
+broadcast 지난주 (it was three weeks ago).
 Running light mystery: **who is 복숭아?** Notes signed 복숭아 keep turning up at the right moment, with small clues:
 an old 1994 방송부 cassette (2교시), a peach 향기 and pre-1988 spelling "했읍니다" (3교시), a 1994 yearbook photo (4교시).
 Red herring: 매점 이모 sells 복숭아 주스, and 찬 is sure it's her.

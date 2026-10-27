@@ -336,7 +336,7 @@ const outLock=()=>!f().afterSchool?'아직 하교 시간이 아니에요. 밖에
 /* 느티고 (src/school.js): the 방송실, the 2층 음악실 and the 체육관 across the 운동장 are open; the 정문 leads to 학교 앞. */
 const ZONES={...SCHOOL({open:['hall2','music','gym','bcast','class','bunsik','cafe'],gate:{to:'street',x:10,y:8,dir:'up',lock:outLock},zones:{
  street:{npcs:['xS1','xS2','xS3','xS4']},  // 학교 앞 (src/school.js): the 분식집 door is open
- bcast:{paint:[[13,0,'b'],[7,2,'T']],greet:()=>f().nextDay&&!f().ready&&'gureumL',  // day two, lunch: walking in starts the crowded run-through
+ bcast:{paint:[[7,2,'T']],greet:()=>f().nextDay&&!f().ready&&'gureumL',  // day two, lunch: walking in starts the crowded run-through
   things:{'#':['벽에 먼지가 많아요.','벽에 오래된 사진 자국이 있어요.','구름이 벽을 조금 닦았어요. 거기만 하얘요.'],
    'r':['카세트테이프가 가득해요. 다 옛날 노래예요.','테이프 이름이 다 손글씨예요.','테이프 하나에 "점심 방송 1"이라고 쓰여 있어요.'],
    'A':()=>f().done?'"방송 중" 램프. 아직 따뜻해요.':f().ready?'"방송 중" 램프. 곧 켜질 거예요.':'"방송 중" 램프예요. 불이 꺼졌어요.',
@@ -351,11 +351,11 @@ const ZONES={...SCHOOL({open:['hall2','music','gym','bcast','class','bunsik','ca
    'x':['상자에 "축제 1998"이라고 쓰여 있어요.','상자 안에 전선이 가득해요.','상자가 무거워요. 안 움직여요.']},
   npcs:['gureum','gureumL','hariMic','daonL','chanL']},
  hall:{locks:{class:()=>!f().nextDay&&'2학년 3반이에요. 지금은 들어갈 일이 없어요.',cafe:()=>f().afterSchool&&!f().nextDay&&'급식실이에요. 점심이 끝나서 문을 닫았어요.'},  // your classroom opens on day two: the lunch bell leaves you at your desk
-  legend:{'b':{tile:'sayeonSlot'}},paint:[[26,9,'b']],  // the 사연함's slot, right of the 방송실 door (the box is behind the wall)
+    // the 사연함's slot, right of the 방송실 door (the box is behind the wall)
   things:{'b':()=>f().done?'방송실 사연함 구멍이에요. 누가 여기로 카세트를 넣었을까요?':'방송실 사연함 구멍이에요. "방송부에 사연을 보내 주세요!"',
    '#':(x,y)=>y===0&&x<16?['하얀 벽이에요. 아래쪽은 초록색이에요.','깨끗한 벽이에요. 먼지 하나 없어요.']  // inside the 교무실 and the 교장실: no graffiti there
     :['하얀 벽이에요. 아래쪽은 초록색이에요.','벽에 "복도에서 뛰지 마세요" 종이가 있어요.','누가 벽에 작게 음표를 그렸어요.'],
-   'N':['게시판: "축제는 다음 주 토요일! 반마다 하나씩 준비해요."','게시판: "중간고사 등수는 교무실 앞에."','게시판: "심화반 신청 · 교무실"'],
+   'N':['게시판: "축제는 다음 달! 반마다 하나씩 준비해요."','게시판: "중간고사 등수는 교무실 앞에."','게시판: "심화반 신청 · 교무실"'],
    'V':()=>f().afterSchool&&!f().nextDay?'2학년 3반 교실이에요. 다들 가서 텅 비었어요.':'교실 안에서 웃음소리가 들려요.',
    'P':()=>f().done?'스피커예요. 노래가 아직 귀에 남아 있어요.':f().ready?'스피커예요. 곧 소리가 날 거예요.':'낡은 스피커예요. 아무 소리도 안 나요.',
    'c':['서류가 가득한 캐비닛이에요.','서랍에 "벌점 기록"이라고 쓰여 있어요. 무서워요.'],

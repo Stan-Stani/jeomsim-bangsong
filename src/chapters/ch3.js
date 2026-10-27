@@ -378,10 +378,10 @@ const ZONES={...SCHOOL({open:['cafe','hall2','music','library','bcast','nr','cla
  street:{things:{'B':'버스 정류장이에요. "다음 버스: 15분 후"'},  // 학교 앞 (src/school.js): the gate opens after school on day one (and after the ending); the 노래방 door is shut on day two
   locks:{nr:()=>f().secret&&'지금은 노래방 문이 닫혀 있어요.'},npcs:['guard','xT1','xT2','xT3','xT4']},
  class:{things:{'J':'시간표예요. 오늘 오후는 국어하고 영어예요.'},npcs:['clA','clB','clC','clD']},  // classmates before class and at lunch; after school the bell leaves you here
- bcast:{paint:[[13,0,'b'],[7,2,'T']],  // the 방송실's 사연함 (as in 2교시 and 4교시): the poster points to its slot by the door
-  things:{'#':['벽에 하리 첫 방송 사진이 붙어 있어요.','벽에 "방송 중 조용히!" 종이가 있어요.','먼지를 닦아서 벽이 깨끗해졌어요.'],
+ bcast:{paint:[[7,2,'T'],[6,7,'..'],[6,8,'.'],[2,9,'.'],[13,8,'x'],[14,9,'x']],  // the 방송실's 사연함 (as in 2교시 and 4교시): the poster points to its slot by the door; cleaned up, the boxes stacked in the back corner
+  things:{'x':['구석에 상자를 쌓았어요. 다 같이 옮겼어요.','상자에 "축제 1998"이라고 쓰여 있어요.','상자 안에 전선이 가득해요.'],'#':['벽에 하리 첫 방송 사진이 붙어 있어요.','벽에 "방송 중 조용히!" 종이가 있어요.','먼지를 닦아서 벽이 깨끗해졌어요.'],
    'b':()=>f().letter?'사연함이에요. 오늘도 편지가 오면 좋겠어요.':f().secret?'사연함 안에 편지가 있어요! 하리가 열쇠를 가지고 있어요.'
-    :['방송실 사연함이에요. 복도 벽 구멍으로 편지가 떨어져요.','지난주에 여기서 1994년 카세트가 나왔어요.'],
+    :['방송실 사연함이에요. 복도 벽 구멍으로 편지가 떨어져요.','하리 첫 방송 날, 여기서 1994년 카세트가 나왔어요.'],
    'r':['카세트테이프가 가득해요. 다 옛날 노래예요.','테이프 이름이 다 손글씨예요.','빈자리 하나. "1994 방송부" 테이프 자리예요.'],
    'A':()=>f().done?'"방송 중" 램프가 꺼졌어요. 기계도 멈췄어요.':f().aired?'"방송 중" 램프에 빨간 불이 들어왔어요!':'"방송 중" 램프예요. 지금은 꺼져 있어요.',
    'O':['빛바랜 포스터예요. 마이크 그림이 있어요.','포스터 구석에 작은 복숭아 그림이 있어요.'],
@@ -394,7 +394,7 @@ const ZONES={...SCHOOL({open:['cafe','hall2','music','library','bcast','nr','cla
    'x':['상자에 "축제 1998"이라고 쓰여 있어요.','상자 안에 전선이 가득해요.','상자 위에 빈 바나나우유 통이 있어요.']},
   npcs:['gureum','gureumFin','daonB','daonEnd','hariFin','chanEnd','hariBox','chanBox']},
  hall:{locks:{class:()=>f().toNR&&!f().secret&&'2학년 3반 교실이에요. 다들 집에 갔어요.'},
-  legend:{'b':{tile:'sayeonSlot'}},paint:[[26,9,'b']],  // the 방송실 사연함's slot, right of the 방송실 door (as in 2교시 and 4교시)
+    // the 방송실 사연함's slot, right of the 방송실 door (as in 2교시 and 4교시)
   things:{'b':'방송실 사연함 구멍이에요. "방송부에 사연을 보내 주세요!"','#':(x,y)=>y===0&&x<16?['하얀 벽이에요. 아래쪽은 초록색이에요.','깨끗한 벽이에요. 먼지 하나 없어요.']  // inside the 교무실 and the 교장실: no graffiti there
     :['하얀 벽이에요. 아래쪽은 초록색이에요.','벽에 "복도에서 뛰지 마세요" 종이가 있어요.','누가 벽에 작게 "찬찬찬"이라고 낙서했어요.'],
    'N':x=>x===19&&f().posted?'"여러분의 사연을 보내 주세요! —방송부"':['게시판: "축제는 이번 주 토요일!"','게시판: "도서관 독후감 대회. 다음 주 제출."'][x%2],
@@ -542,7 +542,7 @@ const NPC={
    return null},
   talk:()=>[
    {say:'아, 왔어? 좋은 아침!',face:'happy'},
-   {say:'지난주 하리 노래, 반응이 엄청 좋았어.'},
+   {say:'요즘 점심 방송, 반응이 엄청 좋아.'},
    {say:'그래서 새 코너를 생각했어. {사연|사연} 코너!'},
    {say:'다들 사연을 써서 상자에 넣어.'},
    {say:'매일 하나를 골라서 방송에서 읽어.'},
@@ -637,7 +637,7 @@ const NPC={
  hanT:{name:'한 선생님',zone:'hall',x:2,y:2,dir:'down',  // at her desk, off the aisle (at 7,3 the desks and 정 선생님 sealed her in; at 3,3 김 선생님's ? drew over her)
 look:LOOK.hanT,
   script:()=>react('hanT',[{say:'사연 정말 좋았어요. 그런데 교장 선생님 방송은…',face:'sad'},{say:'방송실 기계에서 연기도 났다면서요? 큰일이네요.'}]),
-  talk:()=>[{say:'방송부? 지난주 점심 방송 잘 들었어요.',face:'happy'},{say:'교무실에서는 조용히 해 주세요.'}]},
+  talk:()=>[{say:'방송부? 요즘 점심 방송 잘 듣고 있어요.',face:'happy'},{say:'교무실에서는 조용히 해 주세요.'}]},
 
  /* the principal at her desk in the 교장실 (as in 1교시 and 4교시): formal and a little stern; her announcement after the
     사연 comes from the 교무실 mic; no hint of 복숭아 before 4교시 */
@@ -703,7 +703,7 @@ look:LOOK.hanT,
   script:()=>{const F=f();
    if(has('복숭아'))return null;
    if(F.oldSpelling)return null;
-   if(F.rumor&&!F.secret)return [{say:'방송부 끝났대요? 이모는 안 믿어요.'},{say:'구름 학생, 지난주 방송 잘했잖아요.'}];
+   if(F.rumor&&!F.secret)return [{say:'방송부 끝났대요? 이모는 안 믿어요.'},{say:'구름 학생, 요즘 방송 잘하잖아요.'}];
    if(F.secret)return [{say:'아침은 먹었어요? 빵이 아직 따뜻해요.'},{say:'요즘은 복숭아 주스가 제일 인기예요.'}];
    return [{say:'학생, 어서 와요. 오늘 뭐 줄까요?'},{say:'요즘은 복숭아 주스가 제일 인기예요.'}]},
   talk:()=>[
@@ -1028,7 +1028,7 @@ look:LOOK.xT1,
 const FOLLOW={name:'남궁찬',look:LOOK.chan,when:()=>!!f().letter&&!f().juice,
  talk:()=>f().oldSpelling?[{say:'매점! 급식실 안에! 범인은 이모야!',face:'happy'}]:[{say:'복숭아… 복숭아… 누굴까?',face:'think'},{say:'일단 정 선생님한테 가자.'}]};
 
-const INTRO=[{who:'…',say:'하리의 첫 방송 뒤, 방송실이 밝아졌어요.',black:1},{who:'…',say:'월요일 아침. 구름이 벌써 기계 앞에 있어요.',black:0,cam:[5,3]}];  // over black, then the room as it says who's there
+const INTRO=[{who:'…',say:'하리의 첫 방송 뒤, 3주가 지났어요.',black:1},{who:'…',say:'방송부는 점심마다 노래를 틀었어요.',black:1},{who:'…',say:'듣는 학생이 조금씩 늘었어요.',black:1},{who:'…',say:'방송실도 많이 밝아졌어요.',black:1},{who:'…',say:'축제가 있는 주, 월요일 아침. 구름이 벌써 기계 앞에 있어요.',black:0,cam:[5,3]}];  // over black, then the room as it says who's there
 const DONE=[{expand:()=>wrapUp()},{say:'방송이 끝나자 교무실 마이크로 교장 선생님 방송이 나와요.',set:()=>{f().quiet=1}},'"학부모회에서 방송실을 심화반 교실로 쓰자고 했습니다."','"축제 날 방송, 학부모님들과 {운영위원회|운영위원회}도 함께 듣습니다."','"방송실 일은 축제가 끝나고 회의에서 정합니다."',{say:'그 순간, 방송 기계에서 펑! 연기가 나요.',set:()=>{f().smoke=1}},'다섯 명이 아무 말도 못 하고 서로 쳐다봐요.',{say:'3교시 끝!',set:()=>{f().ended=1}},'방송실 복습 노트북에서 단어를 다시 볼 수 있어요.'];
 
 /* what the 운동장 clock shows: Monday morning, lunch (from the rumor), 방과 후, the next morning, its lunch (the 사연 코너) */

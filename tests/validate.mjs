@@ -80,6 +80,13 @@ for(const CH of ctx.CHAPTERS){
  const src=CH.make.toString();for(const m of src.matchAll(/\{([^|{}'"`]+)\|([^}'"`]+)\}/g))if(/[가-힣]/.test(m[1])&&!C.DICT[m[2]])E('gloss key missing: '+m[2]);
  if(typeof C.questText()!=='string')E('questText must return a string');
 }
+// a fixture belongs to the school: something every later 교시 paints the same way into a room, but an earlier 교시 lacks (the 방송실's
+// 사연함 was missing from 1교시 that way), goes into src/school.js. Changes over time (boxes moved after a clean-up) start in a later
+// 교시 and stay, so they're not flagged: only a paint that all 교시 after the first have in common.
+{const P=ctx.CHAPTERS.map(CH=>{ctx.state={f:{},items:[],badges:[],lv:{}};const C=CH.make();const out={};
+  for(const [z,Z] of Object.entries(C.ZONES))for(const k of Z.painted||[]){const [x,y]=k.split(',').map(Number);(out[z]||(out[z]={}))[k]=Z.map[y][x]}const ny={};for(const [z,Z] of Object.entries(C.ZONES))ny[z]=new Set(Z.notYet||[]);return {id:CH.id,p:out,ny}});
+ if(P.length>2){const later=P.slice(1);for(const z of Object.keys(later[0].p))for(const [k,c] of Object.entries(later[0].p[z]))
+  if(later.every(q=>q.p[z]&&q.p[z][k]===c)&&!(P[0].p[z]&&P[0].p[z][k]===c)&&!P[0].ny[z]?.has(k))errs.push(`${P[0].id}: ${z} ${k} lacks "${c}", which every later 교시 paints there: a fixture belongs in src/school.js`)}}
 // the engine is generated from the shared walk-engine: the copy here must match it
 {const shared=new URL('../../walk-engine/engine.js',import.meta.url);if(fs.existsSync(shared)){const mine=fs.readFileSync(new URL('../src/engine.js',import.meta.url),'utf8').replace(/^\/\*[^\n]*\*\/\n/,'');
  if(mine!==fs.readFileSync(shared,'utf8')){errs.push('src/engine.js differs from walk-engine/engine.js — edit walk-engine and run its sync.sh')}}}
