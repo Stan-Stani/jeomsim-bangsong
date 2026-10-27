@@ -9,7 +9,7 @@
  {talk:'jung',wrong:true,shotBefore:'03-teachers-office',shotChoice:'03a-teacher-question',shotTap:'03b-tap-word'},
  {talk:'engT'},  // after 정 선생님: the 영어 선생님 has the desk until lunch (the timetable)
  {talk:'principal',shotBefore:'04-principal-office'},
- {talk:'daon',wrong:true,shotBefore:'05-classroom-daon',shotSay:{text:'넷째 줄',name:'05-daon-last-line'}},
+ {greet:'daon',wrong:true,shotBefore:'05-classroom-daon',shotSay:{text:'넷째 줄',name:'05-daon-last-line'}},  // walking into the classroom, 다온 stops you
  {check:()=>state.f.paidFine,msg:'fine paid'},
  {check:()=>!!C.NPC.daonSeat.walk,msg:'다온 is walking back to her desk'},
  {pause:0,shot:'05a-daon-walks'},

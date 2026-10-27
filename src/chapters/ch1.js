@@ -339,7 +339,7 @@ const ZONES=SCHOOL({open:['class','cafe','bcast'],zones:{
    'm':'"2학년 3반" 팻말이에요. 문 옆에 있어요.',
    'q':()=>f().done?'"방송실" 팻말. "방송 중" 불이 깜빡여요!':'"방송실" 팻말이에요. "방송 중" 불은 꺼져 있어요.'},
   npcs:['jung','mathT','musicT','engT','sciT','principal','gureumH','chanH','mate2H','xHall1','xHall2','xNotice','xWin','xSenior','xBye','xClean']},
- class:{
+ class:{greet:()=>f().paidFine?null:'daon',  // 다온 stops you at the door: the late new student, the 벌금 rule
   things:{'#':['교실 벽이에요. 반 사진이 붙어 있어요.','벽에 "2학년 3반"이라고 쓰여 있어요.'],
    'B':x=>x===4?'칠판에 오늘 날짜가 있어요.':x===12?'칠판 구석: "주번: 남궁찬"':['칠판에 "전학생 환영!"이라고 쓰여 있어요.','분필 글씨가 반쯤 지워졌어요.','칠판에 수학 문제가 남아 있어요. 어려워요.'][x%3],
    'J':'시간표예요. 오늘 점심 다음은 수학이에요.',
@@ -779,10 +779,10 @@ const NPC={
  xSoc2:{name:'3학년 선배',zone:'yard',x:21,y:7,dir:'left',look:LOOK.xSoc2,banmal:1,
   hide:()=>!lunchT(),
   talk:()=>[{say:'패스! …아, 하필 골대 맞았어!'},{say:'2학년이야? 축구 좋아해?'}]},
- xBench1:{name:'1학년 학생',zone:'yard',x:8,y:10,dir:'right',look:LOOK.xBench1,
+ xBench1:{name:'1학년 학생',zone:'yard',x:7,y:8,dir:'right',look:LOOK.xBench1,sit:1,chair:BENCH_LEGS,  // sideways on the yard bench, legs over its edge
   hide:()=>!lunchT(),
   talk:()=>[{say:'선배, 안녕하세요!',face:'happy'},{say:'느티나무 밑이 제일 시원해요.'}]},
- xBench2:{chat:'xBench1',name:'1학년 학생',zone:'yard',x:9,y:10,dir:'left',look:LOOK.xBench2,
+ xBench2:{chat:'xBench1',name:'1학년 학생',zone:'yard',x:7,y:9,dir:'right',look:LOOK.xBench2,sit:1,chair:BENCH_LEGS,
   hide:()=>!lunchT(),
   talk:()=>[{say:'우리 둘이 동갑이에요. 당연하죠? 하하.'},{say:'밥 먹고 매일 여기서 얘기해요.'}]},
  xHome1:{name:'2학년 학생',zone:'yard',x:8,y:11,dir:'right',look:LOOK.xHome1,banmal:1,
