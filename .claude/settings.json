@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/../walk-engine/tools/check-hook.sh",
+            "timeout": 180,
+            "statusMessage": "Building and validating the game…"
+          }
+        ]
+      }
+    ]
+  }
+}

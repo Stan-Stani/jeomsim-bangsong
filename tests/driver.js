@@ -7,7 +7,7 @@ window.__play=async function(steps){
  addEventListener('error',e=>ERR.push('onerror: '+e.message+' @'+e.lineno));
  const realNow=Date.now;let skew=0;Date.now=()=>realNow()+skew;
  const wait=ms=>new Promise(r=>setTimeout(r,ms));
- const until=async(fn,ms=1500)=>{const t=performance.now();while(!fn()){if(performance.now()-t>ms)return false;await wait(15)}return true};
+ const until=async(fn,ms=1500)=>{const now=window.__realNow||(()=>performance.now()),t=now();while(!fn()){if(now()-t>ms)return false;await wait(15)}return true};  // time limits on the real clock (--fast warps the page's): a busy machine's slow frames aren't failures
  const key=async(k,hold=40)=>{dispatchEvent(new KeyboardEvent('keydown',{key:k,bubbles:true}));await wait(hold);dispatchEvent(new KeyboardEvent('keyup',{key:k,bubbles:true}));await wait(25)};
  const ARROW={up:'ArrowUp',down:'ArrowDown',left:'ArrowLeft',right:'ArrowRight'};
  const shot=async name=>{window.__shotDone=false;console.log('SHOT:'+name);await until(()=>window.__shotDone,8000)};
