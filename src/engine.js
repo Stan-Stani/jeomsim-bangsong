@@ -1,4 +1,4 @@
-/* GENERATED from walk-engine/engine.js (9f5c226) — do not edit here; edit walk-engine and run its sync.sh. */
+/* GENERATED from walk-engine/engine.js (68ae809) — do not edit here; edit walk-engine and run its sync.sh. */
 /* =====================================================================
    Engine: tiles, movement, zones, dialogue, spaced review, speech, saving.
    ===================================================================== */
@@ -54,7 +54,12 @@ const carryWords=()=>[...carrySet].filter(w=>!C.WORDS.includes(w)&&(carryBank()[
 const dueWords=()=>[...C.WORDS,...(SRS().shared?carryWords():[])].filter(isDue);
 const carryDue=()=>SRS().shared?carryWords().filter(isDue).sort((a,b)=>lv(a).b-lv(b).b):[];  // other chapters' words that are due, weakest first
 const freshQ=(w,qs)=>{const last=(state.lastAsk||{})[w],o=qs.length>1?qs.filter(q=>q.ask!==last):qs,q=o[Math.random()*o.length|0];if(q)(state.lastAsk=state.lastAsk||{})[w]=q.ask;return q};  // a word's example sentence: not the one it was asked with last time, when it has another
-const carryQ=w=>freshQ(w,carryBank()[w]||[]);
+/* goal:'R' on a word's DICT entry = recognition only: review asks it only as a meaning question (kind:'meaning'), never a blank to
+   fill or by sound. reg:1 on a question = a register choice (which reply fits this listener): it never comes back in review and
+   never counts as remembering the word (its result goes to state.reg). */
+const isR=w=>((C.DICT||{})[w]||carryDict(w)||{}).goal==='R';
+const reviewable=q=>!!q&&!q.reg&&(!isR(q.w)||q.kind==='meaning');
+const carryQ=w=>freshQ(w,(carryBank()[w]||[]).filter(reviewable));
 /* ---------- practice while time passes (opt-in content) ----------
    classTime(CLASS,parts): a stretch of time passing (classes between the bells, a shift, a journey). Each part narrates a beat, then
    someone says one of its lines with a word you've learned, graded like a review: a due word of this chapter (weakest first), else a
@@ -66,7 +71,7 @@ const carryQ=w=>freshQ(w,carryBank()[w]||[]);
 function classTime(CLASS,parts){
  const out=[],used=new Set();let said=0;
  for(const k of parts){const c=CLASS[k];if(!c)continue;out.push({who:'…',say:c.say});
-  const ok=c.lines.filter(l=>has(l.w)&&!used.has(l.w)),due=ok.filter(l=>isDue(l.w));
+  const ok=c.lines.filter(l=>has(l.w)&&!used.has(l.w)&&reviewable(l)),due=ok.filter(l=>isDue(l.w));
   if(due.length){const lo=Math.min(...due.map(l=>lv(l.w).b)),p=due.filter(l=>lv(l.w).b===lo),l=p[Math.random()*p.length|0];used.add(l.w);out.push({...l,review:true});continue}
   const cw=carryDue().find(w=>!used.has(w)),q=cw&&carryQ(cw);
   if(q){used.add(cw);if(!said)out.push({who:'…',say:TERM.carry});said=1;out.push({...q,who:'…',review:true});continue}  // TERM.carry once per stretch, not before every earlier word
@@ -74,8 +79,8 @@ function classTime(CLASS,parts){
  return out;
 }
 function wrapUp(){
- const bank=w=>(C.BANK||[]).filter(q=>q.w===w&&!q.scene&&!q.gram);
- const said=w=>(C.REVIEW||[]).filter(r=>r.w===w&&r.who!=='나'),pick=a=>a[Math.random()*a.length|0];
+ const bank=w=>(C.BANK||[]).filter(q=>q.w===w&&!q.scene&&!q.gram&&reviewable(q));
+ const said=w=>(C.REVIEW||[]).filter(r=>r.w===w&&r.who!=='나'&&reviewable(r)),pick=a=>a[Math.random()*a.length|0];
  const nameOf=r=>{const b=[].concat(r.by)[0];return (C.NPC[b]&&C.NPC[b].name)||b};
  const metBy=r=>[].concat(r.by).some(b=>metIds().includes(b));
  const now_=r=>(!r.when||r.when())&&[].concat(r.by).every(b=>{const n=C.NPC[b];return !n||!n.hide||!n.hide()});  // its moment holds and its speaker is still here (no one speaks after they've died or gone, no "look out!" after the danger)
@@ -539,7 +544,7 @@ const sitting=n=>typeof n.sit==='function'?n.sit():!!n.sit;  // NPC sit: true | 
 function sitDown(o){
  const n=o.npc?C.NPC[o.npc]:null,[x,y]=n?npcPos(n):[o.x,o.y];
  const go=()=>Object.assign(player,{x,y,dir:o.dir||(n&&(n.home||n.dir))||player.dir,moving:false,t:0,sit:{npc:n,chair:o.chair||(n&&n.look)||null}});
- if(Math.abs(player.x-x)+Math.abs(player.y-y)>1){$('fade').classList.add('on');setTimeout(()=>{go();$('fade').classList.remove('on')},230)}  // from further off: a cut, not a jump
+ if(Math.abs(player.x-x)+Math.abs(player.y-y)>1){$('fade').classList.add('on');setTimeout(()=>{go();if(!(dlg&&dlg.black))$('fade').classList.remove('on')},230)}  // from further off: a cut, not a jump (inside a black time cut the screen stays black)
  else go();
 }
 const live=()=>NPCS.filter(n=>!n.hide||!n.hide());
@@ -758,8 +763,127 @@ function openPhone(p){
   +`<div class="pcount txt">${glossHTML('댓글 '+p.count+'개')}</div><div class="plist">${c}${more>0?`<div class="pmore txt">${glossHTML('댓글 '+more+'개 더 보기')}</div>`:''}</div>`;
  $('phonePanel').hidden=false;phoneOpen=true;
 }
-function closePhone(){if(!phoneOpen)return;phoneOpen=false;$('phonePanel').hidden=true;hideGloss();if(curPhone&&curPhone.culture)unlockCulture(curPhone.culture);if(curPhone&&curPhone.grammar)unlockGrammar(curPhone.grammar);curPhone=null}
-if($('phonePanel'))$('phonePanel').addEventListener('click',e=>{const q=e.target.closest('.tq');if(q){e.stopPropagation();hintDone('lineQ');const t=q.closest('.pc,.ppost,.pcapen')?.querySelector('.ten');if(t)t.hidden=!t.hidden;q.classList.toggle('on',!!t&&!t.hidden);q.blur();return}const w=e.target.closest('.w');if(w){e.stopPropagation();showWord(w.textContent)}});
+function closePhone(){if(!phoneOpen)return;phoneOpen=false;$('phonePanel').hidden=true;if(curChat)closeChat();if(curSlides){curSlides=null;document.body.classList.remove('chatting')}hideGloss();if(curPhone&&curPhone.culture)unlockCulture(curPhone.culture);if(curPhone&&curPhone.grammar)unlockGrammar(curPhone.grammar);curPhone=null}
+if($('phonePanel'))$('phonePanel').addEventListener('click',e=>{const q=e.target.closest('.tq');if(q){e.stopPropagation();hintDone('lineQ');const t=q.closest('.pc,.ppost,.pcapen')?.querySelector('.ten')||(q.nextElementSibling&&q.nextElementSibling.classList.contains('ten')?q.nextElementSibling:null);if(t)t.hidden=!t.hidden;q.classList.toggle('on',!!t&&!t.hidden);q.blur();return}const g=e.target.closest('.gl');if(g){e.stopPropagation();showGloss(g.dataset.k);return}const w=e.target.closest('.w');if(w){e.stopPropagation();showWord(w.textContent)}});
+/* ---------- phone chat (opt-in; 소리 엽서). A dialogue step chat:{id, room, msgs, reply?, after?, set?, award?} is one exchange in a
+   messenger room, shown on the phone (#phonePanel) with the dialogue box out of the way:
+   - msgs/after: [{id, from, text, time, now?, pic?, caption?}] (time: when it was sent; now: what the phone's clock shows as it
+     arrives, default its time; the chat's own now: the clock when a finished exchange is reopened later) — from is a cast id (C.CAST / GAME.cast: {id:{name, look}}) or 'me' (the player:
+     right-hand bubbles, no portrait). Each message is one press of A. pic: a picture card (C.PICS[pic](canvas) draws it) with a caption.
+   - reply: {id, ask, opts, w, reg?, time?, now?} — a question whose options are whole messages, answered in the reply strip under the thread (the
+     dialogue's own #choices, moved there): a wrong one shows its hint over the thread and never becomes a bubble; the right one is sent.
+     Or {id, choose:[[label, fn]]}: an ungraded reply whose fn waits for the commit.
+   - The commit: the exchange's last step (the last after message, or the sent reply when there's none) runs set/award and the deferred
+     fn once, and records the exchange in the shared record (GAME prefix + '-shared', across chapters): {done, sent, msgs}. Reopening a
+     done exchange shows that transcript, with nothing sent, set or awarded again. A reload before the commit starts the exchange over.
+   - English: a ? on each message with English, keyed 'chat:<exchange>:<message>' in lines-en (short and jamo-only texts need it), else
+     by the text itself. Every message and sent reply also goes to the talk log under the room's name.
+   - Keys: A next message / send the selected reply; ↑/↓ scroll the thread, or move between replies (↑ on the top one scrolls); B closes
+     word help, then a wrong-answer hint (back to the replies); with no reply pending it puts the phone away and ends the talk. */
+const SHARED_KEY=KEY('shared');let shared={};try{shared=JSON.parse(store.get(SHARED_KEY)||'{}')||{}}catch(e){shared={}}
+const saveShared=()=>store.set(SHARED_KEY,JSON.stringify(shared));
+const chatRoom=r=>({...(G.rooms||{}),...(C.ROOMS||{})})[r]||{t:r};
+const chatWho=id=>id==='me'?{name:T('나')}:({...(G.cast||{}),...(C.CAST||{})})[id]||C.NPC[id]||{name:id};
+let curChat=null;  // {c, msgs:[…shown], home:[parent, next] of #choices}
+function chatSteps(c){  // a chat step → its dialogue steps
+ const rec=(shared.chats||{})[c.id];
+ if(rec&&rec.done)return [{chatOpen:c,chatAll:rec.msgs}];  // done before: the transcript, nothing else happens
+ const msg=m=>({chatMsg:m}),list=[...(c.msgs||[]).map(msg)];
+ if(c.reply)list.push(c.reply.choose?{chatChoose:c.reply.choose,chatReply:c.reply.id,ask:c.reply.ask||''}:{...c.reply,chatReply:c.reply.id,ask:c.reply.ask||''});
+ list.push(...(c.after||[]).map(msg));
+ if(!list.length)return [];
+ list[0].chatOpen=c;
+ const last=list[list.length-1];  // the last step commits; a reply waits: its set/award ride on the bubble it sends
+ if(last.chatReply)Object.assign(last,{chatCommit:c,chatSet:c.set,chatAward:c.award});else Object.assign(last,{chatCommit:c,set:c.set,award:c.award});
+ return list;
+}
+function openChat(c,all){
+ if(!$('phonePanel'))return;curChat={c,msgs:[],sent:null,later:[]};curPhone={chat:1};
+ const R=chatRoom(c.room),bat=c.battery??72,bars='<i class="sig"><b></b><b></b><b></b><b class="off"></b></i>';
+ $('pscr').innerHTML=`<div class="pstat"><span class="pnow">${c.time||(c.msgs&&c.msgs[0]&&(c.msgs[0].now||c.msgs[0].time))||''}</span><span class="pst">LTE${bars}${bat}%<i class="bat"><i style="width:${bat}%"></i></i></span></div>`
+  +`<div class="pbar chatbar"><span class="txt">${glossHTML(R.t||c.room)}${R.members?` <small>${R.members.length}</small>`:''}</span><span>☰</span></div>`
+  +`<div class="clist" id="clist"></div><div class="cfb" id="cfb" hidden></div><div class="creply" id="creply"><div class="cask txt" id="cask" hidden></div></div>`;
+ const ch=$('choices');curChat.home=[ch.parentNode,ch.nextSibling];$('creply').appendChild(ch);  // the dialogue's choices become the reply strip
+ $('phonePanel').hidden=false;phoneOpen=true;document.body.classList.add('chatting');
+ if(all){all.forEach(m=>chatPush(m,true));setNow(c.now||'')}  // reopened later: the transcript keeps its send times, the clock shows c.now (now) if given
+}
+const setNow=t=>{const el=$('pscr')&&$('pscr').querySelector('.pnow');if(el&&t)el.textContent=t};
+function closeChat(){
+ if(!curChat)return;const ch=$('choices');ch.hidden=true;ch.innerHTML='';
+ const [par,nx]=curChat.home;if(par)par.insertBefore(ch,nx&&nx.parentNode===par?nx:null);
+ curChat=null;document.body.classList.remove('chatting');
+}
+function chatPush(m,quiet){
+ const L=$('clist');if(!L||!curChat)return;
+ const near=L.scrollHeight-L.scrollTop-L.clientHeight<48,mine=m.from==='me',who=chatWho(m.from);
+ const key=curChat.c&&m.id?'chat:'+curChat.c.id+':'+m.id:null,en=(key&&lineEn(key))||lineEn(m.text||'');
+ const esc=x=>String(x).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+ const row=document.createElement('div');row.className='cm'+(mine?' me':'');
+ row.innerHTML=(mine?'':`<canvas class="cface" width="48" height="48"></canvas>`)
+  +`<div class="cb">${mine?'':`<span class="cn">${esc(T(who.name||''))}</span>`}`
+  +(m.pic?`<canvas class="cpic" width="96" height="64"></canvas>`:'')
+  +`<span class="ct txt">${glossHTML(m.text||m.caption||'')}</span>`
+  +(en?`<button class="tq${enAll?' on':''}" type="button" aria-label="영어로 보기">?</button><span class="ten"${enAll?'':' hidden'}>${esc(en)}</span>`:'')
+  +`</div>`+(m.time?`<span class="ctime">${esc(m.time)}</span>`:'');
+ L.appendChild(row);
+ if(!mine&&who.look){try{drawPortrait(row.querySelector('.cface'),who.look,m.face||'happy',false)}catch(e){}}
+ if(m.pic){const P=(C.PICS||G.pics||{})[m.pic];if(P)try{P(row.querySelector('.cpic'))}catch(e){}}
+ if(!quiet)setNow(m.now||m.time);  // the phone's clock: the story's time now (m.now), else the message's send time
+ curChat.msgs.push({from:m.from,text:m.text||m.caption||'',time:m.time,id:m.id,pic:m.pic});
+ if(!quiet)logTalk(chatRoom(curChat.c.room).t+' · '+(mine?T('나'):who.name),m.text||m.caption||'',key&&lineEn(key)?key:undefined);
+ if(near||mine||curChat.msgs.length<=1)L.scrollTop=L.scrollHeight;  // new messages don't pull you back down if you scrolled up to read
+}
+function chatCommitNow(c){  // the exchange is over: its deferred reply runs and the shared record keeps the transcript
+ if(!curChat||curChat.committed)return;curChat.committed=1;
+ (shared.chats||(shared.chats={}))[c.id]={done:1,sent:curChat.sent,msgs:curChat.msgs,ch:CH.id,t:Date.now()};saveShared();
+ curChat.later.forEach(fn=>{try{fn()}catch(e){console.error(e)}});curChat.later=[];
+}
+function chatFb(t){const el=$('cfb');if(!el)return;if(!t){el.hidden=true;el.innerHTML='';return}const e=lineEn(t);
+ el.innerHTML=`<span class="txt">${glossHTML(t)}</span>`+(e?`<button class="tq${enAll?' on':''}" type="button" aria-label="영어로 보기">?</button><span class="ten"${enAll?'':' hidden'}>${String(e).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}</span>`:'');el.hidden=false}  // a wrong reply's hint, with its English behind ? like any line
+function renderChatChoose(s){
+ const box=$('choices');box.hidden=false;
+ box.innerHTML=s.chatChoose.map(([label],i)=>`<button class="choice" data-i="${i}">${plain(String(label))}</button>`).join('');
+ box.querySelectorAll('.choice').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();const [label,fn]=s.chatChoose[+b.dataset.i];
+  box.hidden=true;box.innerHTML='';sfx('ok');if(fn)curChat.later.push(fn);curChat.sent=label;
+  dlg.next='advance';show({chatMsg:{from:'me',text:label,id:s.chatReply+':'+b.dataset.i,time:s.time,now:s.now},fb:1,...(s.chatCommit?{chatCommit:s.chatCommit,set:s.chatSet,award:s.chatAward}:{})})}));
+ sel=-1;choicesAt=performance.now();markSel();
+}
+/* ---------- the postcard (opt-in; 소리 엽서): cards the player makes across the chapters, kept in the shared record ----------
+   GAME.postcard (the game's shared.js): [{id, ch, place, def, v:{a:{pic, caption, lines:[[who, text]…]}, b:{…}}}] in story order.
+   A step card:{id, v} puts version v of that card on the postcard (a toast says so); the choice lives in the shared record, so a
+   later chapter's slideshow and the 일지 see it. In the 일지 (#pcards, when the shell has it) the cards up to this chapter show: one
+   not made (the chapter skipped, entered directly) shows its default version, marked 기본, without counting anything as seen.
+   A step slides:1 plays the postcard on the phone, a card per A (B goes on too; after the last card B puts it away).
+   처음부터 in a chapter takes its cards and chats out of the shared record. */
+const PC=()=>G.postcard||globalThis.POSTCARD||[];  // GAME.postcard, or a POSTCARD the game's shared.js sets
+const pcIdx=id=>CHAPTERS.findIndex(c=>c.id===id);
+function pcCards(){  // the cards up to this chapter: [{e, v (the version shown), made}]
+ const cur=pcIdx(CH.id),got=shared.postcard||{};
+ return PC().filter(e=>{const i=pcIdx(e.ch);return i>=0&&i<=cur}).map(e=>{const m=got[e.id];return {e,k:m?m.v:e.def,made:!!m}}).filter(x=>x.e.v[x.k]);
+}
+function putCard(c){const e=PC().find(x=>x.id===c.id);if(!e||!e.v[c.v])return;(shared.postcard||(shared.postcard={}))[c.id]={v:c.v,ch:CH.id,t:Date.now()};saveShared();
+ sfx('item');setTimeout(()=>toast(T('엽서에 추가')+': '+plain(e.v[c.v].caption||e.place||'')),200)}
+function forgetShared(){let n=0;for(const k of ['postcard','chats'])for(const [id,r] of Object.entries(shared[k]||{}))if(r.ch===CH.id){delete shared[k][id];n++}if(n)saveShared()}
+function cardHTML(x,i,n){
+ const esc=t=>String(t).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])),V=x.e.v[x.k];
+ const en=t=>{const e=lineEn(t);return e?`<button class="tq${enAll?' on':''}" type="button" aria-label="영어로 보기">?</button><span class="ten"${enAll?'':' hidden'}>${esc(e)}</span>`:''};
+ return `<div class="pcard"><div class="pchead"><span>${esc(T(x.e.place||''))}</span>${n?`<span>${i+1}/${n}</span>`:''}${x.made?'':`<span class="pcdef">${T('기본')}</span>`}</div>`
+  +(V.pic?`<canvas class="pcpic" width="96" height="64" data-pic="${V.pic}"></canvas>`:'')
+  +`<div class="pccap"><span class="txt">${glossHTML(V.caption||'')}</span>${en(V.caption||'')}</div>`
+  +(V.lines||[]).map(([w,t])=>`<div class="pcl"><span class="pcw">${esc(T(w))}</span><span class="txt">${glossHTML(t)}</span>${en(t)}</div>`).join('')+`</div>`;
+}
+function drawCardPics(root){root.querySelectorAll('canvas.pcpic').forEach(cv=>{const P=(C.PICS||G.pics||{})[cv.dataset.pic];if(P)try{P(cv)}catch(e){}})}
+function renderPostcards(){const el=$('pcards');if(!el)return;const cs=pcCards();
+ el.innerHTML=cs.length?cs.map(x=>cardHTML(x)).join(''):`<p class="none">${T('아직 없어요.')}</p>`;drawCardPics(el);
+ el.onclick=e=>{const q=e.target.closest('.tq');if(q){e.stopPropagation();const t=q.nextElementSibling;if(t)t.hidden=!t.hidden;return}const w=e.target.closest('.w');if(w){e.stopPropagation();showWord(w.textContent)}}}
+let curSlides=null;
+function slideSteps(){const cs=pcCards();return cs.map((x,i)=>({slide:i,slideAll:cs,...(i===0?{slideOpen:1}:{})}))}
+function showSlide(s){
+ if(!$('phonePanel'))return;
+ if(s.slideOpen||!curSlides){closePhone();curSlides={n:s.slideAll.length};curPhone={slides:1};$('phonePanel').hidden=false;phoneOpen=true;document.body.classList.add('chatting')}
+ $('pscr').innerHTML=`<div class="pbar chatbar"><span class="txt">${glossHTML(T('소리 엽서'))}</span><span>▶</span></div><div class="clist pslide">${cardHTML(s.slideAll[s.slide],s.slide,s.slideAll.length)}</div>`;
+ drawCardPics($('pscr'));
+}
 const CULTURE=globalThis.CULTURE_NOTES||{};  // a game's notes (its own file sets globalThis.CULTURE_NOTES)
 let cultureSeen=[];try{cultureSeen=JSON.parse(store.get(KEY('culture'))||'[]')}catch(e){}
 /* A new note shows on the screen for a few seconds as a tappable chip (#noteChip, made here when the shell has a notes section), then
@@ -854,6 +978,8 @@ function playScene(name){
 function show(s){
  if(!s||!dlg){if(dlg)closeDialog();return}  // a step that isn't there closes the talk instead of leaving a blank box
  if(s&&(s.set||s.award||s.give||s.take||s.go)&&dlg)dlg.moved=1;  // a story beat (spaced review counts them)
+ if(s&&s.slides&&s.slide===undefined){const more=slideSteps();dlg.steps.splice(dlg.i,1,...more);if(!more.length||dlg.i>=dlg.steps.length){closeDialog();return}return show(dlg.steps[dlg.i])}  // the postcard on the phone, a card per step
+ if(s&&s.chat&&!s.chatMsg){const more=chatSteps(s.chat);dlg.steps.splice(dlg.i,1,...more);if(!more.length||dlg.i>=dlg.steps.length){closeDialog();return}return show(dlg.steps[dlg.i])}  // a phone chat: its messages, reply and commit as steps
  if(s&&s.expand){const more=says(s.expand()||[]);dlg.steps.splice(dlg.i,1,...more);if(dlg.i>=dlg.steps.length){closeDialog();return}return show(dlg.steps[dlg.i])}  // expand:()=>steps, made when it's reached (class time picks words you have by then)
  dlg.cur=s;hideGloss();
  lastLines.push(((s.who||dlg.name||'')+': '+plain(s.say||s.ask||'')).slice(0,300));if(lastLines.length>3)lastLines.shift();
@@ -865,6 +991,11 @@ function show(s){
  if(s.walk||s.leave)queueWalks(s);
  if(s.move)moveNpcs(s);
  if(s.phone)openPhone(s.phone);
+ if(s.card)putCard(s.card);
+ if(s.chatOpen){closePhone();openChat(s.chatOpen,s.chatAll)}
+ else if(curChat&&!s.chatMsg&&!s.chatReply&&!s.chatFb&&!s.chatAll){closePhone()}
+ else if(curSlides&&s.slide===undefined){closePhone()}
+ if(s.slide!==undefined){showSlide(s);clearInterval(typing?.id);typing=null;$('more').hidden=true;$('choices').hidden=true;if(!dlg.questHold)updateQuest();return}  // the talk goes on past the exchange: the phone goes away
  if(s.culture)unlockCulture(s.culture);
  if(s.grammar)unlockGrammar(s.grammar);
  if(s.sit)sitDown(s.sit);
@@ -876,6 +1007,16 @@ function show(s){
  if(s.take){state.items=state.items.filter(i=>!s.take.includes(i));save()}
  if(s.award)award(s.award);
  if(s.listen)s=prepListen(s);
+ if(curChat&&(s.chatMsg||s.chatReply||s.chatFb||s.chatAll)){  // inside a chat: bubbles and the reply strip, no dialogue box
+  clearInterval(typing?.id);typing=null;$('more').hidden=true;
+  if(s.chatFb!==undefined)chatFb(s.chatFb);else chatFb(null);
+  if(s.chatMsg){chatPush(s.chatMsg);if(s.chatMsg.from==='me')curChat.sent=s.chatMsg.text;if(readOn&&s.chatMsg.from!=='me')speak(s.chatMsg.text||'')}
+  const L=$('clist'),pin=L&&L.scrollHeight-L.scrollTop-L.clientHeight<48;  // at the newest message: stay there when the replies take room
+  const ask=$('cask');if(ask){const q=(s.chatChoose||s.opts)&&s.ask?s.ask:'';ask.innerHTML=q?glossHTML(q):'';ask.hidden=!q}  // the reply's situation, above the replies
+  if(s.chatChoose){$('choices').innerHTML='';renderChatChoose(s)}else if(s.chatReply&&s.opts){$('choices').innerHTML='';renderChoices(s)}else{$('choices').hidden=true;$('choices').innerHTML=''}
+  if(pin)requestAnimationFrame(()=>{L.scrollTop=L.scrollHeight});
+  if(s.chatCommit&&!s.chatReply)chatCommitNow(s.chatCommit);
+  if(!dlg.questHold)updateQuest();return}
  $('who').textContent=T(s.who||dlg.name);  // '나' is the player in every game; GAME.ui names them in its language
  setEn(s.ask||s.build||s.listen?null:lineEn(s.enKey||s.say||''));  // an open question has no English (it would give the answer away); answered, its whole line has
  $('choices').hidden=true;$('choices').innerHTML='';$('build').hidden=true;$('more').hidden=true;writeKbOff();
@@ -900,7 +1041,7 @@ function prepListen(s){
    all other words open the game's dictionary (LEX, built from the dialogue by lexicon/extract.py). */
 function glossHTML(t){
  const esc=x=>x.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
- const words=x=>G.wordsHTML?G.wordsHTML(x,esc):esc(x).replace(/[가-힣]+/g,w=>`<span class="w">${w}</span>`);  // GAME.wordsHTML: the game's own word spans (data-w: the word to look up)
+ const words=x=>G.wordsHTML?G.wordsHTML(x,esc):esc(x).replace(/[가-힣]+|[ㄱ-ㅎㅏ-ㅣ]{2,}/g,w=>`<span class="w">${w}</span>`);  // GAME.wordsHTML: the game's own word spans (data-w: the word to look up)
  let out='',last=0;const re=/\{([^|}]+)\|([^}]+)\}/g;let m;
  while((m=re.exec(t))){out+=words(t.slice(last,m.index))+`<span class="gl" data-k="${esc(m[2])}">${esc(m[1])}</span>`;last=re.lastIndex}
  return out+words(t.slice(last));
@@ -916,7 +1057,7 @@ function lexLookup(w){ // word as written → [[lemma,{k,e}],…]; falls back to
 function popGloss(rows){ // rows: [[headword,{k,e}],…] — Korean first; English only behind the ? button. Stays until ×, A, B or the next line
  if(!rows.length){hideGloss();toast(T('사전에 없는 말이에요.'));return}
  const el=$('gloss');
- el.innerHTML=rows.map(([h,d])=>`<div class="gr"><b>${h}${d.r&&d.r!==h?`<small class="rd">${d.r}</small>`:''}</b>${d.k}<span class="en" hidden>${d.e||''}</span></div>`).join('')+'<button class="q" type="button" aria-label="영어로 보기">?</button><button class="gx" type="button" aria-label="닫기">×</button>';
+ el.innerHTML=rows.map(([h,d])=>`<div class="gr"><b>${h}${d.r&&d.r!==h?`<small class="rd">${d.r}</small>`:''}</b>${d.k}<span class="en" hidden>${d.e||''}</span>${d.reg?`<span class="rg">${T('말투')}: ${d.reg}</span><span class="en" hidden>${lineEn(d.reg)||''}</span>`:''}</div>`).join('')+'<button class="q" type="button" aria-label="영어로 보기">?</button><button class="gx" type="button" aria-label="닫기">×</button>';
  el.hidden=false;const q=el.querySelector('.q');if(hints.glossQ!==1){q.classList.add('hintq');hintSeen('glossQ',3)}
  q.addEventListener('click',e=>{e.stopPropagation();hintDone('glossQ');q.classList.remove('hintq');el.querySelectorAll('.en').forEach(x=>x.hidden=!x.hidden)});
 }
@@ -1270,6 +1411,7 @@ let explained={};try{explained=JSON.parse(localStorage.getItem(KEY('explained'))
 function firstTime(k){if(explained[k])return false;explained[k]=1;try{localStorage.setItem(KEY('explained'),JSON.stringify(explained))}catch(e){}return true}
 function gradeStep(s){
  if(!s.w)return;
+ if(s.reg){const r=(state.reg=state.reg||{})[s.w]||(state.reg[s.w]={ok:0,miss:0});s.missed?r.miss++:r.ok++;save();return}  // register judgment, kept apart from remembering the word
  const before=lv(s.w).b,b=grade(s.w,!s.missed,!!s.hinted);
  updateHud();
  if(s.missed)setTimeout(()=>toast(`${qt(s.w)} ${T('다시 연습해요')}`),250);
@@ -1283,6 +1425,12 @@ function answered(ask,a){const f=ask.replace('___',a),i=ask.indexOf('___')+a.len
  const m=f.slice(i).match(/^([^"”]*["”][.!?]?)\s+([^"”]*\?)$/);return m?f.slice(0,i)+m[1]:f}  // only a quoted example's question
 function choose(s,i){
  const o=s.opts[i];if(s.w)askedIn[s.w]=talkN;
+ if(s.chatReply&&curChat){  // a reply in a chat: right = sent as a bubble (the commit rides on it when nothing comes after); wrong = a hint over the thread
+  if(o[1]){sfx('ok');if(s.review||dlg.review)gradeStep(s);dlg.next='advance';curChat.sent=String(o[0]);
+   show({chatMsg:{from:'me',text:String(o[0]),id:s.chatReply+':'+i,time:s.time,now:s.now},fb:1,...(s.chatCommit?{chatCommit:s.chatCommit,set:s.chatSet,award:s.chatAward}:{})})}
+  else{sfx('no');s.missed=true;if(s.w){dlg.missed.add(s.w);if(!has(s.w)){(state.miss=state.miss||{})[s.w]=1;save()}}
+   dlg.next=s;show({chatFb:o[2]||T('다시 해 봐요.'),fb:1})}
+  return}
  if(o[1]){
   sfx('ok');
   if(s.review||dlg.review)gradeStep(s);
@@ -1303,7 +1451,7 @@ function choose(s,i){
 function advance(){
  if(!dlg)return;
  if(typing&&!typing.finished){typing.fin();return}
- if(dlg.cur.ask||dlg.cur.build||dlg.cur.choose)return;
+ if(dlg.cur.ask||dlg.cur.build||dlg.cur.choose||dlg.cur.chatChoose)return;
  if(dlg.next){const n=dlg.next;dlg.next=null;if(n!=='advance'){show(n);return}}
  if(dlg.cur.finale){const p=pending;pending=null;closeDialog();finish(p);return}  // a note still waiting (20/20 words!) goes before the ending, not under its fade
  dlg.i++;
@@ -1327,6 +1475,11 @@ function closeDialog(){
  if(pending){const c=pending;pending=null;setTimeout(()=>{if(!dlg)openDialog(LOGNAME,c)},400)}
 }
 function cancel(){
+ if(phoneOpen&&curSlides){if(!$('gloss').hidden){hideGloss();return}if(dlg&&dlg.cur&&dlg.cur.slide<curSlides.n-1){advance();return}if(dlg)advance();else closePhone();return}  // B goes on through the cards; after the last it puts the postcard away (the talk goes on)
+ if(phoneOpen&&curChat){if(!$('gloss').hidden){hideGloss();return}
+  if(dlg&&dlg.cur&&dlg.cur.fb&&dlg.next&&dlg.next.chatReply){advance();return}  // a wrong-answer hint: back to the replies
+  if(choosing())return;  // a reply is waiting: B never throws it away
+  if(dlg)closeDialog();else closePhone();return}  // the phone goes away and the talk ends
  if(phoneOpen){if(!$('gloss').hidden){hideGloss();return}closePhone();return}
  if(CREATOR&&!$('mePanel').hidden){if(me)closeMe(false);return}  // first time: you must pick (no B)
  if(!$('startPanel').hidden){$('startPanel').hidden=true;return}
@@ -1361,7 +1514,7 @@ function linesFor(n){  // their lines for words you have, true right now (when),
 const revAt={};  // when each person last asked a review: at most one per story beat (re-talking isn't a quiz machine)
 const cooling=n=>{const r=revAt[npcId(n)];return !!r&&(SRS().beats?r.b===beats():talkN-r.t<3)};
 const cooledLine=r=>{const h=(state.heardB||{})[rKey(r)];return h==null||beats()-h>=3};  // a line just heard as plain talk isn't asked for a few beats
-const reviewLines=n=>cooling(n)?[]:linesFor(n).filter(r=>isDue(r.w)&&cooledLine(r));
+const reviewLines=n=>cooling(n)?[]:linesFor(n).filter(r=>isDue(r.w)&&cooledLine(r)&&reviewable(r));
 /* Spaced review decides when a line is a question, not whether you hear it: with nothing of theirs due, a person says one of
    their lines you haven't heard yet, the word filled in, as ordinary talk (state.heard keeps which), then their usual chatter. */
 const rKey=r=>r.w+'|'+r.ask,heard=()=>state.heard||(state.heard=[]),unheard=r=>!heard().includes(rKey(r));
@@ -1369,6 +1522,7 @@ function hear(r){if(unheard(r)){heard().push(rKey(r));save()}}
 function sayLine(n){
  const L=linesFor(n).filter(unheard);if(!L.length)return null;
  const r=L[Math.random()*L.length|0],ok=(r.opts||[]).find(o=>o[1]);hear(r);(state.heardB||(state.heardB={}))[rKey(r)]=beats();
+ if(r.plain)return [...says(r.pre||[]),{...(r.who?{who:r.who}:{}),say:r.plain}];  // plain: the line said when nothing is due, for a row that can't be filled in (a meaning question about an R word)
  return [...says(r.pre||[]),{...(r.who?{who:r.who}:{}),say:answered(r.ask,ok?ok[0]:r.w),enKey:r.ask}];  // its English is kept under the question as written
 }
 const usual=n=>n.badge?(n.badge.every(has)?says(n.after):null):(n.again&&metIds().includes(npcId(n))?says(typeof n.again==='function'?n.again():n.again):n.talk());  // again: what they say once you've met (no second introduction)  // what they'd say anyway (null: still teaching)
@@ -1378,19 +1532,20 @@ function reviewPick(n){
  const rank=r=>lv(r.w).b*2+((n.badge||[]).includes(r.w)?0:1);  // the weakest word first; their own word before someone else's
  const lo=Math.min(...L.map(rank)),best0=L.filter(r=>rank(r)===lo),fresh=best0.filter(unheard),best=fresh.length?fresh:best0,r=best[Math.random()*best.length|0];hear(r);revAt[npcId(n)]={b:beats(),t:talkN+1};  // a line you haven't heard first
  const q={...r,review:true};delete q.by;delete q.pre;delete q.when;
- if(q.who!=='나'&&canSpeak()&&soundOn&&listenOn&&Math.random()<.35){const ok=(q.opts||[]).find(o=>o[1]);q.listen=q.w;q.listenLine=answered(q.ask,ok?ok[0]:q.w)}  // they say it aloud (the answer as it fits the line: 주워, not 줍다); you pick the word you heard
+ if(q.who!=='나'&&!isR(q.w)&&canSpeak()&&soundOn&&listenOn&&Math.random()<.35){const ok=(q.opts||[]).find(o=>o[1]);q.listen=q.w;q.listenLine=answered(q.ask,ok?ok[0]:q.w)}  // they say it aloud (the answer as it fits the line: 주워, not 줍다); you pick the word you heard
  return [...says(r.pre||[]),q];
 }
 function reviewFor(words){ // pick a question for the weakest of these words
  const ws=[...words].sort((a,b)=>(isDue(b)-isDue(a))||(lv(a).b-lv(b).b));
  const w=ws[0];
- let pool=allQuestions().filter(q=>q.w===w);
- if(!pool.length&&SRS().shared)pool=carryBank()[w]||[];  // a word from another chapter: its own chapter's sentences
- if(C.REVIEW){const g=(C.BANK||[]).filter(q=>q.w===w&&!q.scene);if(g.length)pool=g}  // with in-character review, the notebook asks the generic example sentences, not lines from someone's scene
+ let pool=allQuestions().filter(q=>q.w===w&&reviewable(q));
+ if(!pool.length&&SRS().shared)pool=(carryBank()[w]||[]).filter(reviewable);  // a word from another chapter: its own chapter's sentences
+ if(C.REVIEW){const g=(C.BANK||[]).filter(q=>q.w===w&&!q.scene&&reviewable(q));if(g.length)pool=g}  // with in-character review, the notebook asks the generic example sentences, not lines from someone's scene
  const gen=pool.filter(q=>!q.scene),all=gen.length?gen:pool;  // scene:1 quotes its own scene: never asked in review (it would play the scene before it happens)
  const own=all.filter(q=>!q.gram),qs=own.length?own:all;  // gram:1 tests a pattern, not the word: no star for the word from it
+ if(!qs.length)return null;  // nothing it can be asked with (a recognition word with no meaning question): no review, not a blank box
  const narr={review:true,who:'…',ok:T('맞아요!')};  /* asked by the narrator: the sentences are generic examples, not in the NPC's voice */
- if(canSpeak()&&soundOn&&listenOn&&Math.random()<.35)return {listen:w,...narr};  // a muted phone (or 듣기 문제 off) can't answer a listening question
+ if(!isR(w)&&canSpeak()&&soundOn&&listenOn&&Math.random()<.35)return {listen:w,...narr};  // a muted phone (or 듣기 문제 off) can't answer a listening question
  return {...freshQ(w,qs),...narr};
 }
 function terminal(){
@@ -1445,6 +1600,8 @@ function talkWith(n){
  openDialog(n.name,steps,{npc:n,review:isReview,snap});
 }
 function interact(){
+ if(phoneOpen&&curChat){if(!$('gloss').hidden){hideGloss();return}if(choosing()){confirmSel();return}if(dlg)advance();return}
+ if(phoneOpen&&curSlides){if(!$('gloss').hidden){hideGloss();return}if(dlg)advance();else closePhone();return}  // the postcard: A is the next card  // a chat: A is the next message, or sends the reply
  if(phoneOpen){if(!$('gloss').hidden){hideGloss();return}if(typing&&!typing.finished){typing.fin();return}closePhone();return}  // A finishes the line, then puts the phone away
  if(!$('gloss').hidden){hideGloss();return}  // A closes the definition first, without advancing
  if(panelOpen())return;
@@ -1498,7 +1655,7 @@ function updateSound(){$('sndBtn').setAttribute('aria-pressed',soundOn?'true':'f
 let logSel=null,showEn=false;
 function pips(w){const L=lv(w);return `<span class="pips${isDue(w)?' due':''}">${[1,2,3,4,5].map(i=>`<i class="${L.b>=i?'on':''}"></i>`).join('')}</span>`}
 function openPanel(){
- renderNotes();if($('itemCard'))$('itemCard').hidden=true;
+ renderNotes();renderPostcards();if($('itemCard'))$('itemCard').hidden=true;
  const got=C.WORDS.filter(has);
  $('logCount').textContent=`${got.length}/${C.WORDS.length} · ${T('복습')} ${dueWords().length}`;
  if(!logSel||!has(logSel))logSel=got[got.length-1]||null;
@@ -1506,9 +1663,9 @@ function openPanel(){
  $('wlist').querySelectorAll('button.wd').forEach(b=>b.addEventListener('click',()=>{logSel=b.dataset.w;showEn=false;openPanel();speak(logSel)}));
  if(logSel){const d=C.DICT[logSel],L=lv(logSel);
   $('card').innerHTML=`<div class="top"><span class="big">${logSel}</span>${d.r&&d.r!==logSel?`<span class="rd">${d.r}</span>`:''}<button class="spk${canSpeak()?'':' '}" id="cardSpk" aria-label="듣기" ${canSpeak()?'':'hidden'}>${$('spk').innerHTML}</button></div>
-   <span class="def">${d.k}</span><span class="ex">${T('예')}: ${d.ex}</span>${d.hj?`<span class="hj">${d.hj}</span>`:''}
+   <span class="def">${d.k}</span>${d.reg?`<span class="rg">${T('말투')}: ${d.reg}</span>`:''}<span class="ex">${T('예')}: ${d.ex}</span>${d.hj?`<span class="hj">${d.hj}</span>`:''}
    <span class="hj">${T('기억 레벨')} ${L.b}/5 · ${isDue(logSel)?T('지금 복습할 수 있어요'):T('다음 복습: ')+fmtWait(L.due-now())+T(' 후')}</span>
-   ${showEn?`<span class="en">${d.e}</span>`:'<button class="enb" id="cardEn" aria-label="영어로 보기">?</button>'}`;
+   ${showEn?`<span class="en">${d.e}${d.reg&&lineEn(d.reg)?' · '+lineEn(d.reg):''}</span>`:'<button class="enb" id="cardEn" aria-label="영어로 보기">?</button>'}`;
   $('cardSpk')?.addEventListener('click',()=>speak(logSel+'. '+d.ex));
   $('cardEn')?.addEventListener('click',()=>{showEn=true;openPanel()});  // its own id: it once shared the dialogue's #enBtn, so this handler went onto the line's ? (re-rendering the 일지 on every tap)
  }else $('card').innerHTML='<span class="def">'+T('아직 단어가 없어요.')+'</span><span class="ex">'+T('사람들한테 말을 걸면 일지에 단어가 생겨요.')+'</span>';
@@ -1537,6 +1694,9 @@ function loadState(){
 
 /* ---------- input ---------- */
 function dirPress(d){
+ if(phoneOpen&&curChat){const l=$('clist');if(choosing()&&!(d==='up'&&sel<=0)&&(d==='up'||d==='down')){moveSel(d==='up'?-1:1);return true}
+  if(l&&(d==='up'||d==='down')){l.scrollBy({top:d==='down'?70:-70,behavior:'smooth'});if(d==='down'&&choosing()&&sel<0){sel=0;markSel()}}return true}
+ if(phoneOpen&&curSlides){const l=$('pscr').querySelector('.clist');if(l&&(d==='up'||d==='down'))l.scrollBy({top:d==='down'?70:-70,behavior:'smooth'});return true}
  if(phoneOpen){const l=$('pscr').querySelector('.plist');if(l&&(d==='up'||d==='down'))l.scrollBy({top:d==='down'?70:-70,behavior:'smooth'});return true}  // the D-pad scrolls the phone
  if(choosing()||building()){moveSel(d==='up'||d==='left'?-1:1);return true}
  return false;
@@ -1737,7 +1897,7 @@ let musicOn=store.get(KEY('music'))!=='0',bgm=null,bgmSrc='',musicT=0,musicVol=+
 if(!(musicVol>=0&&musicVol<=100))musicVol=30;
 /* GAME.music: the credit, a string or {by,url} (the credit links there); the playing track's name comes from its file
    (audio/cafe-alps.m4a → Cafe Alps) */
-function creditUI(){const c=$('credit');if(!c)return;const M=typeof G.music==='string'?{by:G.music}:G.music;
+function creditUI(){const c=$('credit');if(!c||!G.music)return;const M=typeof G.music==='string'?{by:G.music}:G.music;
  const t=bgmSrc.split('/').pop().replace(/\.\w+$/,'').split(/[-_]/).filter(Boolean).map(w=>w[0].toUpperCase()+w.slice(1)).join(' ');  // '' while quiet: no track name
  c.textContent='음악 · '+(t?t+' — ':'');const a=document.createElement(M.url?'a':'span');a.textContent=M.by;
  if(M.url){a.href=M.url;a.target='_blank';a.rel='noopener'}c.append(a)}
@@ -1782,7 +1942,7 @@ $('resetBtn').addEventListener('click',()=>{
  const b=$('resetBtn');
  if(!b.classList.contains('armed')){b.classList.add('armed');b.textContent=T('한 번 더 누르면 지워져요');clearTimeout(armT);armT=setTimeout(()=>{b.classList.remove('armed');b.textContent=T('처음부터')},3000);return}
  b.classList.remove('armed');b.textContent=T('처음부터');
- dropTalk();state=fresh();state.seenIntro=true;save();forgetNotes();store.set(backKey(),'[]');updBack();loadZone(state.zone,state.x,state.y,state.dir);updateHud();updateQuest();$('panel').hidden=true;
+ dropTalk();state=fresh();state.seenIntro=true;save();forgetNotes();forgetShared();store.set(backKey(),'[]');updBack();loadZone(state.zone,state.x,state.y,state.dir);updateHud();updateQuest();$('panel').hidden=true;
  setTimeout(()=>openDialog(CH.introWho||G.title||T('이야기'),C.INTRO),300);  // starting over replays the intro, like a first start
 });
 document.addEventListener('contextmenu',e=>e.preventDefault());
