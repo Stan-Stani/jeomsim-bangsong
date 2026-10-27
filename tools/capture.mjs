@@ -4,7 +4,7 @@
 import {spawn} from 'node:child_process';import fs from 'node:fs';import path from 'node:path';import os from 'node:os';
 const [,,vid,out]=process.argv;fs.mkdirSync(out,{recursive:true});
 const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'kp-'));const port=9300+Math.floor(Math.random()*500);
-const chrome=spawn('flatpak',['run',`--filesystem=${tmp}`,'com.google.Chrome','--headless=new','--mute-audio','--disable-gpu','--hide-scrollbars',
+const chrome=spawn('flatpak',['run','--nodevice=all',`--filesystem=${tmp}`,'com.google.Chrome','--headless=new','--mute-audio','--disable-gpu','--hide-scrollbars',
  `--remote-debugging-port=${port}`,`--user-data-dir=${tmp}/prof`,'about:blank'],{stdio:'ignore'});
 const reap=()=>{try{spawn('pkill',['-9','-f',`user-data-dir=${tmp}/prof`])}catch(e){}};process.on('exit',reap);
 const wait=ms=>new Promise(r=>setTimeout(r,ms));

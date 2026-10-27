@@ -3,7 +3,7 @@ import {spawn} from 'node:child_process';import fs from 'node:fs';import path fr
 const ch=process.argv[2]||'ch1';const root=path.resolve(path.dirname(new URL(import.meta.url).pathname),'..');
 const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'pg-'));fs.copyFileSync(path.join(root,'index.html'),path.join(tmp,'index.html'));
 const port=9800+Math.floor(Math.random()*150);
-const chrome=spawn('flatpak',['run',`--filesystem=${tmp}`,'com.google.Chrome','--headless=new','--mute-audio','--disable-gpu',`--remote-debugging-port=${port}`,`--user-data-dir=${tmp}/prof`,'about:blank'],{stdio:'ignore'});
+const chrome=spawn('flatpak',['run','--nodevice=all',`--filesystem=${tmp}`,'com.google.Chrome','--headless=new','--mute-audio','--disable-gpu',`--remote-debugging-port=${port}`,`--user-data-dir=${tmp}/prof`,'about:blank'],{stdio:'ignore'});
 const reap=()=>{try{spawn('pkill',['-9','-f',`user-data-dir=${tmp}/prof`])}catch(e){}};process.on('exit',reap);
 const wait=ms=>new Promise(r=>setTimeout(r,ms));let ws;
 for(let i=0;i<60&&!ws;i++){await wait(500);try{const l=await (await fetch(`http://127.0.0.1:${port}/json`)).json();const p=l.find(x=>x.type==='page');if(p)ws=p.webSocketDebuggerUrl}catch(e){}}
