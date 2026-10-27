@@ -16,6 +16,8 @@ parts=['<script>\n/* Tap-a-word dictionary: word as written → dictionary forms
  '<script>\n/* Chapters register themselves here; each keeps its own save. */\nconst CHAPTERS=[];\n</script>']
 en_p=root/'src/lines-en.json'  # whole-line English behind the dialogue box's ? (walk-engine/tools/lines_en.py lists the lines)
 if en_p.exists(): parts.append('<script>\n/* Close English for whole lines, Korean line as written → English (the last aid after word taps). */\nglobalThis.LINES_EN='+json.dumps({k:v for k,v in json.loads(en_p.read_text(encoding='utf-8')).items() if v},ensure_ascii=False,separators=(',',':'))+';\n</script>')
+gt_p=root/'src/grammar-tags.json'  # grammar patterns and chapter words of the lines (walk-engine/tools/grammar_tags.py): the 사전's 문법 summary
+if gt_p.exists(): parts.append('<script>\n/* Grammar patterns per line and words per chapter (walk-engine/tools/grammar_tags.py). */\nglobalThis.LINE_GRAMMAR='+gt_p.read_text(encoding='utf-8').strip()+';\n</script>')
 parts.append(f'<script>\n{(root/"src/school.js").read_text(encoding="utf-8")}</script>')  # the school every 교시 is set in
 parts+=[f'<script>\n{p.read_text(encoding="utf-8")}</script>' for p in chs]
 parts.append(f'<script>\n{(root/"src/game.js").read_text(encoding="utf-8")}</script>')  # this game's settings for the shared engine
