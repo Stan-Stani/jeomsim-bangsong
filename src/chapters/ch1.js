@@ -648,7 +648,7 @@ const NPC={
   hide:()=>!f().paidFine,
   get after(){const F=f();   // she is at her desk from the morning to after school
    if(F.done)return ['아까 복도 스피커 들었어? 누가 튼 거야?','…무서운 거 아니야. 그냥 궁금한 거야.'];
-   if(F.crew3)return pick([['구경만이야. 진짜 구경만.'],['종례 끝. 내일 지각하면 벌금 또 걷어.']]);
+   if(F.crew3)return pick([['구경만이야. 진짜 구경만.'],['종례 끝. 내일 지각하면 벌금 또 걷어.'],['종례 끝났잖아. 집에 가. 나는 일지 써.']]);  // 일지: why she's still at her desk
    if(F.deal)return ['종례 시작해. 빨리 앉아.'];
    if(F.gotNotice)return ['방송실 갔다 왔어? …아니, 안 궁금해.'];
    if(F.metChan)return pick([['찬이랑 먹었어? 귀 안 아파?'],['벌금은 내가 걷어. 규칙은 규칙이야.']]);  // you've eaten
