@@ -721,14 +721,15 @@ const NPC={
 
  chanB:{nomark:1,name:'남궁찬',zone:'bunsik',x:8,y:5,dir:'down',look:LOOK.chan,sit:1,chair:STOOL,badge:['어색하다'],banmal:1,
   hide:()=>!f().afterSchool||!!f().hariMaybe,
-  get after(){return pick([['떡볶이는 왜 빨개? …아, 이미 했지.'],['하리 웃었지? 봤지? 나 천재야.']])},
+  get after(){return pick([['자동차를 톡 치면? …아, 이미 했지.'],['하리 웃었지? 봤지? 나 천재야.']])},
   status:()=>{if(!has('어색하다'))return f().hariGiveUp?'todo':'wait'},
   script:()=>!has('어색하다')&&!f().hariGiveUp?[{say:'떡볶이 나왔다! 하리 얘기부터 들어 봐.'}]:null,
   /* you choose how to break the silence (the 목표 asks you to change the mood); every way leads into 찬's joke */
   talk:()=>{const rest=[
-    {say:'떡볶이가 왜 빨간지 알아?',face:'think'},
-    {say:'…부끄러워서! 하하하!',face:'happy'},
+    {say:'자동차를 톡 치면 뭐게?',face:'think'},
+    {say:'…카톡! 하하하!',face:'happy'},
     {who:'…',say:'…아무도 안 웃어요. 더 어색해요.'},
+    {say:'아니, 차가 영어로 카잖아. 카를 톡!',face:'sad'},  // explaining it is what gets 하리
     {who:'유하리',say:'…푸흡. 하하!',face:'happy'},
     {say:'봐! 웃었다! 나 천재야.',face:'happy'},
     Q.chanB[1],
