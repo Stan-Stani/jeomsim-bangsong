@@ -134,8 +134,8 @@ const refresh=()=>{try{updateQuest()}catch(e){}};
 function openPlace(key){
  const P=PLACES[key],here=R.items.filter(it=>it.place===key&&!R.bag.includes(it)&&!it.given);
  const first=`${J(P.name,'을','를')} 열어 봤어요.`;en(first,`I looked in ${P.en}.`);
- if(!here.length){openDialog('…',[say('…',`${P.name}… 비어 있어요.`,`${P.en}… it's empty.`)]);return}
- openDialog('…',[{who:'…',say:first,choose:[...here.map(it=>[look(it),()=>{if(R.bag.length>=2){openDialog('…',[say('…','가방이 꽉 찼어요.','The bag is full.')]);return}R.bag.push(it);sfx('item');refresh()}]),['그만 보기',null]]}]);
+ if(!here.length&&!R.bag.length){openDialog('…',[say('…',`${P.name}… 비어 있어요.`,`${P.en}… it's empty.`)]);return}
+ openDialog('…',[{who:'…',say:first,choose:[...here.map(it=>[look(it),()=>{if(R.bag.length>=2){openDialog('…',[say('…','가방이 꽉 찼어요.','The bag is full.')]);return}R.bag.push(it);sfx('item');refresh()}]),...R.bag.map(it=>['내려놓기 · '+look(it),()=>{R.bag=R.bag.filter(x=>x!==it);it.place=key;sfx('item');refresh()}]),['그만 보기',null]]}]);
 }
 function talkGureum(){
  if(R.phase==='errand'){const E=cur();
@@ -146,7 +146,7 @@ function talkGureum(){
 }
 function give(it){
  const E=cur();
- if(it!==E.want){E.misses++;const w=E.wrong.get(it)||['어…? 이건 필요 없는데…','Huh…? I don\'t need this…'];openDialog('백구름',[say('백구름',w[0],w[1])]);return}
+ if(it!==E.want){E.misses++;const w=E.wrong.get(it)||['어…? 이건 필요 없는데…','Huh…? I don\'t need this…'];R.bag=R.bag.filter(x=>x!==it);refresh();openDialog('백구름',[say('백구름',w[0],w[1]),say('백구름','이건 제자리에 갖다 놓을게.','I\'ll put this one back where it was.')]);return}
  it.given=1;R.bag=R.bag.filter(x=>x!==it);sfx('ok');refresh();
  whenFree(()=>draft(E.misses>0));
  openDialog('백구름',[say('백구름','고마워… 이거 맞아. 자, 이거 가져가. 방송 때 써.','Thanks… this is it. Here, take this. Use it on air.')]);

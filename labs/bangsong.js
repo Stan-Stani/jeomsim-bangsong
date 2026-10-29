@@ -151,8 +151,8 @@ function refresh(){try{updateQuest()}catch(e){}}
 function openPlace(key){
  const P=PLACES[key],here=R.items.filter(it=>it.place===key&&!R.bag.includes(it)&&!it.given);
  const first=`${J(P.name,'을','를')} 열어 봤어요.`;en(first,`I looked in ${P.en}.`);
- if(!here.length){openDialog('…',[say('…',`${P.name}… 비어 있어요.`,`${P.en}… it's empty.`)]);return}
- openDialog('…',[{who:'…',say:first,choose:[...here.map(it=>[look(it),()=>take(it)]),['그만 보기',null]]}]);
+ if(!here.length&&!R.bag.length){openDialog('…',[say('…',`${P.name}… 비어 있어요.`,`${P.en}… it's empty.`)]);return}
+ openDialog('…',[{who:'…',say:first,choose:[...here.map(it=>[look(it),()=>take(it)]),...R.bag.map(it=>['내려놓기 · '+look(it),()=>{R.bag=R.bag.filter(x=>x!==it);it.place=key;sfx('item');refresh()}]),['그만 보기',null]]}]);  // what you carry can be put down here
 }
 function take(it){
  if(R.bag.length>=3){openDialog('…',[say('…','가방이 꽉 찼어요. 구름한테 먼저 갖다줘요.','The bag is full. Take things to Gureum first.')]);return}
@@ -175,7 +175,8 @@ function give(it){
   R.phase='air';R.show=chooseShow();R.si=0;refresh();
   openDialog('백구름',[say('백구름','됐다… 방송 준비 끝. 믹서 앞으로 가자. 오늘 사연은 세 개야.','Done… the broadcast is ready. Let\'s go to the mixer. Three letters today.')]);return}
  E.misses++;const w=E.wrong.get(it)||['어…? 이건 필요 없는데…','Huh…? I don\'t need this…'];
- openDialog('백구름',[say('백구름',w[0],w[1])]);  // it stays in your bag
+ R.bag=R.bag.filter(x=>x!==it);refresh();  // it goes back where it came from, so the bag never fills with wrong things
+ openDialog('백구름',[say('백구름',w[0],w[1]),say('백구름','이건 제자리에 갖다 놓을게.','I\'ll put this one back where it was.')]);
 }
 function labCss(){if(document.getElementById('labCss'))return;const st=document.createElement('style');st.id='labCss';
  st.textContent='body.lab-air #choices{grid-template-columns:1fr!important;display:grid}body.lab-air #choices .choice{width:100%!important;max-width:none!important;text-align:left!important;font-size:.92rem;padding:8px 12px;line-height:1.45}';document.head.appendChild(st)}
