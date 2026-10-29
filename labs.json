@@ -1,4 +1,5 @@
 [
  {"id":"bangsong","name":"방송부 활동 (2교시)","file":"labs/bangsong.js"},
- {"id":"deck","name":"방송 덱 (2교시)","file":"labs/deck.js"}
+ {"id":"deck","name":"방송 덱 (2교시)","file":"labs/deck.js"},
+ {"id":"battle","name":"단어 배틀 (2교시)","file":"labs/battle.js"}
 ]
