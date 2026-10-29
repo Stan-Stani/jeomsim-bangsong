@@ -253,7 +253,7 @@ function render(){
   <div class="log">${B.log.slice(Math.max(B.turnStart||0,B.log.length-9)).map(([k,e])=>`<div class="${/^[^:]{2,4}: "/.test(k)?'say':''}">${esc(k)}${showEn&&e?`<div class="en">${esc(e)}</div>`:''}</div>`).join('')||'…'}</div>
   ${B.over?`${partyHTML(false)}<div class="row"><span></span><button class="btn" type="button" id="btEnd" style="background:var(--ink);color:var(--hull)">끝</button></div>`:`
   <div class="row"><span class="bench">내 단어 · 골라서 말해요</span>${comboHTML()}</div>
-  ${partyHTML(!B.swap)}
+  ${partyHTML(!B.swap&&!B.wait)}
   <div class="acts">${B.combo>=3?`<button class="act combo" type="button" id="btCombo"><b>방송부 합동!</b><small>우리 단어마다 자기 대사를 찾아요. 맞힌 만큼 다 같이 공격해요.</small></button>`:''}
    ${canSteal()?`<button class="act" type="button" id="btSteal"><b>가로채기 · 「${esc(t.w)}」</b><small>상대 단어의 대사를 먼저 말하면 상대가 한 턴 쉬어요. 단어마다 한 번.</small></button>`:''}
    <button class="act" type="button" id="btAtk"><b>기본 공격</b><small>읽지 않고 약하게 공격해요. 콤보가 끊겨요.</small></button>
@@ -261,11 +261,13 @@ function render(){
     <button class="act" type="button" id="btRun"><b>도망가기</b><small>책장으로 돌아가요.</small></button>`:`<button class="act" type="button" id="btInfo"><b>단어 보기</b><small>상대 단어의 뜻과 기술</small></button>`}</div>
   <details class="moves"><summary>내 단어 기술</summary>${B.me.team.map(m=>`<div><b>${esc(m.w)}</b> · ${esc(mv(m))}${m.evo?' (+25%)':''} — ${esc(MOVES[m.w].d)}${showEn?` <i>${esc(MOVES[m.w].e)}</i>`:''}</div>`).join('')}</details>`}`);
  playFx(box);faces(box);
+ {const L=box.querySelector('.log'),st=Math.max(B.turnStart||0,B.log.length-9),el=L&&B.scrollTo!=null&&L.children[B.scrollTo-st];if(el)L.scrollTop=el.offsetTop-L.children[0].offsetTop}
  B.me.team.forEach((m,i)=>{if(m.hp<=0&&!B.downShown.has(m)){B.downShown.add(m);box.querySelector(`[data-fx="${i}"]`)?.classList.add('faint')}});
  if(t.hp<=0)box.querySelector('[data-fx="foe"]')?.classList.add('faint');
  if(B.enter){B.enter=false;box.querySelector('[data-fx="foe"]')?.classList.add('enter')}
  $('btEn').onclick=()=>{showEn=!showEn;render()};
  if(B.over){$('btEnd').onclick=finish;return}
+ if(B.wait){box.querySelectorAll('.acts .act,.moves').forEach(e=>e.style.visibility='hidden');return}
  if(B.swap){box.querySelectorAll('.acts .act,.moves').forEach(e=>e.style.visibility='hidden');  // a beat while it falls, then the next one
   const b0=B;setTimeout(()=>{if(B!==b0||!B.swap)return;B.swap=false;nextFoe();trainerSays('fall');log(B,`${B.trainer}: ${foeNow().w}, 나와!`,`${B.trainer}: ${foeNow().w}, go!`);B.foeFace='think';B.enter=true;chooseIntent();render()},1200);return}
  box.querySelectorAll('.party .pm').forEach(b=>b.onclick=()=>{const u=B.me.team[+b.dataset.w];if(ready().includes(u))pickLine(u.w,'say')});
@@ -366,12 +368,17 @@ function foeFell(){sfx('door');log(B,`${who(foeNow())}${josa(foeNow().w,'이','�
  if(!B.foe.team.some(w=>w.hp>0)){B.over='win';B.meFace='happy';log(B,'이겼어요!','You won!');return true}B.swap=true;return true}  // the next one comes out after the fall (render)
 function lost(){B.over='lose';B.meFace='surprised';B.foeFace='happy';
  if(B.wild)log(B,`다들 쓰러졌어요… ${foeNow().w}${josa(foeNow().w,'이','가')} 책장으로 돌아갔어요.`,`Everyone fell… ${foeNow().w} went back into the shelf.`);render()}
+const BEAT=750;  // ms between your action and the foe's: each gets its own moment on screen
 function endTurn(){  // your side counts down after your action and the foe's after its own, so what one side puts on the other lasts through the other's next turn
- B.deal={};B.turnStart=B.turnStartNext||0;
+ B.deal={};B.turnStart=B.turnStartNext||0;B.scrollTo=null;
  if(foeNow().hp<=0){foeFell();render();return}
  B.me.team.forEach(tick);if(B.me.field)B.me.field--;
  if(!alive().length){lost();return}
- foeTurn();
+ B.wait=true;render();const b0=B;  // your action shows on its own, then a beat, then the foe's
+ setTimeout(()=>{if(B!==b0)return;B.wait=false;foePhase()},BEAT);
+}
+function foePhase(){
+ B.scrollTo=B.log.length;foeTurn();  // the log opens on the foe's part (yours is just above)
  if(!alive().length){lost();return}
  tick(foeNow());if(B.foe.field)B.foe.field--;
  if(foeNow().hp<=0){foeFell();render();return}
