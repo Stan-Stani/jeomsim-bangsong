@@ -204,7 +204,7 @@ function afterShow(){
   ...lines.map(a=>say(a.who,a.ko,a.en))]);
 }
 /* ===== hooking in (only while a run is on, in 2교시's replay) ===== */
-const on=()=>!!R&&!!RP&&CH&&CH.id==='ch2';
+const on=()=>!!R&&!!RP&&CH&&CH.id==='ch2'&&(window.__labActive||'bangsong')==='bangsong';  // one lab at a time
 const facing0=window.facing,talk0=window.talkWith,open0=window.openDialog;
 facing=function(){  // a lab place (or the mixer, once it's time) is something to press A at, like a spot
  if(on()){const [dx,dy]=D[player.dir],L=Z.legend[at(player.x+dx,player.y+dy)]||{};
@@ -223,7 +223,7 @@ LAB.start=()=>{
  const go=()=>{
   loadCps().then(all=>{const L=(all||{}).ch2||[];const at=L[L.length-1];
    if(!at){toast('2교시 장면이 없어요.');return}
-   boot('ch2',{force:1,at});R=plan();
+   boot('ch2',{force:1,at});window.__labActive='bangsong';R=plan();
    const q0=C.questText;C.questText=()=>on()?quest():q0();
    setTimeout(()=>{loadZone('bcast',5,4,'up');refresh();
     openDialog('백구름',[say('백구름','어, 왔어? 오늘 방송 준비 좀 도와줄래? 내가 하나씩 말할게.','Oh, you\'re here? Could you help me get today\'s broadcast ready? I\'ll tell you one thing at a time.'),say('백구름',cur().ask,cur().en)])},500)});

@@ -1,3 +1,4 @@
 [
- {"id":"bangsong","name":"방송부 활동 (2교시)","file":"labs/bangsong.js"}
+ {"id":"bangsong","name":"방송부 활동 (2교시)","file":"labs/bangsong.js"},
+ {"id":"deck","name":"방송 덱 (2교시)","file":"labs/deck.js"}
 ]
