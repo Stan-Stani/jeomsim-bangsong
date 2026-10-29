@@ -321,11 +321,14 @@ openDialog=function(name,steps,opts){
  return open0(name,steps,opts);
 };
 const avgLv=()=>{const ws=Object.keys(M.box);return ws.reduce((a,w)=>a+lvOf(w),0)/ws.length};
+function resetAsk(){open0('백구름',[{...say('백구름','…처음부터? 모은 단어랑 레벨, 이긴 기록이 다 없어져.','…From the start? Your words, levels and wins all go.'),
+ choose:[['응, 처음부터',()=>{M={box:{},wins:{}};STARTERS.forEach(w=>M.box[w]={xp:0});store(M);try{updateQuest()}catch(e){}sfx('door');
+  open0('백구름',[say('백구름','좋아. 다시 세 개부터. 기회, 챙기다, 놓치다.','Okay. Back to three. 기회, 챙기다, 놓치다.')])}],['아니, 그대로',null]]}])}
 const beatAll=()=>['chan','hari','daon'].every(k=>(M.wins[k]||0)>0);
 talkWith=function(n){
  if(on()&&n){
   if(n.name==='백구름'){const T=TRAINERS['백구름'],opts=[['단어 도감',showDex]];
-   if(beatAll())opts.push(['챔피언전!',()=>startBattle({trainer:'백구름',foe:T.team,scale:1+Math.min(2,M.wins.gureum||0)})]);opts.push(['나중에',null]);
+   if(beatAll())opts.push(['챔피언전!',()=>startBattle({trainer:'백구름',foe:T.team,scale:1+Math.min(2,M.wins.gureum||0)})]);opts.push(['처음부터',resetAsk],['나중에',null]);
    const line=beatAll()?say('백구름',T.hi[0],T.hi[1]):say('백구름',`단어 ${Object.keys(M.box).length}/${WORDS.length}개. 찬, 하리, 다온을 다 이기면… 나랑 해.`,`${Object.keys(M.box).length}/${WORDS.length} words. Beat Chan, Hari and Daon… then me.`);
    return open0('백구름',[{...line,choose:opts}])}
   if(TRAINERS[n.name]){const T=TRAINERS[n.name];return open0(n.name,[{...say(n.name,T.hi[0],T.hi[1]),choose:[['배틀!',()=>startBattle({trainer:n.name,foe:T.team,scale:(M.wins[T.key]?0:-1)+Math.min(2,M.wins[T.key]||0)})],['나중에',null]]}])}
