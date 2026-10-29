@@ -12,10 +12,12 @@
    - 가로채기: once per foe word, find the line for ITS word first and it loses its turn;
    - right lines in a row fill a combo; at three, 방송부 합동! hits with the whole party (a wrong word resets it);
    - hits shake and float numbers, criticals flash; trainers talk during the fight;
-   - collecting: 구름's three starters, wild words in the library shelves (weaken one, then find the sentence it belongs in),
+   - collecting: 구름's three starters, wild words where their meaning lives around school (a twinkling spot: weaken one, then
+     find its sentence),
      찬, 하리 and 다온 in the 방송실 (beat one, take a word), a 단어 도감 of all 20 from 구름, and 구름 himself as the champion once
      all three are beaten. Correct lines level a word. The box, levels and wins stay in this browser.
-   Starting the lab boots 2교시's replay save at its last checkpoint (overwriting that replay); booting any other chapter turns it off. */
+   Starting the lab boots 2교시's replay save at its last checkpoint (overwriting that replay); booting any other chapter turns it off,
+   and a reload starts it again (the engine remembers the lab that was on). */
 (()=>{
 const LAB={},ID='battle',en=(ko,e)=>{(window.LINES_EN=window.LINES_EN||{})[plain(ko)]=e};
 const pick=a=>a[Math.random()*a.length|0],shuf=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
@@ -353,7 +355,7 @@ function reveal(w,title,then){
 }
 function finish(){
  const b=B;closePanel();B=null;
- if(b.wild){if(b.over==='caught')reveal(b.foe.team[0].w,'새 단어!');return}  // fled, ran or lost: the battle log already said so
+ if(b.wild){const w=b.foe.team[0].w;if(b.over==='caught'){delete SPOTS[w];reveal(w,'새 단어!')}else placeSpot(w);return}  // fled, ran or lost (the log said so): it hides somewhere else at home
  const T=TRAINERS[b.trainer];
  if(b.over==='win'){M.wins[T.key]=(M.wins[T.key]||0)+1;if(T.champ)M.champ=1;store(M);try{updateQuest()}catch(e){}
   const take=b.foe.team.map(w=>w.w).filter(w=>!M.box[w]);
@@ -370,29 +372,48 @@ function offer(name,after){const T=TRAINERS[name],P=M.pending;
 function showDex(){
  const have=Object.keys(M.box).length;
  panel(`<h2>단어 도감<span>${have}/${WORDS.length}${M.champ?' · 챔피언':''}</span></h2><div class="dex">${WORDS.map(w=>{const own=!!M.box[w],d=own&&defOf(w);
-  return own?`<div class="dx"><b>${esc(w)}</b><small>Lv.${lvOf(w)} · 「${esc(MOVES[w].n)}」</small><small>${esc(d?d.k:'')}</small></div>`:`<div class="dx no"><b>${'□'.repeat(w.length)}</b><small>${w.length}글자 · ？？？</small></div>`}).join('')}</div>
-  <div class="row"><span class="bench">도서관 책장에 야생 단어가 있어요.</span><button class="btn" type="button" id="btOk">닫기</button></div>`);
+  return own?`<div class="dx"><b>${esc(w)}</b><small>Lv.${lvOf(w)} · 「${esc(MOVES[w].n)}」</small><small>${esc(d?d.k:'')}</small></div>`:`<div class="dx no"><b>${'□'.repeat(w.length)}</b><small>${w.length}글자 · ${esc(HOME[w][2])} 어딘가</small></div>`}).join('')}</div>
+  <div class="row"><span class="bench">반짝이는 곳에 야생 단어가 있어요.</span><button class="btn" type="button" id="btOk">닫기</button></div>`);
  $('btOk').onclick=closePanel;
 }
 const say=(who,ko,e)=>{if(e)en(ko,e);return {who,say:ko}};
 /* ===== hooks (only while this lab is on, in 2교시's replay) ===== */
 const on=()=>!!M&&!!RP&&CH&&CH.id==='ch2'&&window.__labActive===ID;
 const facing0=window.facing,talk0=window.talkWith,open0=window.openDialog;
-const SHELF=['libShelf','bookWall','bookCart'];
+/* habitats: a wild word lives where its meaning does (곡 by the piano, 명찰 in the lockers, 얼다 at the cold water…). Each one you
+   don't have waits on one of its home tiles, and that spot twinkles; if it gets away it moves to another spot at home. */
+const HOME={'곡':['music',['piano'],'음악실'],'분위기':['music',['drums','mstand'],'음악실'],'긴장하다':['music',['mstand','piano'],'음악실'],
+ '타이밍':['bcast',['mixer'],'방송실'],'효과':['bcast',['micStand','tapeCart'],'방송실'],'연락처':['bcast',['sayeon'],'방송실'],
+ '기회':['library',['libShelf'],'도서관'],'포기하다':['library',['libShelf','bookCart'],'도서관'],'어색하다':['library',['readTable'],'도서관'],
+ '명찰':['class',['lockers'],'교실'],'재촉하다':['class',['timetable'],'교실'],'놀리다':['class',['desk'],'교실'],'장난':['class',['piggy','desk'],'교실'],
+ '즐기다':['cafe',['lunchTable','snacks'],'급식실'],'챙기다':['cafe',['serve'],'급식실'],
+ '심장':['gym',['hoop','mat'],'체육관'],'데려오다':['gym',['ballCart','bleacher'],'체육관'],'놓치다':['gym',['ballCart'],'체육관'],
+ '얼다':['hall2',['hallWater'],'2층 복도'],'괴롭히다':['yard',['zelkova'],'운동장']};
+let SPOTS={};
+function placeSpot(w){const [zid,tiles]=HOME[w],Zs=C.ZONES[zid];if(!Zs)return;const ok=[];  // a home tile you can stand next to, and not one another word has
+ Zs.map.forEach((row,y)=>[...row].forEach((ch,x)=>{const L=Zs.legend[ch]||{};if(!tiles.includes(L.tile))return;
+  if(Object.values(SPOTS).some(s=>s.z===zid&&s.x===x&&s.y===y))return;
+  if(Object.values(D).some(([dx,dy])=>(Zs.legend[(Zs.map[y+dy]||'')[x+dx]]||{}).walk))ok.push({z:zid,x,y})}));
+ if(ok.length)SPOTS[w]=pick(ok);else delete SPOTS[w]}
+function placeSpots(){SPOTS={};WORDS.filter(w=>!M.box[w]).forEach(placeSpot)}
+function sparkle(X,Y,t){const c=['#FFF6C8','#F6D9A6','#FFFFFF','#E8962A'][Math.floor(t/180)%4],b=Math.round(Math.sin(t/260)*1.5);
+ r(X+7,Y+1+b,2,6,c);r(X+5,Y+3+b,6,2,c);r(X+7,Y+3+b,2,2,'#FFFFFF')}
+function wrapTiles(){for(const k of new Set(Object.values(HOME).flatMap(h=>h[1]))){const f=TILES[k];if(!f||f.labSpot)continue;
+ const w=function(X,Y,x,y,t){f.apply(this,arguments);if(on()&&Object.values(SPOTS).some(s=>s.z===ZID&&s.x===x&&s.y===y))sparkle(X,Y,t)};w.labSpot=1;TILES[k]=w}}
+const spotAt=(x,y)=>Object.keys(SPOTS).find(w=>!M.box[w]&&SPOTS[w].z===ZID&&SPOTS[w].x===x&&SPOTS[w].y===y);
 facing=function(){
- if(on()){const [dx,dy]=D[player.dir],L=Z.legend[at(player.x+dx,player.y+dy)]||{};
-  if(ZID==='library'&&SHELF.includes(L.tile))return {spot:{steps:[{lab:ID+':wild'}]}}}
+ if(on()){const [dx,dy]=D[player.dir],w=spotAt(player.x+dx,player.y+dy);if(w)return {spot:{steps:[{lab:ID+':wild:'+w}]}}}
  return facing0();
 };
 openDialog=function(name,steps,opts){
  const l=steps&&steps.length===1&&steps[0]&&steps[0].lab;
- if(l===ID+':wild'&&on()){const wild=WORDS.filter(w=>!M.box[w]);if(!wild.length){return open0('…',[say('…','책장이 조용해요. 단어를 다 모았어요!','The shelves are quiet. You\'ve collected every word!')])}
-  const w=pick(wild);return open0('…',[{...say('…','책장에서 뭔가 튀어나왔어요!','Something jumped out of the shelf!'),choose:[['맞서기',()=>startBattle({wild:1,foe:[w],scale:-1})],['도망가기',null]]}])}
+ if(l&&l.startsWith(ID+':wild:')&&on()){const w=l.slice(ID.length+6);
+  return open0('…',[{...say('…','뭔가 반짝여요… 단어가 튀어나왔어요!','Something twinkles… a word jumped out!'),choose:[['맞서기',()=>startBattle({wild:1,foe:[w],scale:-1})],['도망가기',null]]}])}
  return open0(name,steps,opts);
 };
 const avgLv=()=>{const ws=Object.keys(M.box);return ws.reduce((a,w)=>a+lvOf(w),0)/ws.length};
 function resetAsk(){open0('백구름',[{...say('백구름','…처음부터? 모은 단어랑 레벨, 이긴 기록이 다 없어져.','…From the start? Your words, levels and wins all go.'),
- choose:[['응, 처음부터',()=>{M={box:{},wins:{}};STARTERS.forEach(w=>M.box[w]={xp:0});store(M);try{updateQuest()}catch(e){}sfx('door');
+ choose:[['응, 처음부터',()=>{M={box:{},wins:{}};STARTERS.forEach(w=>M.box[w]={xp:0});store(M);placeSpots();try{updateQuest()}catch(e){}sfx('door');
   open0('백구름',[say('백구름','좋아. 다시 세 개부터. 기회, 챙기다, 놓치다.','Okay. Back to three. 기회, 챙기다, 놓치다.')])}],['아니, 그대로',null]]}])}
 const beatAll=()=>['chan','hari','daon'].every(k=>(M.wins[k]||0)>0);
 talkWith=function(n){
@@ -408,16 +429,16 @@ talkWith=function(n){
 };
 LAB.start=()=>{
  loadCps().then(all=>{const L=(all||{}).ch2||[],at=L[L.length-1];if(!at){toast('2교시 장면이 없어요.');return}
-  if(!boot.labWrapped){const b0=boot;boot=function(id,rp){if(!(rp&&rp.lab===ID))window.__labActive=null;return b0(id,rp)};boot.labWrapped=1}  // any other boot (another 교시, a normal 2교시 or a scene) turns the lab off
-  boot('ch2',{force:1,at,lab:ID});window.__labActive=ID;
+  boot('ch2',{force:1,at});window.__labActive=ID;  // the engine clears this on any other boot, and brings the lab back after a reload
   M=load()||{box:{},wins:{}};const fresh=!Object.keys(M.box).length;if(fresh){STARTERS.forEach(w=>M.box[w]={xp:0});store(M)}
+  wrapTiles();placeSpots();
   const q0=C.questText;C.questText=()=>on()?`${M.champ?'챔피언 · ':''}단어 ${Object.keys(M.box).length}/${WORDS.length} · 찬 ${M.wins.chan||0}승 · 하리 ${M.wins.hari||0}승 · 다온 ${M.wins.daon||0}승`:q0();
   setTimeout(()=>{loadZone('bcast',5,4,'up');try{updateQuest()}catch(e){}
    open0('백구름',fresh?[say('백구름','단어 배틀 알아? 단어마다 기술이 있어. 뜻이 곧 기술이야.','Know word battles? Every word has a move. Its meaning is the move.'),
     say('백구름','자, 첫 단어 세 개. 기회, 챙기다, 놓치다. 대사를 읽고 맞는 단어를 넣으면 기술이 나가.','Here, your first three words: 기회, 챙기다, 놓치다. Read a line, put in the right word, and its move goes off.'),
-    say('백구름','상대가 다음에 뭘 할지 보여. 공격이 오면 「놓치다」로 빗나가게 해.','You can see what the foe will do next. When an attack is coming, make it miss with 놓치다.'),say('백구름','먼저 도서관 책장에서 야생 단어를 잡아 봐. 찬, 하리, 다온은 그다음에.','Catch some wild words in the library shelves first. Chan, Hari and Daon after that.')]
+    say('백구름','상대가 다음에 뭘 할지 보여. 공격이 오면 「놓치다」로 빗나가게 해.','You can see what the foe will do next. When an attack is coming, make it miss with 놓치다.'),say('백구름','학교 곳곳에 반짝이는 데가 있어. 거기 야생 단어가 숨어 있어. 먼저 몇 개 잡아 봐. 찬, 하리, 다온은 그다음에.','Things twinkle here and there around school. Wild words hide there. Catch a few first. Chan, Hari and Daon after that.')]
     :[say('백구름',`다시 왔네. 단어 ${Object.keys(M.box).length}개.`,`You're back. ${Object.keys(M.box).length} words.`)])},500)});
 };
-LAB.state=()=>({M,B});LAB.moves=MOVES;LAB.sentence=sentenceFor;LAB.deal=w=>deal(w);  // for tests
+LAB.state=()=>({M,B});LAB.moves=MOVES;LAB.sentence=sentenceFor;LAB.deal=w=>deal(w);LAB.spots=()=>SPOTS;  // for tests
 WALK_LABS[ID]=LAB;
 })();

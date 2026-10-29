@@ -205,7 +205,7 @@ function afterShow(){
   ...lines.map(a=>say(a.who,a.ko,a.en))]);
 }
 /* ===== hooking in (only while a run is on, in 2교시's replay) ===== */
-const on=()=>!!R&&!!RP&&CH&&CH.id==='ch2'&&(window.__labActive||'bangsong')==='bangsong';  // one lab at a time
+const on=()=>!!R&&!!RP&&CH&&CH.id==='ch2'&&window.__labActive==='bangsong';  // one lab at a time, and only while it's on
 const facing0=window.facing,talk0=window.talkWith,open0=window.openDialog;
 facing=function(){  // a lab place (or the mixer, once it's time) is something to press A at, like a spot
  if(on()){const [dx,dy]=D[player.dir],L=Z.legend[at(player.x+dx,player.y+dy)]||{};
