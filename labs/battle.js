@@ -1,16 +1,23 @@
 /* 실험 · 단어 배틀 (2교시): collect words and battle with them, Pokémon-style. Debug only (설정 · 개발, or ?lab=battle); never in
    index.html; remove = delete this file and its labs.json entry. Runs in 2교시's replay save from the end of its story.
    A word's move IS its meaning: 얼다 freezes, 놓치다 makes the enemy miss, 재촉하다 acts twice, 곡 heals, 포기하다 finishes a weak
-   foe… (the move is described in simple Korean, English behind ?). Casting a move = filling the blank in one of 2교시's own
-   sentences for that word (BANK): right, it works; wrong, it fizzles and the reason shows (the chapter's own hint). A plain
-   attack needs no check, so a move is a choice. 3 on 3, one out at a time; 교체 swaps (it costs the turn).
-   Collecting: 구름 gives three starters; wild words jump out of the library shelves (weaken one, then catch it by finding
-   the sentence it belongs in); 찬, 하리 and 다온 in the 방송실 battle with themed teams, and beating one lets you take one of their words.
-   A word that casts right gains XP and levels (HP, attack). The box, levels and wins stay in this browser. */
+   foe… (the move is described in simple Korean, English behind ?). Your three words fight together (the foe's come out one at a
+   time). A move isn't picked by name: each turn three lines (대사) come up, fill-in sentences from 2교시 (BANK, Q, REVIEW) for your
+   words, without saying whose. Say one and choose which of your words fills its blank (a look-alike decoy is among them): right,
+   that word's move fires; wrong, it fizzles. 뜻 보기 shows the choices' meanings for 8 HP.
+   What makes it a game:
+   - the foe's next action shows ahead (다음: 「얼리기」 → 기회), so the move-words are counter-play: find the line that needs 놓치다
+     (it misses), 얼다 (it can't move) or 어색하다 (it may fumble);
+   - right lines in a row fill a combo; at three, 방송부 합동! hits with the whole party (a wrong word resets it);
+   - hits shake and float numbers, criticals flash; trainers talk during the fight;
+   - collecting: 구름's three starters, wild words in the library shelves (weaken one, then find the sentence it belongs in),
+     찬, 하리 and 다온 in the 방송실 (beat one, take a word), a 단어 도감 of all 20 from 구름, and 구름 himself as the champion once
+     all three are beaten. Correct lines level a word. The box, levels and wins stay in this browser. */
 (()=>{
 const LAB={},ID='battle',en=(ko,e)=>{(window.LINES_EN=window.LINES_EN||{})[plain(ko)]=e};
 const pick=a=>a[Math.random()*a.length|0],shuf=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
 const esc=x=>String(x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const josa=(w,a,b2)=>{const c=w.charCodeAt(w.length-1);return c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28!==0?a:b2};
 /* ===== moves: what each 2교시 word does (cd: turns before it can be cast again) ===== */
 const MOVES={
  '괴롭히다':{n:'괴롭히기',d:'세 턴 동안 상대가 매 턴 조금씩 다쳐요.',e:'The foe takes a little damage every turn for three turns.',fx:(b,u,t)=>{t.st.poison=3}},
@@ -29,17 +36,22 @@ const MOVES={
  '효과':{n:'효과 한 번 더',d:'방금 쓴 기술의 효과가 한 번 더 나와요.',e:'Your last move\'s effect happens once more.',fx:(b,u,t)=>{const m=b.lastFx;if(m&&m!=='효과')MOVES[m].fx(b,u,t);else log(b,'아무 효과도 없어요.','No effect.')}},
  '포기하다':{n:'포기시키기',d:'상대 체력이 30% 이하면 상대가 포기해요. 아니면 아무 일도 없어요.',e:'If the foe is at 30% HP or less, it gives up. Otherwise nothing happens.',fx:(b,u,t)=>{if(t.hp<=t.max*.3){t.hp=0;log(b,`${t.w}${josa(t.w,'이','가')} 포기했어요!`,`${t.w} gave up!`)}else log(b,'아직 포기 안 해요.','It won\'t give up yet.')}},
  '즐기다':{n:'즐기기',d:'두 턴 동안 매 턴 체력이 조금씩 돌아와요.',e:'Recover a little HP every turn for two turns.',fx:(b,u)=>{u.st.regen=2}},
- '챙기다':{n:'챙기기',d:'쓰러진 우리 편 단어 하나를 챙겨서 다시 일으켜요.',e:'Look after a fallen word and get it back up.',fx:(b,u)=>{const f=b.me.team.find(w=>w.hp<=0);if(f){f.hp=Math.round(f.max/2);log(b,`${f.w}${josa(f.w,'이','가')} 다시 일어났어요!`,`${f.w} got back up!`)}else{heal(u,18);log(b,'다들 괜찮아요. 대신 체력을 챙겼어요.','Everyone\'s fine. Took care of HP instead.')}},cd:4},
+ '챙기다':{n:'챙기기',d:'쓰러진 우리 편 단어 하나를 챙겨서 다시 일으켜요.',e:'Look after a fallen word and get it back up.',fx:(b,u)=>{const f=b.me.team.find(w=>w.hp<=0);if(f){f.hp=Math.round(f.max/2);fxEv(f,f.hp,'heal');log(b,`${f.w}${josa(f.w,'이','가')} 다시 일어났어요!`,`${f.w} got back up!`)}else{heal(u,18);log(b,'다들 괜찮아요. 대신 체력을 챙겼어요.','Everyone\'s fine. Took care of HP instead.')}},cd:4},
  '재촉하다':{n:'재촉하기',d:'빨리빨리! 이번 턴에 한 번 더 공격해요.',e:'Hurry, hurry! Attack once more this turn.',fx:(b,u,t)=>{hit(b,u,t,10);hit(b,u,t,10)}},
  '연락처':{n:'연락하기',d:'다른 단어한테 연락해요. 그 단어의 다음 공격이 두 배예요.',e:'Call another word: its next attack does double.',fx:(b,u)=>{const o=b.me.team.find(w=>w!==u&&w.hp>0);if(o){o.st.double=1;log(b,`${o.w}한테 연락했어요!`,`Called ${o.w}!`)}else log(b,'연락할 단어가 없어요.','No one to call.')}},
  '데려오다':{n:'데려오기',d:'다른 단어를 데려와서 같이 공격해요.',e:'Bring another word along and attack together.',fx:(b,u,t)=>{const o=b.me.team.find(w=>w!==u&&w.hp>0);hit(b,u,t,12);if(o)hit(b,o,t,12,`${o.w}도 같이!`)}},
 };
 const WORDS=Object.keys(MOVES);
-const josa=(w,a,b2)=>{const c=w.charCodeAt(w.length-1);return c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28!==0?a:b2};
+/* ===== people: their teams, and what they say during a fight ===== */
 const TRAINERS={
- '남궁찬':{key:'chan',team:['재촉하다','놀리다','장난'],hi:['배틀? 좋아! 난 빠른 게 좋아.','A battle? Sure! I like fast.'],win:['와… 졌다. 하나 가져가. 다음엔 안 져.','Whoa… I lost. Take one. I won\'t lose next time.'],lose:['내가 이겼다! 또 해!','I win! Again!']},
- '유하리':{key:'hari',team:['곡','긴장하다','얼다'],hi:['…배틀? 음악으로 해도 돼?','…A battle? Can I do it with music?'],win:['…졌네. 괜찮아. 하나 골라.','…I lost. It\'s fine. Pick one.'],lose:['…이겼다. 조금 기뻐.','…I won. I\'m a little happy.']},
- '오다온':{key:'daon',team:['명찰','포기하다','타이밍'],hi:['배틀? 규칙은 지켜. 반칙하면 벌금이야.','A battle? Keep to the rules. Cheat and you\'re fined.'],win:['…인정. 하나 가져가. 규칙은 규칙이니까.','…Fair. Take one. Rules are rules.'],lose:['내가 이겼어. 당연하지.','I won. Obviously.']},
+ '남궁찬':{key:'chan',team:['재촉하다','놀리다','장난'],hi:['배틀? 좋아! 난 빠른 게 좋아.','A battle? Sure! I like fast.'],win:['와… 졌다. 하나 가져가. 다음엔 안 져.','Whoa… I lost. Take one. I won\'t lose next time.'],lose:['내가 이겼다! 또 해!','I win! Again!'],
+  move:[['빨리빨리! 기다리는 거 싫어!','Faster! I hate waiting!'],['이거 받아라!','Take this!']],fall:[['헐… 벌써?','Huh… already?'],['괜찮아, 아직 남았어!','It\'s fine, I\'ve got more!']],low:['어, 어… 잠깐만!','Wait, wait… hold on!']},
+ '유하리':{key:'hari',team:['곡','긴장하다','얼다'],hi:['…배틀? 음악으로 해도 돼?','…A battle? Can I do it with music?'],win:['…졌네. 괜찮아. 하나 골라.','…I lost. It\'s fine. Pick one.'],lose:['…이겼다. 조금 기뻐.','…I won. I\'m a little happy.'],
+  move:[['…한 소절만.','…just one line.'],['떨려도 할 거야.','I\'ll do it, even shaking.']],fall:[['…아.','…oh.'],['다음 곡이 있어.','There\'s a next song.']],low:['…마이크 꺼 줘.','…turn the mic off.']},
+ '오다온':{key:'daon',team:['명찰','포기하다','타이밍'],hi:['배틀? 규칙은 지켜. 반칙하면 벌금이야.','A battle? Keep to the rules. Cheat and you\'re fined.'],win:['…인정. 하나 가져가. 규칙은 규칙이니까.','…Fair. Take one. Rules are rules.'],lose:['내가 이겼어. 당연하지.','I won. Obviously.'],
+  move:[['규칙대로 간다.','By the rules.'],['벌금이야.','That\'s a fine.']],fall:[['…계산 실수.','…a miscalculation.'],['아직 안 끝났어.','It\'s not over.']],low:['이건… 규칙 위반 아니야?','Isn\'t this… against the rules?']},
+ '백구름':{key:'gureum',champ:1,team:['효과','타이밍','심장'],hi:['…셋 다 이겼다며. 그럼 이제 나야. 방송부 챔피언전.','…You beat all three, I hear. Then it\'s me now. The broadcast club championship.'],win:['…내가 졌어. 오늘부터 네가 챔피언이야.','…I lost. From today, you\'re the champion.'],lose:['…아직은 내가 챔피언.','…I\'m still the champion, for now.'],
+  move:[['타이밍이 중요해.','Timing matters.'],['…여기서 한 번 더.','…once more, right here.']],fall:[['…좋아.','…good.'],['계속해.','Keep going.']],low:['…진짜 세졌다.','…you really got strong.']},
 };
 const STARTERS=['기회','챙기다','즐기다'];
 /* ===== the box (this browser) ===== */
@@ -49,22 +61,24 @@ const store=m=>{try{localStorage.setItem(KEYM,JSON.stringify(m))}catch(e){}};
 let M=null;
 const lvOf=w=>{const x=M.box[w]||{xp:0};return 1+Math.floor(x.xp/3)};
 function mon(w,lv,side){const max=40+lv*8;return {w,lv,max,hp:max,atk:8+lv*2,st:{},cd:0,side}}
-/* ===== battle state + text ===== */
+/* ===== battle state, hits and their show ===== */
 let B=null,showEn=false;
 const log=(b,ko,e)=>{b.log.push([ko,e||''])};
-function hurt(m,n){m.hp=Math.max(0,m.hp-Math.round(n))}
-function heal(m,n){m.hp=Math.min(m.max,m.hp+Math.round(n))}
+function fxEv(m,n,kind,crit){if(!B)return;const i=m.side==='foe'?'foe':B.me.team.indexOf(m);B.fx.push({i,n:Math.round(n),kind,crit})}
+function hurt(m,n){n=Math.round(n);m.hp=Math.max(0,m.hp-n);fxEv(m,n,'hurt')}
+function heal(m,n){const h=Math.min(m.max-m.hp,Math.round(n));m.hp+=h;if(h>0)fxEv(m,h,'heal')}
 function hit(b,u,t,base,note){
  if(u.st.frozen){return}
- if(u.st.miss){u.st.miss=0;log(b,`${u.w}의 공격이 빗나갔어요!`,`${u.w}'s attack missed!`);return}
+ if(u.st.miss){u.st.miss=0;log(b,`${u.w}의 공격이 빗나갔어요!`,`${u.w}'s attack missed!`);fxEv(t,0,'miss');return}
  let n=base+u.atk/2;if(u.st.weak)n*=.6;if(t.st.open)n*=1.4;if(u.side==='me'&&b.me.field)n*=1.3;
  let crit=u.st.crit||Math.random()<.08;if(crit){n*=1.6;u.st.crit=0}if(u.st.double){n*=2;u.st.double=0}
- hurt(t,n);log(b,(note?note+' ':'')+`${t.w}에게 ${Math.round(n)}!${crit?' 급소!':''}`,`${Math.round(n)} to ${t.w}!${crit?' Critical!':''}`);
+ n=Math.round(n);t.hp=Math.max(0,t.hp-n);fxEv(t,n,'hurt',crit);sfx(crit?'star':u.side==='me'?'item':'lock');
+ log(b,(note?note+' ':'')+`${t.w}에게 ${n}!${crit?' 급소!':''}`,`${n} to ${t.w}!${crit?' Critical!':''}`);
 }
-const meNow=()=>B.me.team[B.me.cur],foeNow=()=>B.foe.team[B.foe.cur];
-/* sentence to cast or to catch: one of 2교시's own BANK items for the word (an authored blank with a reason for each wrong option) */
-/* every fill-in sentence 2교시 has for the word: its BANK, the teaching questions (Q, by person) and the in-character review lines
-   (REVIEW, with who says it and their lead-in), in a shuffled round per word, so one doesn't come back until the others have */
+const foeNow=()=>B.foe.team[B.foe.cur];
+const alive=()=>B.me.team.filter(w=>w.hp>0);
+const ready=()=>alive().filter(w=>w.cd<=0&&!w.st.frozen);
+/* every fill-in sentence 2교시 has for the word (BANK, Q by person, REVIEW with who says it), in a shuffled round per word */
 const usable=q=>q&&q.ask&&q.ask.includes('___')&&Array.isArray(q.opts)&&q.opts.some(o=>o[1])&&!q.listen&&!q.gram&&!q.reg;
 const rounds={};
 function sentenceFor(w){
@@ -73,30 +87,60 @@ function sentenceFor(w){
  const q=rounds[w].shift()||null;if(q)rounds[w].last=q;return q;
 }
 const whoSays=q=>{const by=[].concat(q.by||[])[0],n=by&&C.NPC&&C.NPC[by];return n?n.name:(by||'')};
+function defOf(w){const d=(C.DICT||{})[w]||(typeof carryDict==='function'&&carryDict(w))||((typeof lexLookup==='function'&&lexLookup(w)[0])||[])[1];return d?{k:plain(d.k||''),e:d.e||''}:null}
+/* the foe's next action, decided ahead and shown */
+function chooseIntent(){
+ const t=foeNow();if(!t||t.hp<=0||B.over)return;
+ const target=pick(alive());const useMove=t.cd<=0&&!!MOVES[t.w]&&Math.random()<.45;
+ B.intent={move:useMove,target};
+}
+function intentHTML(){
+ const t=foeNow(),I=B.intent;if(!I||B.over)return '';
+ if(t.st.frozen)return `<div class="intent">다음: 얼어서 못 움직여요</div>`;
+ const to=I.target&&I.target.hp>0?I.target.w:'?';
+ return `<div class="intent">다음: ${I.move?`「${esc(MOVES[t.w].n)}」`:'공격'} → ${esc(to)}${t.st.miss?' · 빗나갈 거예요':''}${t.st.awk?' · 어색해서 못 할 수도':''}</div>`;
+}
 /* ===== the table ===== */
 function css(){if($('btCss'))return;const st=document.createElement('style');st.id='btCss';
- st.textContent=`#btPanel .sheet{gap:10px}
- #btPanel .side{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;border:2px solid color-mix(in srgb,var(--ink) 25%,transparent);border-radius:10px;padding:8px 10px}
- #btPanel .side.foe{border-style:dashed}
- #btPanel .side b{font-size:1.35rem;letter-spacing:.02em}#btPanel .side small{font-size:.72rem;opacity:.7}
+ st.textContent=`#btPanel .sheet{gap:9px;position:relative}
+ #btPanel .side{position:relative;display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;border:2px dashed color-mix(in srgb,var(--ink) 30%,transparent);border-radius:10px;padding:8px 10px}
+ #btPanel .side b{font-size:1.4rem;letter-spacing:.02em}#btPanel .side small{font-size:.72rem;opacity:.7}
+ #btPanel .intent{grid-column:1/-1;font-size:.8rem;font-weight:700;color:#e9952c}
  #btPanel .hp{grid-column:1/-1;height:8px;border-radius:5px;background:color-mix(in srgb,var(--ink) 15%,transparent);overflow:hidden}
- #btPanel .hp i{display:block;height:100%;background:#4aa66a;transition:width .35s}#btPanel .hp i.low{background:#d0503f}
- #btPanel .chips{grid-column:1/-1;display:flex;gap:4px;flex-wrap:wrap;min-height:0}#btPanel .chips span{font-size:.68rem;border:1px solid currentColor;border-radius:999px;padding:0 6px;opacity:.8}
+ #btPanel .hp i{display:block;height:100%;background:#4aa66a;transition:width .4s}#btPanel .hp i.low{background:#d0503f}
+ #btPanel .chips{grid-column:1/-1;display:flex;gap:4px;flex-wrap:wrap}#btPanel .chips span{font-size:.66rem;border:1px solid currentColor;border-radius:999px;padding:0 6px;opacity:.85}
  #btPanel .bench{font-size:.75rem;opacity:.75}
- #btPanel .log{background:#f1e9d4;color:#2b2720;border-radius:6px;padding:8px 10px;font-size:.92rem;line-height:1.55;display:grid;gap:2px;max-height:9.5em;overflow:auto}
- #btPanel .log .en{opacity:.7;font-size:.8rem}
+ #btPanel .log{background:#f1e9d4;color:#2b2720;border-radius:6px;padding:7px 10px;font-size:.88rem;line-height:1.5;display:grid;gap:1px;max-height:7.8em;overflow:auto}
+ #btPanel .log .en{opacity:.7;font-size:.78rem}#btPanel .log .say{color:#8a4b12;font-weight:700}
  #btPanel .acts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
  #btPanel .act{text-align:left;border:2px solid var(--ink);border-radius:9px;background:transparent;color:var(--ink);padding:8px 10px;cursor:pointer;font-family:inherit;display:grid;gap:2px}
  #btPanel .act b{font-size:.95rem}#btPanel .act small{font-size:.76rem;opacity:.8;line-height:1.35}
  #btPanel .act:disabled{opacity:.4;cursor:default}#btPanel .act.main{background:var(--ink);color:var(--hull)}
+ #btPanel .act.combo{background:#e9952c;color:#231503;border-color:#e9952c;grid-column:1/-1;animation:btPulse 1s ease-in-out infinite alternate}
  #btPanel .q{background:#f1e9d4;color:#2b2720;border-radius:6px;padding:10px 12px;font-size:1.02rem;line-height:1.6;font-weight:500}
  #btPanel .row{display:flex;gap:8px;justify-content:space-between;align-items:center;flex-wrap:wrap}
  #btPanel .box{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:6px}
- #btPanel .party{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}#btPanel .pm{border:2px solid color-mix(in srgb,var(--ink) 25%,transparent);border-radius:9px;padding:6px 8px;display:grid;gap:3px}
- #btPanel .pm b{font-size:1rem}#btPanel .pm small{font-size:.68rem;opacity:.75}#btPanel .pm .hp{grid-column:auto}#btPanel .pm.down{opacity:.4}
+ #btPanel .party{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}#btPanel .pm{position:relative;border:2px solid color-mix(in srgb,var(--ink) 25%,transparent);border-radius:9px;padding:6px 8px;display:grid;gap:3px}
+ #btPanel .pm b{font-size:1rem}#btPanel .pm small{font-size:.66rem;opacity:.75}#btPanel .pm .hp{grid-column:auto}#btPanel .pm.down{opacity:.35;filter:grayscale(1)}
+ #btPanel .pm.aim{border-color:#e9952c}
  #btPanel .lines{display:grid;gap:6px}#btPanel .line{background:#f1e9d4;color:#2b2720;border-color:#c9bea3}#btPanel .line b{font-weight:500;font-size:.95rem;line-height:1.5}#btPanel .line small{opacity:.7}
  #btPanel .act .def{font-size:.74rem;opacity:.85;line-height:1.4;font-weight:400}
- #btPanel .moves{font-size:.8rem;opacity:.85}#btPanel .moves summary{cursor:pointer}#btPanel .moves div{margin-top:3px}#btPanel .moves i{opacity:.7}`;
+ #btPanel .combo-m{display:flex;gap:4px;align-items:center;font-size:.75rem;opacity:.85}#btPanel .combo-m i{width:16px;height:6px;border-radius:3px;background:color-mix(in srgb,var(--ink) 20%,transparent)}#btPanel .combo-m i.on{background:#e9952c}
+ #btPanel .moves{font-size:.8rem;opacity:.85}#btPanel .moves summary{cursor:pointer}#btPanel .moves div{margin-top:3px}#btPanel .moves i{opacity:.7}
+ #btPanel .float{position:absolute;right:12px;top:4px;font-weight:800;font-size:1.25rem;pointer-events:none;animation:btFloat .9s ease-out forwards}
+ #btPanel .float.hurt{color:#d0503f}#btPanel .float.heal{color:#4aa66a}#btPanel .float.miss{color:inherit;opacity:.8}#btPanel .float.crit{font-size:1.6rem;color:#e9952c}
+ #btPanel .shake{animation:btShake .35s}#btPanel .glow{animation:btGlow .6s}
+ #btPanel .sheet.flash{animation:btFlash .3s}
+ #btPanel .reveal{display:grid;gap:8px;justify-items:center;text-align:center;padding:10px 0}#btPanel .reveal .big{font-size:2.6rem;font-weight:800;letter-spacing:.04em;animation:btPop .5s}
+ #btPanel .dex{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px}#btPanel .dx{border:2px solid color-mix(in srgb,var(--ink) 25%,transparent);border-radius:9px;padding:7px 9px;display:grid;gap:2px}
+ #btPanel .dx b{font-size:1.05rem}#btPanel .dx small{font-size:.72rem;opacity:.8;line-height:1.35}#btPanel .dx.no{opacity:.45;border-style:dashed}
+ @keyframes btShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+ @keyframes btGlow{0%{box-shadow:0 0 0 0 #4aa66a}100%{box-shadow:0 0 0 10px transparent}}
+ @keyframes btFloat{0%{opacity:0;transform:translateY(6px)}20%{opacity:1}100%{opacity:0;transform:translateY(-22px)}}
+ @keyframes btFlash{0%{box-shadow:inset 0 0 0 999px rgba(233,149,44,.35)}100%{box-shadow:none}}
+ @keyframes btPulse{from{filter:brightness(1)}to{filter:brightness(1.18)}}
+ @keyframes btPop{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.12);opacity:1}100%{transform:scale(1)}}
+ @media (prefers-reduced-motion:reduce){#btPanel *{animation:none!important;transition:none!important}}`;
  document.head.appendChild(st)}
 let keyBlock=null;
 function panel(html){css();let P=$('btPanel');
@@ -105,37 +149,46 @@ function panel(html){css();let P=$('btPanel');
  P.firstChild.innerHTML=html;return P.firstChild}
 function closePanel(){$('btPanel')?.remove();if(keyBlock)removeEventListener('keydown',keyBlock,true);keyBlock=null}
 const chips=m=>Object.entries({frozen:'얼음',weak:'긴장',awk:'어색',poison:'괴롭힘',open:'화남',miss:'놓침',regen:'즐김',double:'두 배',crit:'급소'}).filter(([k])=>m.st[k]).map(([,v])=>`<span>${v}</span>`).join('');
-function foeHTML(m,team,label){const p=m.hp/m.max;return `<div class="side foe"><span><small>${label}</small><br><b>${esc(m.w)}</b> <small>Lv.${m.lv}</small></span><small>${m.hp}/${m.max}</small>
- <div class="hp"><i class="${p<.3?'low':''}" style="width:${Math.round(p*100)}%"></i></div><div class="chips">${chips(m)}</div>
+const hpBar=m=>{const p=m.hp/m.max;return `<div class="hp"><i class="${p<.3?'low':''}" style="width:${Math.round(p*100)}%"></i></div>`};
+function foeHTML(m,team,label){return `<div class="side foe" data-fx="foe"><span><small>${label}</small><br><b>${esc(m.w)}</b> <small>Lv.${m.lv}</small></span><small>${m.hp}/${m.max}</small>
+ ${hpBar(m)}<div class="chips">${chips(m)}</div>${intentHTML()}
  ${team.length>1?`<div class="bench" style="grid-column:1/-1">${team.map(w=>w===m?'':(w.hp>0?'●':'○')+' '+esc(w.w)).filter(Boolean).join(' · ')}</div>`:''}</div>`}
-const partyHTML=()=>`<div class="party">${B.me.team.map(m=>{const p=m.hp/m.max;return `<div class="pm${m.hp<=0?' down':''}"><b>${esc(m.w)}</b><small>Lv.${m.lv} · ${m.hp}/${m.max}${m.cd>0?` · ${m.cd}턴 쉬어요`:''}</small><div class="hp"><i class="${p<.3?'low':''}" style="width:${Math.round(p*100)}%"></i></div><div class="chips">${chips(m)}</div></div>`}).join('')}</div>`;
-const alive=()=>B.me.team.filter(w=>w.hp>0);
-const ready=()=>alive().filter(w=>w.cd<=0&&!w.st.frozen);
+const partyHTML=()=>`<div class="party">${B.me.team.map((m,i)=>`<div class="pm${m.hp<=0?' down':''}${B.intent&&B.intent.target===m&&!B.over?' aim':''}" data-fx="${i}"><b>${esc(m.w)}</b><small>Lv.${m.lv} · ${m.hp}/${m.max}${m.cd>0?` · ${m.cd}턴 쉬어요`:''}</small>${hpBar(m)}<div class="chips">${chips(m)}</div></div>`).join('')}</div>`;
 function dealLines(){B.cards=shuf(ready()).slice(0,3).map(m=>({w:m.w,q:sentenceFor(m.w)})).filter(c=>c.q)}
 const lineHTML=(c,i)=>{const who=whoSays(c.q),pre=[].concat(c.q.pre||[]).map(plain).join(' ');
  return `<button class="act line" type="button" data-i="${i}">${who||pre?`<small>${esc(who)}${who&&pre?': ':''}${esc(pre)}</small>`:''}<b>${esc(plain(c.q.ask))}</b></button>`};
+const comboHTML=()=>`<div class="combo-m">콤보 ${[0,1,2].map(i=>`<i class="${B.combo>i?'on':''}"></i>`).join('')}</div>`;
+function playFx(box){  // shakes, floating numbers and the crit flash, after the table is drawn
+ for(const f of B.fx){const el=box.querySelector(`[data-fx="${f.i}"]`);if(!el)continue;
+  el.classList.add(f.kind==='heal'?'glow':'shake');if(f.crit)box.classList.add('flash');
+  const s=document.createElement('span');s.className='float '+(f.crit?'crit':f.kind);s.textContent=f.kind==='miss'?'빗나감!':f.kind==='heal'?'+'+f.n:'-'+f.n;el.append(s)}
+ B.fx=[];
+}
 function render(){
  const t=foeNow();if(!B.over&&!B.cards)dealLines();
  const box=panel(`<h2>${B.wild?'야생 단어':esc(B.trainer)+'와 배틀'}<button class="btn" type="button" id="btEn" aria-pressed="${showEn}" style="padding:2px 9px;font-size:.8rem">?</button></h2>
   ${foeHTML(t,B.wild?[]:B.foe.team,B.wild?'야생':esc(B.trainer))}
-  <div class="log">${B.log.slice(-4).map(([k,e])=>`<div>${esc(k)}${showEn&&e?`<div class="en">${esc(e)}</div>`:''}</div>`).join('')||'…'}</div>
+  <div class="log">${B.log.slice(-5).map(([k,e])=>`<div class="${/^[^:]{2,4}: "/.test(k)?'say':''}">${esc(k)}${showEn&&e?`<div class="en">${esc(e)}</div>`:''}</div>`).join('')||'…'}</div>
   ${partyHTML()}
   ${B.over?`<div class="row"><span></span><button class="btn" type="button" id="btEnd" style="background:var(--ink);color:var(--hull)">끝</button></div>`:`
-  <div class="bench">대사 · 하나를 골라서 말해요</div><div class="lines">${B.cards.map(lineHTML).join('')||'<small>지금 말할 수 있는 대사가 없어요.</small>'}</div>
-  <div class="acts"><button class="act" type="button" id="btAtk"><b>기본 공격</b><small>읽지 않고 그냥 공격해요.</small></button>
+  <div class="row"><span class="bench">대사 · 하나를 골라서 말해요</span>${comboHTML()}</div>
+  <div class="lines">${B.cards.map(lineHTML).join('')||'<small>지금 말할 수 있는 대사가 없어요.</small>'}</div>
+  <div class="acts">${B.combo>=3?`<button class="act combo" type="button" id="btCombo"><b>방송부 합동!</b><small>우리 단어들이 다 같이 공격해요.</small></button>`:''}
+   <button class="act" type="button" id="btAtk"><b>기본 공격</b><small>읽지 않고 그냥 공격해요.</small></button>
    ${B.wild?`<button class="act" type="button" id="btCatch" ${t.hp>t.max*.5?'disabled':''}><b>잡기</b><small>${t.hp>t.max*.5?'체력이 반 아래일 때.':'이 단어가 들어갈 문장을 찾으면 잡혀요.'}</small></button>`:`<button class="act" type="button" id="btInfo"><b>단어 보기</b><small>상대 단어의 뜻과 기술</small></button>`}</div>
   <details class="moves"><summary>내 단어 기술</summary>${B.me.team.map(m=>`<div><b>${esc(m.w)}</b> · ${esc(MOVES[m.w].n)} — ${esc(MOVES[m.w].d)}${showEn?` <i>${esc(MOVES[m.w].e)}</i>`:''}</div>`).join('')}</details>`}`);
+ playFx(box);
  $('btEn').onclick=()=>{showEn=!showEn;render()};
  if(B.over){$('btEnd').onclick=finish;return}
  box.querySelectorAll('.line').forEach(b=>b.onclick=()=>sayLine(B.cards[+b.dataset.i]));
  $('btAtk').onclick=()=>{const u=pick(alive());B.me.cur=B.me.team.indexOf(u);hit(B,u,foeNow(),10);endTurn()};
+ if($('btCombo'))$('btCombo').onclick=()=>{sfx('bell');log(B,'방송부 합동!','Broadcast club, together!');for(const u of alive())hit(B,u,foeNow(),16);B.combo=0;endTurn()};
  if($('btCatch'))$('btCatch').onclick=()=>catchIt();
  if($('btInfo'))$('btInfo').onclick=()=>{const d=(C.DICT||{})[t.w];log(B,`${t.w}: ${d?d.k:''} · 기술: ${MOVES[t.w].n} — ${MOVES[t.w].d}`,`${t.w}: ${d?d.e:''} · move: ${MOVES[t.w].e}`);render()};
 }
 /* 뜻 보기: definitions cost health (8 from your healthiest word, never its last point) */
 const DEF_COST=8;
-function defOf(w){const d=(C.DICT||{})[w]||(typeof carryDict==='function'&&carryDict(w))||((typeof lexLookup==='function'&&lexLookup(w)[0])||[])[1];return d?{k:plain(d.k||''),e:d.e||''}:null}
-function payForDefs(){const m=alive().sort((a,b)=>b.hp-a.hp)[0];if(!m)return;const n=Math.min(DEF_COST,m.hp-1);m.hp-=n;sfx('no');log(B,`뜻을 봤어요. ${m.w} 체력 -${n}`,`Looked up meanings. ${m.w} -${n} HP`)}
+function payForDefs(){const m=alive().sort((a,b)=>b.hp-a.hp)[0];if(!m)return;const n=Math.min(DEF_COST,m.hp-1);m.hp-=n;fxEv(m,n,'hurt');sfx('no');log(B,`뜻을 봤어요. ${m.w} 체력 -${n}`,`Looked up meanings. ${m.w} -${n} HP`)}
 const defHTML=w=>{const d=defOf(w);return d?`<small class="def">${esc(d.k)}${showEn&&d.e?` · ${esc(d.e)}`:''}</small>`:'<small class="def">뜻을 몰라요.</small>'};
 /* saying a line: which of your words fills its blank? (your words, and one look-alike that isn't yours) */
 function sayLine(c,defs){
@@ -145,14 +198,15 @@ function sayLine(c,defs){
  const box=panel(`<h2>어떤 단어가 들어가요?<span></span></h2>${who||pre?`<div class="bench">${esc(who)}${who&&pre?': ':''}${esc(pre)}</div>`:''}<div class="q">${esc(plain(c.q.ask))}</div>
   <div class="acts">${choices.map((w,i)=>`<button class="act" type="button" data-i="${i}"><b>${esc(w)}</b>${defs?defHTML(w):''}</button>`).join('')}</div>
   <div class="row">${defs?'<span></span>':`<button class="btn" type="button" id="btDef">뜻 보기 · 체력 -${DEF_COST}</button>`}<button class="btn" type="button" id="btBack">뒤로</button></div>`);
+ B.fx=[];
  $('btBack').onclick=()=>render();
  if($('btDef'))$('btDef').onclick=()=>{payForDefs();B.defChoices=choices;sayLine(c,true)};
  box.querySelectorAll('.act').forEach(b=>b.onclick=()=>{const w=choices[+b.dataset.i];
   const right=plain((c.q.opts.find(o=>o[1])||[c.w])[0]);B.cards=null;
-  if(w===c.w){sfx('ok');const u=B.me.team.find(m=>m.w===w);B.me.cur=B.me.team.indexOf(u);
+  if(w===c.w){sfx('ok');const u=B.me.team.find(m=>m.w===w);B.me.cur=B.me.team.indexOf(u);B.combo=Math.min(3,B.combo+1);
    log(B,`"${plain(c.q.ask).replace('___',right)}" — ${u.w}의 「${MOVES[u.w].n}」!`,`${u.w} used ${MOVES[u.w].n}!`);MOVES[u.w].fx(B,u,foeNow());B.lastFx=u.w;u.cd=MOVES[u.w].cd||2;
-   const x=M.box[u.w]||(M.box[u.w]={xp:0});const lv0=lvOf(u.w);x.xp++;if(lvOf(u.w)>lv0)log(B,`${u.w} 레벨 업! Lv.${lvOf(u.w)}`,`${u.w} levelled up!`);store(M)}
-  else{sfx('no');const why=(c.q.opts.find(o=>!o[1]&&plain(o[0]).startsWith(w.replace(/다$/,'')))||[])[2];
+   const x=M.box[u.w]||(M.box[u.w]={xp:0});const lv0=lvOf(u.w);x.xp++;if(lvOf(u.w)>lv0){sfx('badge');log(B,`${u.w} 레벨 업! Lv.${lvOf(u.w)}`,`${u.w} levelled up!`)}store(M)}
+  else{sfx('no');B.combo=0;const why=(c.q.opts.find(o=>!o[1]&&plain(o[0]).startsWith(w.replace(/다$/,'')))||[])[2];
    log(B,`안 맞아요. 여기는 "${right}" (${c.w}).${why?' '+plain(why):''}`,`Doesn't fit. It's "${right}" (${c.w}).`)}
   endTurn()});
 }
@@ -162,18 +216,21 @@ function catchIt(defs,keep){
  const cards=keep||shuf([{w:t.w,q:sentenceFor(t.w)},...others.map(w=>({w,q:sentenceFor(w)}))].filter(c=>c.q));
  const box=panel(`<h2>「${esc(t.w)}」${josa(t.w,'이','가')} 들어갈 문장은?<span></span></h2>${defs?`<div class="bench">${esc(t.w)}: ${defHTML(t.w)}</div>`:''}<div class="lines">${cards.map(lineHTML).join('')}</div>
   <div class="row">${defs?'<span></span>':`<button class="btn" type="button" id="btDef">뜻 보기 · 체력 -${DEF_COST}</button>`}<button class="btn" type="button" id="btBack">뒤로</button></div>`);
+ B.fx=[];
  $('btBack').onclick=()=>render();
  if($('btDef'))$('btDef').onclick=()=>{payForDefs();catchIt(true,cards)};
  box.querySelectorAll('.line').forEach(b=>b.onclick=()=>{const c=cards[+b.dataset.i];B.cards=null;
   if(c.w===t.w){M.box[t.w]=M.box[t.w]||{xp:0};store(M);sfx('badge');log(B,`${t.w}${josa(t.w,'을','를')} 잡았어요!`,`Caught ${t.w}!`);B.over='caught';render()}
-  else{log(B,`그 문장엔 "${c.w}"${josa(c.w,'이','가')} 들어가요. ${t.w}${josa(t.w,'이','가')} 빠져나갔어요!`,`That sentence takes "${c.w}". ${t.w} broke free!`);endTurn()}});
+  else{B.combo=0;log(B,`그 문장엔 "${c.w}"${josa(c.w,'이','가')} 들어가요. ${t.w}${josa(t.w,'이','가')} 빠져나갔어요!`,`That sentence takes "${c.w}". ${t.w} broke free!`);endTurn()}});
 }
-/* the foe's turn: at one of your words still standing */
+/* the foe's turn: what it announced, at whom it announced (or whoever is still standing) */
+const trainerSays=(kind)=>{const T=TRAINERS[B.trainer];if(!T||!T[kind])return;const l=Array.isArray(T[kind][0])?pick(T[kind]):T[kind];log(B,`${SHORT[B.trainer]||B.trainer}: "${l[0]}"`,l[1])};
+const SHORT={'남궁찬':'찬','유하리':'하리','오다온':'다온','백구름':'구름'};
 function foeTurn(){
- const t=foeNow();if(t.hp<=0)return;B.foeHit=false;const u=pick(alive());if(!u)return;
+ const t=foeNow();if(t.hp<=0)return;B.foeHit=false;const I=B.intent||{move:false};const u=I.target&&I.target.hp>0?I.target:pick(alive());if(!u)return;
  if(t.st.frozen){log(B,`${t.w}${josa(t.w,'은','는')} 얼어서 못 움직여요.`,`${t.w} is frozen.`);return}
  if(t.st.awk&&Math.random()<.5){log(B,`어색해서 ${t.w}${josa(t.w,'이','가')} 아무것도 못 했어요.`,`Too awkward: ${t.w} did nothing.`);return}
- if(t.cd<=0&&Math.random()<.4&&MOVES[t.w]){log(B,`${t.w}의 「${MOVES[t.w].n}」!`,`${t.w} used ${MOVES[t.w].n}!`);
+ if(I.move&&t.cd<=0&&MOVES[t.w]){if(!B.wild&&Math.random()<.5)trainerSays('move');log(B,`${t.w}의 「${MOVES[t.w].n}」!`,`${t.w} used ${MOVES[t.w].n}!`);
   const swapB={me:B.foe,foe:B.me,log:B.log,lastFx:null,foeHit:false};MOVES[t.w].fx(swapB,t,u);t.cd=MOVES[t.w].cd||2}
  else{hit(B,t,u,10);B.foeHit=true}
  if(u.hp<=0)log(B,`${u.w}${josa(u.w,'이','가')} 쓰러졌어요…`,`${u.w} fell…`);
@@ -185,15 +242,18 @@ function tick(m){
  if(m.cd>0)m.cd--;
 }
 function nextFoe(){const i=B.foe.team.findIndex(w=>w.hp>0);if(i>=0)B.foe.cur=i;return i>=0}
+function foeFell(){log(B,`${foeNow().w}${josa(foeNow().w,'이','가')} 쓰러졌어요!`,`${foeNow().w} fell!`);
+ if(!nextFoe()){B.over='win';return true}if(!B.wild)trainerSays('fall');log(B,`${B.trainer}: ${foeNow().w}, 나와!`,`${B.trainer}: ${foeNow().w}, go!`);return false}
 function endTurn(){
  B.cards=null;
- if(foeNow().hp<=0){log(B,`${foeNow().w}${josa(foeNow().w,'이','가')} 쓰러졌어요!`,`${foeNow().w} fell!`);if(!nextFoe()){B.over='win';render();return}log(B,`${B.trainer}: ${foeNow().w}, 나와!`,`${B.trainer}: ${foeNow().w}, go!`)}
+ if(foeNow().hp<=0){if(foeFell()){render();return}}
  else foeTurn();
  if(!alive().length){B.over='lose';render();return}
  B.me.team.forEach(tick);tick(foeNow());if(B.me.field)B.me.field--;
- if(foeNow().hp<=0&&!nextFoe()){B.over='win';render();return}
+ if(foeNow().hp<=0&&foeFell()){render();return}
  if(!alive().length){B.over='lose';render();return}
- render();
+ if(!B.wild&&!B.lowSaid&&B.foe.team.filter(w=>w.hp>0).length===1&&foeNow().hp<foeNow().max*.3){B.lowSaid=1;trainerSays('low')}
+ chooseIntent();render();
 }
 function teamPick(then){
  const owned=Object.keys(M.box);if(owned.length<=3){then(owned);return}
@@ -206,18 +266,36 @@ function teamPick(then){
 }
 function startBattle(opts){
  teamPick(team=>{
-  B={me:{team:team.map(w=>mon(w,lvOf(w),'me')),cur:0},foe:{team:opts.foe.map(w=>mon(w,opts.lv,'foe')),cur:0},log:[],wild:!!opts.wild,trainer:opts.trainer||'',tk:opts.tk||null,lastFx:null,foeHit:false};
+  B={me:{team:team.map(w=>mon(w,lvOf(w),'me')),cur:0},foe:{team:opts.foe.map(w=>mon(w,opts.lv,'foe')),cur:0},log:[],fx:[],combo:0,intent:null,wild:!!opts.wild,trainer:opts.trainer||'',lastFx:null,foeHit:false};
   log(B,opts.wild?`야생 단어 「${opts.foe[0]}」${josa(opts.foe[0],'이','가')} 나타났어요!`:`${opts.trainer}${josa(opts.trainer,'이','가')} 배틀을 걸었어요!`,opts.wild?`A wild "${opts.foe[0]}" appeared!`:`${opts.trainer} wants to battle!`);
-  render()});
+  chooseIntent();render()});
+}
+/* a new word: its card, big */
+function reveal(w,title,then){
+ const d=defOf(w),m=MOVES[w];sfx('badge');
+ panel(`<h2>${esc(title)}<span>${Object.keys(M.box).length}/${WORDS.length}</span></h2><div class="reveal"><div class="big">${esc(w)}</div>
+  ${d?`<div>${esc(d.k)}</div>${showEn&&d.e?`<small>${esc(d.e)}</small>`:''}`:''}<div class="bench">기술 · 「${esc(m.n)}」 — ${esc(m.d)}</div></div>
+  <div class="row"><span></span><button class="btn" type="button" id="btOk" style="background:var(--ink);color:var(--hull)">좋아!</button></div>`);
+ $('btOk').onclick=()=>{closePanel();if(then)then()};
 }
 function finish(){
  const b=B;closePanel();B=null;
- if(b.wild){if(b.over==='caught')openDialog('…',[say('…',`「${b.foe.team[0].w}」${josa(b.foe.team[0].w,'을','를')} 일지에 넣었어요. 지금 단어 ${Object.keys(M.box).length}개.`,`Added "${b.foe.team[0].w}". You now have ${Object.keys(M.box).length} words.`)]);return}
+ if(b.wild){if(b.over==='caught')reveal(b.foe.team[0].w,'새 단어!');return}
  const T=TRAINERS[b.trainer];
- if(b.over==='win'){M.wins[T.key]=(M.wins[T.key]||0)+1;store(M);
+ if(b.over==='win'){M.wins[T.key]=(M.wins[T.key]||0)+1;if(T.champ)M.champ=1;store(M);try{updateQuest()}catch(e){}
   const take=b.foe.team.map(w=>w.w).filter(w=>!M.box[w]);
-  openDialog(b.trainer,[{...say(b.trainer,T.win[0],T.win[1]),choose:(take.length?take:['…']).map(w=>[take.length?`「${w}」 — ${MOVES[w].n}`:'이미 다 있어요',()=>{if(take.length){M.box[w]={xp:0};store(M);sfx('badge');toast(`단어 획득: ${w}`)}}])}]);return}
- openDialog(b.trainer,[say(b.trainer,T.lose[0],T.lose[1]),say('백구름','…단어들 좀 쉬게 하고, 다시 해 봐.','…let your words rest, then try again.')]);
+  const after=T.champ?()=>{sfx('star');toast('방송부 챔피언!')}:null;
+  if(!take.length){open0(b.trainer,[say(b.trainer,T.win[0],T.win[1])]);if(after)after();return}
+  open0(b.trainer,[{...say(b.trainer,T.win[0],T.win[1]),choose:take.map(w=>[`「${esc(w)}」 — ${esc(MOVES[w].n)}`,()=>{M.box[w]={xp:0};store(M);try{updateQuest()}catch(e){}reveal(w,'새 단어!',after)}])}]);return}
+ open0(b.trainer,[say(b.trainer,T.lose[0],T.lose[1]),say('백구름','…단어들 좀 쉬게 하고, 다시 해 봐.','…let your words rest, then try again.')]);
+}
+/* 단어 도감: all 20, the ones you have with their meaning and move */
+function showDex(){
+ const have=Object.keys(M.box).length;
+ panel(`<h2>단어 도감<span>${have}/${WORDS.length}${M.champ?' · 챔피언':''}</span></h2><div class="dex">${WORDS.map(w=>{const own=!!M.box[w],d=own&&defOf(w);
+  return own?`<div class="dx"><b>${esc(w)}</b><small>Lv.${lvOf(w)} · 「${esc(MOVES[w].n)}」</small><small>${esc(d?d.k:'')}</small></div>`:`<div class="dx no"><b>${'□'.repeat(w.length)}</b><small>${w.length}글자 · ？？？</small></div>`}).join('')}</div>
+  <div class="row"><span class="bench">도서관 책장에 야생 단어가 있어요.</span><button class="btn" type="button" id="btOk">닫기</button></div>`);
+ $('btOk').onclick=closePanel;
 }
 const say=(who,ko,e)=>{if(e)en(ko,e);return {who,say:ko}};
 /* ===== hooks (only while this lab is on, in 2교시's replay) ===== */
@@ -236,10 +314,14 @@ openDialog=function(name,steps,opts){
  return open0(name,steps,opts);
 };
 const avgLv=()=>{const ws=Object.keys(M.box);return ws.reduce((a,w)=>a+lvOf(w),0)/ws.length};
+const beatAll=()=>['chan','hari','daon'].every(k=>(M.wins[k]||0)>0);
 talkWith=function(n){
  if(on()&&n){
-  if(TRAINERS[n.name]){const T=TRAINERS[n.name];return open0(n.name,[{...say(n.name,T.hi[0],T.hi[1]),choose:[['배틀!',()=>startBattle({trainer:n.name,tk:T.key,foe:T.team,lv:1+(M.wins[T.key]||0)})],['나중에',null]]}])}
-  if(n.name==='백구름')return open0('백구름',[say('백구름',`지금 단어 ${Object.keys(M.box).length}/${WORDS.length}개. 도서관 책장에 야생 단어가 숨어 있어. 찬, 하리, 다온한테 배틀 걸어 봐.`,`You have ${Object.keys(M.box).length}/${WORDS.length} words. Wild words hide in the library shelves. Challenge Chan, Hari or Daon.`)]);
+  if(n.name==='백구름'){const T=TRAINERS['백구름'],opts=[['단어 도감',showDex]];
+   if(beatAll())opts.push(['챔피언전!',()=>startBattle({trainer:'백구름',foe:T.team,lv:3+(M.wins.gureum||0)})]);opts.push(['나중에',null]);
+   const line=beatAll()?say('백구름',T.hi[0],T.hi[1]):say('백구름',`단어 ${Object.keys(M.box).length}/${WORDS.length}개. 찬, 하리, 다온을 다 이기면… 나랑 해.`,`${Object.keys(M.box).length}/${WORDS.length} words. Beat Chan, Hari and Daon… then me.`);
+   return open0('백구름',[{...line,choose:opts}])}
+  if(TRAINERS[n.name]){const T=TRAINERS[n.name];return open0(n.name,[{...say(n.name,T.hi[0],T.hi[1]),choose:[['배틀!',()=>startBattle({trainer:n.name,foe:T.team,lv:1+(M.wins[T.key]||0)})],['나중에',null]]}])}
  }
  return talk0(n);
 };
@@ -247,11 +329,11 @@ LAB.start=()=>{
  loadCps().then(all=>{const L=(all||{}).ch2||[],at=L[L.length-1];if(!at){toast('2교시 장면이 없어요.');return}
   boot('ch2',{force:1,at});window.__labActive=ID;
   M=load()||{box:{},wins:{}};const fresh=!Object.keys(M.box).length;if(fresh){STARTERS.forEach(w=>M.box[w]={xp:0});store(M)}
-  const q0=C.questText;C.questText=()=>on()?`단어 ${Object.keys(M.box).length}/${WORDS.length} · 찬 ${M.wins.chan||0}승 · 하리 ${M.wins.hari||0}승 · 다온 ${M.wins.daon||0}승`:q0();
+  const q0=C.questText;C.questText=()=>on()?`${M.champ?'챔피언 · ':''}단어 ${Object.keys(M.box).length}/${WORDS.length} · 찬 ${M.wins.chan||0}승 · 하리 ${M.wins.hari||0}승 · 다온 ${M.wins.daon||0}승`:q0();
   setTimeout(()=>{loadZone('bcast',5,4,'up');try{updateQuest()}catch(e){}
    open0('백구름',fresh?[say('백구름','단어 배틀 알아? 단어마다 기술이 있어. 뜻이 곧 기술이야.','Know word battles? Every word has a move. Its meaning is the move.'),
-    say('백구름','자, 첫 단어 세 개. 기회, 챙기다, 즐기다. 기술을 쓰려면 문장을 맞게 완성해야 해.','Here, your first three words: 기회, 챙기다, 즐기다. To use a move, you have to complete its sentence right.'),
-    say('백구름','도서관 책장에 야생 단어가 있어. 찬, 하리, 다온도 배틀 좋아해.','Wild words are in the library shelves. Chan, Hari and Daon like battles too.')]
+    say('백구름','자, 첫 단어 세 개. 기회, 챙기다, 즐기다. 대사를 읽고 맞는 단어를 넣으면 기술이 나가.','Here, your first three words: 기회, 챙기다, 즐기다. Read a line, put in the right word, and its move goes off.'),
+    say('백구름','상대가 다음에 뭘 할지 보여. 잘 읽고 막아. 도서관 책장엔 야생 단어, 여기엔 찬, 하리, 다온.','You can see what the foe will do next. Read well and block it. Wild words in the library shelves; Chan, Hari and Daon here.')]
     :[say('백구름',`다시 왔네. 단어 ${Object.keys(M.box).length}개.`,`You're back. ${Object.keys(M.box).length} words.`)])},500)});
 };
 LAB.state=()=>({M,B});LAB.moves=MOVES;LAB.sentence=sentenceFor;  // for tests
