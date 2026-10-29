@@ -95,6 +95,7 @@ function css(){if($('btCss'))return;const st=document.createElement('style');st.
  #btPanel .party{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}#btPanel .pm{border:2px solid color-mix(in srgb,var(--ink) 25%,transparent);border-radius:9px;padding:6px 8px;display:grid;gap:3px}
  #btPanel .pm b{font-size:1rem}#btPanel .pm small{font-size:.68rem;opacity:.75}#btPanel .pm .hp{grid-column:auto}#btPanel .pm.down{opacity:.4}
  #btPanel .lines{display:grid;gap:6px}#btPanel .line{background:#f1e9d4;color:#2b2720;border-color:#c9bea3}#btPanel .line b{font-weight:500;font-size:.95rem;line-height:1.5}#btPanel .line small{opacity:.7}
+ #btPanel .act .def{font-size:.74rem;opacity:.85;line-height:1.4;font-weight:400}
  #btPanel .moves{font-size:.8rem;opacity:.85}#btPanel .moves summary{cursor:pointer}#btPanel .moves div{margin-top:3px}#btPanel .moves i{opacity:.7}`;
  document.head.appendChild(st)}
 let keyBlock=null;
@@ -131,15 +132,21 @@ function render(){
  if($('btCatch'))$('btCatch').onclick=()=>catchIt();
  if($('btInfo'))$('btInfo').onclick=()=>{const d=(C.DICT||{})[t.w];log(B,`${t.w}: ${d?d.k:''} · 기술: ${MOVES[t.w].n} — ${MOVES[t.w].d}`,`${t.w}: ${d?d.e:''} · move: ${MOVES[t.w].e}`);render()};
 }
+/* 뜻 보기: definitions cost health (8 from your healthiest word, never its last point) */
+const DEF_COST=8;
+function defOf(w){const d=(C.DICT||{})[w]||(typeof carryDict==='function'&&carryDict(w))||((typeof lexLookup==='function'&&lexLookup(w)[0])||[])[1];return d?{k:plain(d.k||''),e:d.e||''}:null}
+function payForDefs(){const m=alive().sort((a,b)=>b.hp-a.hp)[0];if(!m)return;const n=Math.min(DEF_COST,m.hp-1);m.hp-=n;sfx('no');log(B,`뜻을 봤어요. ${m.w} 체력 -${n}`,`Looked up meanings. ${m.w} -${n} HP`)}
+const defHTML=w=>{const d=defOf(w);return d?`<small class="def">${esc(d.k)}${showEn&&d.e?` · ${esc(d.e)}`:''}</small>`:'<small class="def">뜻을 몰라요.</small>'};
 /* saying a line: which of your words fills its blank? (your words, and one look-alike that isn't yours) */
-function sayLine(c){
+function sayLine(c,defs){
  const conf=((C.CONFUSE||{})[c.w]||[]).filter(x=>!B.me.team.some(m=>m.w===x));
- const choices=shuf([...alive().map(m=>m.w),...conf.slice(0,1)]);
+ const choices=defs&&B.defChoices?B.defChoices:shuf([...alive().map(m=>m.w),...conf.slice(0,1)]);B.defChoices=null;
  const who=whoSays(c.q),pre=[].concat(c.q.pre||[]).map(plain).join(' ');
  const box=panel(`<h2>어떤 단어가 들어가요?<span></span></h2>${who||pre?`<div class="bench">${esc(who)}${who&&pre?': ':''}${esc(pre)}</div>`:''}<div class="q">${esc(plain(c.q.ask))}</div>
-  <div class="acts">${choices.map((w,i)=>`<button class="act" type="button" data-i="${i}"><b>${esc(w)}</b></button>`).join('')}</div>
-  <div class="row"><span></span><button class="btn" type="button" id="btBack">뒤로</button></div>`);
+  <div class="acts">${choices.map((w,i)=>`<button class="act" type="button" data-i="${i}"><b>${esc(w)}</b>${defs?defHTML(w):''}</button>`).join('')}</div>
+  <div class="row">${defs?'<span></span>':`<button class="btn" type="button" id="btDef">뜻 보기 · 체력 -${DEF_COST}</button>`}<button class="btn" type="button" id="btBack">뒤로</button></div>`);
  $('btBack').onclick=()=>render();
+ if($('btDef'))$('btDef').onclick=()=>{payForDefs();B.defChoices=choices;sayLine(c,true)};
  box.querySelectorAll('.act').forEach(b=>b.onclick=()=>{const w=choices[+b.dataset.i];
   const right=plain((c.q.opts.find(o=>o[1])||[c.w])[0]);B.cards=null;
   if(w===c.w){sfx('ok');const u=B.me.team.find(m=>m.w===w);B.me.cur=B.me.team.indexOf(u);
@@ -150,12 +157,13 @@ function sayLine(c){
   endTurn()});
 }
 /* catching: which sentence does the wild word belong in? */
-function catchIt(){
+function catchIt(defs,keep){
  const t=foeNow(),others=shuf(WORDS.filter(w=>w!==t.w)).slice(0,2);
- const cards=shuf([{w:t.w,q:sentenceFor(t.w)},...others.map(w=>({w,q:sentenceFor(w)}))].filter(c=>c.q));
- const box=panel(`<h2>「${esc(t.w)}」${josa(t.w,'이','가')} 들어갈 문장은?<span></span></h2><div class="lines">${cards.map(lineHTML).join('')}</div>
-  <div class="row"><span></span><button class="btn" type="button" id="btBack">뒤로</button></div>`);
+ const cards=keep||shuf([{w:t.w,q:sentenceFor(t.w)},...others.map(w=>({w,q:sentenceFor(w)}))].filter(c=>c.q));
+ const box=panel(`<h2>「${esc(t.w)}」${josa(t.w,'이','가')} 들어갈 문장은?<span></span></h2>${defs?`<div class="bench">${esc(t.w)}: ${defHTML(t.w)}</div>`:''}<div class="lines">${cards.map(lineHTML).join('')}</div>
+  <div class="row">${defs?'<span></span>':`<button class="btn" type="button" id="btDef">뜻 보기 · 체력 -${DEF_COST}</button>`}<button class="btn" type="button" id="btBack">뒤로</button></div>`);
  $('btBack').onclick=()=>render();
+ if($('btDef'))$('btDef').onclick=()=>{payForDefs();catchIt(true,cards)};
  box.querySelectorAll('.line').forEach(b=>b.onclick=()=>{const c=cards[+b.dataset.i];B.cards=null;
   if(c.w===t.w){M.box[t.w]=M.box[t.w]||{xp:0};store(M);sfx('badge');log(B,`${t.w}${josa(t.w,'을','를')} 잡았어요!`,`Caught ${t.w}!`);B.over='caught';render()}
   else{log(B,`그 문장엔 "${c.w}"${josa(c.w,'이','가')} 들어가요. ${t.w}${josa(t.w,'이','가')} 빠져나갔어요!`,`That sentence takes "${c.w}". ${t.w} broke free!`);endTurn()}});
