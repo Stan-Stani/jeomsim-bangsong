@@ -23,7 +23,7 @@ const MOVES={
  '괴롭히다':{n:'괴롭히기',d:'세 턴 동안 상대가 매 턴 조금씩 다쳐요.',e:'The foe takes a little damage every turn for three turns.',fx:(b,u,t)=>{t.st.poison=3}},
  '긴장하다':{n:'긴장',d:'상대가 긴장해서 두 턴 동안 약하게 공격해요.',e:'The foe gets nervous and attacks weakly for two turns.',fx:(b,u,t)=>{t.st.weak=2}},
  '얼다':{n:'얼리기',d:'상대가 한 턴 동안 얼어서 못 움직여요.',e:'The foe freezes and can\'t move for a turn.',fx:(b,u,t)=>{hit(b,u,t,0);t.st.frozen=1},cd:3},
- '심장':{n:'두근두근',d:'심장이 빨리 뛰어요. 다음 공격이 두 배예요.',e:'Your heart races. Your next attack does double.',fx:(b,u)=>{u.st.double=1}},
+ '심장':{n:'두근두근',d:'심장이 빨리 뛰어요. 우리 편의 다음 공격이 두 배예요.',e:'Hearts race: your side\'s next hit does double.',fx:(b,u)=>{b.me.dbl=1;log(b,'두근두근! 다음 공격이 두 배예요.','Next hit does double.')}},
  '분위기':{n:'분위기 띄우기',d:'두 턴 동안 우리 편 단어들이 모두 세져요.',e:'For two turns all your words hit harder.',fx:(b)=>{b.me.field=2}},
  '어색하다':{n:'어색한 침묵',d:'분위기가 어색해져서 상대가 반쯤은 아무것도 못 해요.',e:'Things get awkward: half the time the foe can\'t do anything.',fx:(b,u,t)=>{t.st.awk=2}},
  '장난':{n:'장난',d:'무슨 일이 생길지 몰라요! 좋을 수도, 나쁠 수도.',e:'Anything can happen! Good or bad.',fx:(b,u,t)=>{const r=Math.random();if(r<.4)hit(b,u,t,22,'장난이 통했어요!');else if(r<.7){heal(u,15);log(b,'장난치다가 기분이 좋아졌어요.','Messing around cheered it up.')}else{hurt(u,8);log(b,'장난이 실패했어요… 우리가 다쳤어요.','The prank backfired… we got hurt.')}}},
@@ -31,8 +31,8 @@ const MOVES={
  '명찰':{n:'명찰 보기',d:'상대 이름을 알았어요. 다음 공격이 꼭 급소에 맞아요.',e:'You know its name now. Your next attack is a sure critical.',fx:(b,u)=>{u.st.crit=1}},
  '곡':{n:'한 곡',d:'노래 한 곡! 우리 편 단어들이 모두 기운을 차려요.',e:'One song! All your words recover.',fx:(b)=>{b.me.team.forEach(w=>w.hp>0&&heal(w,14))},cd:3},
  '기회':{n:'기회 잡기',d:'좋은 기회! 지금 세게 공격해요.',e:'A good chance! Strike hard now.',fx:(b,u,t)=>hit(b,u,t,26)},
- '놓치다':{n:'놓치게 하기',d:'상대가 다음 공격을 놓쳐요. 빗나가요.',e:'The foe misses its next attack.',fx:(b,u,t)=>{hit(b,u,t,0);t.st.miss=1},cd:2},
- '타이밍':{n:'타이밍',d:'상대가 방금 공격했다면, 딱 맞는 타이밍에 두 배로 받아쳐요.',e:'If the foe just attacked, hit back double at the perfect moment.',fx:(b,u,t)=>hit(b,u,t,b.foeHit?30:12,b.foeHit?'딱 맞는 타이밍!':null)},
+ '놓치다':{n:'놓치게 하기',d:'상대의 다음 행동(공격이나 기술)이 빗나가요.',e:'The foe\'s next action (attack or move) misses.',fx:(b,u,t)=>{hit(b,u,t,0);t.st.miss=1},cd:2},
+ '타이밍':{n:'타이밍',d:'상대가 방금 움직였다면, 딱 맞는 타이밍에 두 배로 받아쳐요.',e:'If the foe just acted, hit back double at the perfect moment.',fx:(b,u,t)=>hit(b,u,t,b.foeHit?30:12,b.foeHit?'딱 맞는 타이밍!':null)},
  '효과':{n:'효과 한 번 더',d:'방금 쓴 기술의 효과가 한 번 더 나와요.',e:'Your last move\'s effect happens once more.',fx:(b,u,t)=>{const m=b.lastFx;if(m&&m!=='효과')MOVES[m].fx(b,u,t);else log(b,'아무 효과도 없어요.','No effect.')}},
  '포기하다':{n:'포기시키기',d:'상대 체력이 30% 이하면 상대가 포기해요. 아니면 아무 일도 없어요.',e:'If the foe is at 30% HP or less, it gives up. Otherwise nothing happens.',fx:(b,u,t)=>{if(t.hp<=t.max*.3){t.hp=0;log(b,`${t.w}${josa(t.w,'이','가')} 포기했어요!`,`${t.w} gave up!`)}else log(b,'아직 포기 안 해요.','It won\'t give up yet.')}},
  '즐기다':{n:'즐기기',d:'두 턴 동안 매 턴 체력이 조금씩 돌아와요.',e:'Recover a little HP every turn for two turns.',fx:(b,u)=>{u.st.regen=2}},
@@ -44,13 +44,13 @@ const MOVES={
 const WORDS=Object.keys(MOVES);
 /* ===== people: their teams, and what they say during a fight ===== */
 const TRAINERS={
- '남궁찬':{key:'chan',team:['재촉하다','놀리다','장난'],hi:['배틀? 좋아! 난 빠른 게 좋아.','A battle? Sure! I like fast.'],win:['와… 졌다. 하나 가져가. 다음엔 안 져.','Whoa… I lost. Take one. I won\'t lose next time.'],lose:['내가 이겼다! 또 해!','I win! Again!'],
+ '남궁찬':{key:'chan',team:['재촉하다','놀리다','장난'],hi:['배틀? 좋아! 난 빠른 게 좋아.','A battle? Sure! I like fast.'],style:'빠르고 장난스러운 단어들',again:['또 졌어? …다음엔 진짜 안 져!','Lost again? …Next time I really won\'t!'],win:['와… 졌다. 하나 가져가. 다음엔 안 져.','Whoa… I lost. Take one. I won\'t lose next time.'],lose:['내가 이겼다! 또 해!','I win! Again!'],
   move:[['빨리빨리! 기다리는 거 싫어!','Faster! I hate waiting!'],['이거 받아라!','Take this!']],fall:[['헐… 벌써?','Huh… already?'],['괜찮아, 아직 남았어!','It\'s fine, I\'ve got more!']],low:['어, 어… 잠깐만!','Wait, wait… hold on!']},
- '유하리':{key:'hari',team:['곡','긴장하다','얼다'],hi:['…배틀? 음악으로 해도 돼?','…A battle? Can I do it with music?'],win:['…졌네. 괜찮아. 하나 골라.','…I lost. It\'s fine. Pick one.'],lose:['…이겼다. 조금 기뻐.','…I won. I\'m a little happy.'],
+ '유하리':{key:'hari',team:['곡','긴장하다','얼다'],hi:['…배틀? 음악으로 해도 돼?','…A battle? Can I do it with music?'],style:'노래와 떨림의 단어들',again:['…또 졌네. 연습할게.','…lost again. I\'ll practise.'],win:['…졌네. 괜찮아. 하나 골라.','…I lost. It\'s fine. Pick one.'],lose:['…이겼다. 조금 기뻐.','…I won. I\'m a little happy.'],
   move:[['…한 소절만.','…just one line.'],['떨려도 할 거야.','I\'ll do it, even shaking.']],fall:[['…아.','…oh.'],['다음 곡이 있어.','There\'s a next song.']],low:['…마이크 꺼 줘.','…turn the mic off.']},
- '오다온':{key:'daon',team:['명찰','포기하다','타이밍'],hi:['배틀? 규칙은 지켜. 반칙하면 벌금이야.','A battle? Keep to the rules. Cheat and you\'re fined.'],win:['…인정. 하나 가져가. 규칙은 규칙이니까.','…Fair. Take one. Rules are rules.'],lose:['내가 이겼어. 당연하지.','I won. Obviously.'],
+ '오다온':{key:'daon',team:['명찰','포기하다','타이밍'],hi:['배틀? 규칙은 지켜. 반칙하면 벌금이야.','A battle? Keep to the rules. Cheat and you\'re fined.'],style:'규칙과 끝내기의 단어들',again:['…또? 내 규칙이 문제야.','…Again? My rules are the problem.'],win:['…인정. 하나 가져가. 규칙은 규칙이니까.','…Fair. Take one. Rules are rules.'],lose:['내가 이겼어. 당연하지.','I won. Obviously.'],
   move:[['규칙대로 간다.','By the rules.'],['벌금이야.','That\'s a fine.']],fall:[['…계산 실수.','…a miscalculation.'],['아직 안 끝났어.','It\'s not over.']],low:['이건… 규칙 위반 아니야?','Isn\'t this… against the rules?']},
- '백구름':{key:'gureum',champ:1,team:['효과','타이밍','심장'],hi:['…셋 다 이겼다며. 그럼 이제 나야. 방송부 챔피언전.','…You beat all three, I hear. Then it\'s me now. The broadcast club championship.'],win:['…내가 졌어. 오늘부터 네가 챔피언이야.','…I lost. From today, you\'re the champion.'],lose:['…아직은 내가 챔피언.','…I\'m still the champion, for now.'],
+ '백구름':{key:'gureum',champ:1,team:['효과','타이밍','심장'],hi:['…셋 다 이겼다며. 그럼 이제 나야. 방송부 챔피언전.','…You beat all three, I hear. Then it\'s me now. The broadcast club championship.'],style:'방송부장의 단어들',again:['…역시 챔피언. 또 와.','…the champion, as expected. Come again.'],hi2:['챔피언, 또 왔네. …한 판 더?','Champion, back again? …One more round?'],win:['…내가 졌어. 오늘부터 네가 챔피언이야.','…I lost. From today, you\'re the champion.'],lose:['…아직은 내가 챔피언.','…I\'m still the champion, for now.'],
   move:[['타이밍이 중요해.','Timing matters.'],['…여기서 한 번 더.','…once more, right here.']],fall:[['…좋아.','…good.'],['계속해.','Keep going.']],low:['…진짜 세졌다.','…you really got strong.']},
 };
 const STARTERS=['기회','챙기다','놓치다'];  // an attack, a rescue and a counter: the intent line means something from the first fight
@@ -62,7 +62,7 @@ let M=null;
 const lvOf=w=>{const x=M.box[w]||{xp:0};return 1+Math.floor(x.xp/3)};
 const avgXp=()=>{const xs=Object.values(M.box).map(x=>x.xp||0);return xs.length?Math.round(xs.reduce((a,b)=>a+b,0)/xs.length):0};
 function addWord(w){if(!M.box[w])M.box[w]={xp:Math.max(0,avgXp()-3),fresh:1};store(M)}  // a new word joins about a level under your average, so it's worth fielding
-function mon(w,lv,side){const max=side==='foe'?24+lv*5:40+lv*8;return {w,lv,max,hp:max,atk:8+lv*2,st:{},cd:0,side}}  // a foe's three words: about 8–10 turns
+function mon(w,lv,side){const max=side==='foe'?44+lv*8:40+lv*8;return {w,lv,max,hp:max,atk:8+lv*2,st:{},cd:0,side}}  // a foe's three words: about 8–10 turns
 /* ===== battle state, hits and their show ===== */
 let B=null,showEn=false;
 const log=(b,ko,e)=>{b.log.push([ko,e||''])};
@@ -74,6 +74,7 @@ function hit(b,u,t,base,note){
  if(u.st.miss){u.st.miss=0;log(b,`${u.w}의 공격이 빗나갔어요!`,`${u.w}'s attack missed!`);fxEv(t,0,'miss');return}
  let n=base+u.atk/2;if(u.st.weak)n*=.6;if(t.st.open)n*=1.4;if(u.side==='me'&&b.me.field)n*=1.3;
  let crit=u.st.crit||Math.random()<.08;if(crit){n*=1.6;u.st.crit=0}if(u.st.double){n*=2;u.st.double=0}
+ const S=B&&(u.side==='me'?B.me:B.foe);if(S&&S.dbl){n*=2;S.dbl=0}
  n=Math.round(n);t.hp=Math.max(0,t.hp-n);if(b.wild&&t.side==='foe'&&t.hp<=0){t.hp=1;if(!b.held){b.held=1;log(b,`${t.w}${josa(t.w,'이','가')} 버텼어요! 지금 잡아요.`,`${t.w} held on! Catch it now.`)}}fxEv(t,n,'hurt',crit);sfx(crit?'star':u.side==='me'?'item':'lock');
  log(b,(note?note+' ':'')+`${t.w}에게 ${n}!${crit?' 급소!':''}`,`${n} to ${t.w}!${crit?' Critical!':''}`);
 }
@@ -82,12 +83,17 @@ const alive=()=>B.me.team.filter(w=>w.hp>0);
 const ready=()=>alive().filter(w=>w.cd<=0&&!w.st.frozen);
 const CD=w=>MOVES[w].cd||1;  // a word rests a turn after its move; 얼다, 곡 and 챙기다 longer
 /* every fill-in sentence 2교시 has for the word (BANK, Q by person, REVIEW with who says it), in a shuffled round per word */
-const usable=q=>q&&q.ask&&q.ask.includes('___')&&Array.isArray(q.opts)&&q.opts.some(o=>o[1])&&!q.listen&&!q.gram&&!q.reg;
+const usable=q=>q&&q.ask&&q.ask.includes('___')&&Array.isArray(q.opts)&&q.opts.some(o=>o[1])&&!q.listen&&!q.gram&&!q.reg&&plain(q.opts.find(o=>o[1])[0])[0]===q.w[0];  // the answer has to be the word itself
 const rounds={};
 function sentenceFor(w){
  if(!rounds[w]||!rounds[w].length){const all=[...(C.BANK||[]),...Object.values(C.Q||{}).flat(),...(C.REVIEW||[])].filter(q=>q.w===w&&usable(q));
   const last=rounds[w]&&rounds[w].last;rounds[w]=shuf(all);if(rounds[w].length>1&&rounds[w][0]===last)rounds[w].push(rounds[w].shift());}
- const q=rounds[w].shift()||null;if(q)rounds[w].last=q;return q;
+ let q=null;for(let k=0;k<rounds[w].length;k++){const c=rounds[w].shift();if(B&&B.used&&B.used.has(c.ask)&&k<rounds[w].length){rounds[w].push(c);continue}q=c;break}  // not twice in one battle while others are left
+ if(q){rounds[w].last=q;if(B&&B.used)B.used.add(q.ask)}return q;
+}
+function askShown(q){  // a blank that swallows a grammar ending shows the ending (1학년 ___지 마세요!)
+ const right=plain((q.opts.find(o=>o[1])||[''])[0]),stem=q.w.replace(/다$/,'');
+ return right.startsWith(stem)&&right.length-stem.length>=3?plain(q.ask).replace('___','___'+right.slice(stem.length)):plain(q.ask);
 }
 const whoSays=q=>{const by=[].concat(q.by||[])[0],n=by&&C.NPC&&C.NPC[by];return n?n.name:(by||'')};
 function defOf(w){const d=(C.DICT||{})[w]||(typeof carryDict==='function'&&carryDict(w))||((typeof lexLookup==='function'&&lexLookup(w)[0])||[])[1];return d?{k:plain(d.k||''),e:d.e||''}:null}
@@ -131,7 +137,7 @@ function css(){if($('btCss'))return;const st=document.createElement('style');st.
  #btPanel .combo-m{display:flex;gap:4px;align-items:center;font-size:.75rem;opacity:.85}#btPanel .combo-m i{width:16px;height:6px;border-radius:3px;background:color-mix(in srgb,var(--ink) 20%,transparent)}#btPanel .combo-m i.on{background:#e9952c}
  #btPanel .moves{font-size:.8rem;opacity:.85}#btPanel .moves summary{cursor:pointer}#btPanel .moves div{margin-top:3px}#btPanel .moves i{opacity:.7}
  #btPanel .float{position:absolute;right:12px;top:4px;font-weight:800;font-size:1.25rem;pointer-events:none;animation:btFloat .9s ease-out forwards}
- #btPanel .float.hurt{color:#d0503f}#btPanel .float.heal{color:#4aa66a}#btPanel .float.miss{color:inherit;opacity:.8}#btPanel .float.crit{font-size:1.6rem;color:#e9952c}
+ #btPanel .float.hurt{color:#d0503f}#btPanel .float.heal{color:#4aa66a}#btPanel .float.miss{color:inherit;opacity:.8}#btPanel .float.block,#btPanel .float.steal{color:#e9952c;font-size:1.1rem}#btPanel .float.crit{font-size:1.6rem;color:#e9952c}
  #btPanel .shake{animation:btShake .35s}#btPanel .glow{animation:btGlow .6s}
  #btPanel .sheet.flash{animation:btFlash .3s}
  #btPanel .reveal{display:grid;gap:8px;justify-items:center;text-align:center;padding:10px 0}#btPanel .reveal .big{font-size:2.6rem;font-weight:800;letter-spacing:.04em;animation:btPop .5s}
@@ -169,16 +175,17 @@ function foeHTML(m,team,label){return `<div class="side foe" data-fx="foe"><span
  ${hpBar(m)}<div class="chips">${chips(m)}</div>${intentHTML()}
  ${team.length>1?`<div class="bench" style="grid-column:1/-1">${team.map(w=>w===m?'':(w.hp>0?'●':'○')+' '+esc(w.w)).filter(Boolean).join(' · ')}</div>`:''}</div>`}
 const partyHTML=()=>`<div class="party">${B.me.team.map((m,i)=>`<div class="pm${m.hp<=0?' down':''}${B.intent&&B.intent.target===m&&!B.over?' aim':''}" data-fx="${i}"><b>${esc(m.w)}</b><small>Lv.${m.lv} · ${m.hp}/${m.max}${m.cd>0?` · ${m.cd}턴 쉬어요`:''}</small>${hpBar(m)}<div class="chips">${chips(m)}</div></div>`).join('')}</div>`;
-function dealLines(){  // three lines every turn: one per ready word, then more sentences for them (or for anyone standing, if no one is ready)
+function dealLines(){  // three lines every turn: one per ready word, then more sentences for them (or for anyone standing, if no one is ready); now and then one is the foe's (가로채기)
  const pool=ready().length?ready():alive();const ws=shuf(pool).map(m=>m.w);const seen=new Set();B.cards=[];
- for(let k=0;k<6&&B.cards.length<3&&ws.length;k++){const w=ws[k%ws.length],q=sentenceFor(w);if(q&&!seen.has(q.ask)){seen.add(q.ask);B.cards.push({w,q})}}}
+ for(let k=0;k<6&&B.cards.length<3&&ws.length;k++){const w=ws[k%ws.length],q=sentenceFor(w);if(q&&!seen.has(q.ask)){seen.add(q.ask);B.cards.push({w,q})}}
+ const f=foeNow();if(!B.wild&&f&&f.hp>0&&Math.random()<.35){const q=sentenceFor(f.w);if(q&&!seen.has(q.ask)){B.cards[Math.min(2,B.cards.length)]={w:f.w,q,foe:1};B.cards=shuf(B.cards)}}}
 const lineHTML=(c,i)=>{const who=whoSays(c.q),pre=[].concat(c.q.pre||[]).map(plain).join(' ');
- return `<button class="act line" type="button" data-i="${i}">${who||pre?`<small>${esc(who)}${who&&pre?': ':''}${esc(pre)}</small>`:''}<b>${esc(plain(c.q.ask))}</b></button>`};
+ return `<button class="act line" type="button" data-i="${i}">${who||pre?`<small>${esc(who)}${who&&pre?': ':''}${esc(pre)}</small>`:''}<b>${esc(askShown(c.q))}</b></button>`};
 const comboHTML=()=>`<div class="combo-m">콤보 ${[0,1,2].map(i=>`<i class="${B.combo>i?'on':''}"></i>`).join('')}</div>`;
 function playFx(box){  // shakes, floating numbers and the crit flash, after the table is drawn
  for(const f of B.fx){const el=box.querySelector(`[data-fx="${f.i}"]`);if(!el)continue;
   el.classList.add(f.kind==='heal'?'glow':'shake');if(f.crit)box.classList.add('flash');
-  const s=document.createElement('span');s.className='float '+(f.crit?'crit':f.kind);s.textContent=f.kind==='miss'?'빗나감!':f.kind==='heal'?'+'+f.n:'-'+f.n;el.append(s)}
+  const s=document.createElement('span');s.className='float '+(f.crit?'crit':f.kind);s.textContent=f.kind==='miss'?'빗나감!':f.kind==='block'?'막았다!':f.kind==='steal'?'가로채기!':f.kind==='heal'?'+'+f.n:'-'+f.n;el.append(s)}
  B.fx=[];
 }
 const balls=()=>`<span class="balls">${B.foe.team.map(w=>`<i class="${w.hp>0?'':'out'}"></i>`).join('')}</span>`;
@@ -199,7 +206,7 @@ function render(){
   <div class="row"><span class="bench">대사 · 하나를 골라서 말해요</span>${comboHTML()}</div>
   <div class="lines">${B.swap?'':(B.cards||[]).map(lineHTML).join('')||'<small>지금 말할 수 있는 대사가 없어요.</small>'}</div>
   <div class="acts">${B.combo>=3?`<button class="act combo" type="button" id="btCombo"><b>방송부 합동!</b><small>우리 단어들이 다 같이 공격해요.</small></button>`:''}
-   <button class="act" type="button" id="btAtk"><b>기본 공격</b><small>읽지 않고 그냥 공격해요.</small></button>
+   <button class="act" type="button" id="btAtk"><b>기본 공격</b><small>읽지 않고 약하게 공격해요. 콤보가 끊겨요.</small></button>
    ${B.wild?`<button class="act" type="button" id="btCatch" ${t.hp>t.max*.5?'disabled':''}><b>잡기</b><small>${t.hp>t.max*.5?'체력이 반 아래일 때.':'이 단어가 들어갈 문장을 찾으면 잡혀요.'}</small></button>`:`<button class="act" type="button" id="btInfo"><b>단어 보기</b><small>상대 단어의 뜻과 기술</small></button>`}</div>
   <details class="moves"><summary>내 단어 기술</summary>${B.me.team.map(m=>`<div><b>${esc(m.w)}</b> · ${esc(MOVES[m.w].n)} — ${esc(MOVES[m.w].d)}${showEn?` <i>${esc(MOVES[m.w].e)}</i>`:''}</div>`).join('')}</details>`}`);
  playFx(box);faces(box);
@@ -211,7 +218,7 @@ function render(){
  if(B.swap){box.querySelectorAll('.lines .act,.acts .act,.moves').forEach(e=>e.style.visibility='hidden');  // a beat while it falls, then the next one
   setTimeout(()=>{if(!B||!B.swap)return;B.swap=false;nextFoe();trainerSays('fall');log(B,`${B.trainer}: ${foeNow().w}, 나와!`,`${B.trainer}: ${foeNow().w}, go!`);B.foeFace='think';B.enter=true;chooseIntent();render()},1200);return}
  box.querySelectorAll('.line').forEach(b=>b.onclick=()=>sayLine(B.cards[+b.dataset.i]));
- $('btAtk').onclick=()=>{B.turnStartNext=B.log.length;const u=pick(alive());B.me.cur=B.me.team.indexOf(u);hit(B,u,foeNow(),10);endTurn()};
+ $('btAtk').onclick=()=>{B.turnStartNext=B.log.length;const u=pick(alive());B.me.cur=B.me.team.indexOf(u);B.combo=0;hit(B,u,foeNow(),2);endTurn()};  // weak, and it breaks the combo: reading wins
  if($('btCombo'))$('btCombo').onclick=()=>{B.turnStartNext=B.log.length;sfx('bell');log(B,'방송부 합동!','Broadcast club, together!');for(const u of alive())hit(B,u,foeNow(),16);B.combo=0;endTurn()};
  if($('btCatch'))$('btCatch').onclick=()=>catchIt();
  if($('btInfo'))$('btInfo').onclick=()=>{const d=(C.DICT||{})[t.w];log(B,`${t.w}: ${d?d.k:''} · 기술: ${MOVES[t.w].n} — ${MOVES[t.w].d}`,`${t.w}: ${d?d.e:''} · move: ${MOVES[t.w].e}`);render()};
@@ -223,9 +230,10 @@ const defHTML=w=>{const d=defOf(w);return d?`<small class="def">${esc(d.k)}${sho
 /* saying a line: which of your words fills its blank? (your words, and one look-alike that isn't yours) */
 function sayLine(c,defs){
  const conf=((C.CONFUSE||{})[c.w]||[]).filter(x=>!B.me.team.some(m=>m.w===x));
- const choices=defs&&B.defChoices?B.defChoices:shuf([...alive().map(m=>m.w),...conf.slice(0,1)]);B.defChoices=null;
+ const fw=!B.wild&&foeNow().hp>0?foeNow().w:null;
+ const choices=defs&&B.defChoices?B.defChoices:shuf([...new Set([...alive().map(m=>m.w),...(fw?[fw]:[]),...conf.filter(x=>x!==fw).slice(0,1)])]);B.defChoices=null;
  const who=whoSays(c.q),pre=[].concat(c.q.pre||[]).map(plain).join(' ');
- const box=panel(`<h2>어떤 단어가 들어가요?<span></span></h2>${who||pre?`<div class="bench">${esc(who)}${who&&pre?': ':''}${esc(pre)}</div>`:''}<div class="q">${esc(plain(c.q.ask))}</div>
+ const box=panel(`<h2>어떤 단어가 들어가요?<span></span></h2>${who||pre?`<div class="bench">${esc(who)}${who&&pre?': ':''}${esc(pre)}</div>`:''}<div class="q">${esc(askShown(c.q))}</div>
   <div class="acts">${choices.map((w,i)=>`<button class="act" type="button" data-i="${i}"><b>${esc(w)}</b>${defs?defHTML(w):''}</button>`).join('')}</div>
   <div class="row">${defs?'<span></span>':`<button class="btn" type="button" id="btDef">뜻 보기 · 체력 -${DEF_COST}</button>`}<button class="btn" type="button" id="btBack">뒤로</button></div>`);
  B.fx=[];
@@ -233,9 +241,11 @@ function sayLine(c,defs){
  if($('btDef'))$('btDef').onclick=()=>{payForDefs();B.defChoices=choices;sayLine(c,true)};
  box.querySelectorAll('.act').forEach(b=>b.onclick=()=>{const w=choices[+b.dataset.i];B.turnStartNext=B.log.length;
   const right=plain((c.q.opts.find(o=>o[1])||[c.w])[0]);B.cards=null;
-  if(w===c.w){sfx('ok');B.meFace='happy';const u=B.me.team.find(m=>m.w===w);B.me.cur=B.me.team.indexOf(u);B.combo=Math.min(3,B.combo+1);
+  if(w===c.w&&c.foe){sfx('star');B.meFace='happy';B.foeFace='surprised';B.combo=Math.min(3,B.combo+1);const t=foeNow(),u=alive().sort((a,b)=>b.atk-a.atk)[0];  // their line, said first
+   log(B,`가로채기! "${plain(c.q.ask).replace('___',right)}" — ${t.w}${josa(t.w,'이','가')} 할 말을 잃었어요.`,`Intercepted! ${t.w} lost its line.`);fxEv(t,0,'steal');t.st.frozen=1;if(u)hit(B,u,t,14)}
+  else if(w===c.w){sfx('ok');B.meFace='happy';const u=B.me.team.find(m=>m.w===w);B.me.cur=B.me.team.indexOf(u);B.combo=Math.min(3,B.combo+1);
    log(B,`"${plain(c.q.ask).replace('___',right)}" — ${u.w}의 「${MOVES[u.w].n}」!`,`${u.w} used ${MOVES[u.w].n}!`);MOVES[u.w].fx(B,u,foeNow());B.lastFx=u.w;u.cd=CD(u.w);
-   const x=M.box[u.w]||(M.box[u.w]={xp:0});const lv0=lvOf(u.w);x.xp++;if(lvOf(u.w)>lv0){sfx('badge');log(B,`${u.w} 레벨 업! Lv.${lvOf(u.w)}`,`${u.w} levelled up!`)}store(M)}
+   const x=M.box[u.w]||(M.box[u.w]={xp:0});const lv0=lvOf(u.w);x.xp++;if(lvOf(u.w)>lv0){sfx('badge');u.lv=lvOf(u.w);u.max+=8;u.hp=Math.min(u.max,u.hp+8);u.atk+=2;fxEv(u,8,'heal');log(B,`${u.w} 레벨 업! Lv.${lvOf(u.w)}`,`${u.w} levelled up!`)}store(M)}
   else{sfx('no');B.meFace='surprised';B.combo=0;const why=(c.q.opts.find(o=>!o[1]&&plain(o[0]).startsWith(w.replace(/다$/,'')))||[])[2];
    log(B,`안 맞아요. 여기는 "${right}"${right===c.w?'':` (${c.w})`}.${why?' '+plain(why):''}`,`Doesn't fit. It's "${right}" (${c.w}).`)}
   endTurn()});
@@ -254,14 +264,16 @@ function catchIt(defs,keep){
   else{B.combo=0;log(B,`그 문장엔 "${c.w}"${josa(c.w,'이','가')} 들어가요. ${t.w}${josa(t.w,'이','가')} 빠져나갔어요!`,`That sentence takes "${c.w}". ${t.w} broke free!`);endTurn()}});
 }
 /* the foe's turn: what it announced, at whom it announced (or whoever is still standing) */
-const trainerSays=(kind)=>{const T=TRAINERS[B.trainer];if(!T||!T[kind])return;const l=Array.isArray(T[kind][0])?pick(T[kind]):T[kind];log(B,`${SHORT[B.trainer]||B.trainer}: "${l[0]}"`,l[1])};
+const trainerSays=(kind)=>{const T=TRAINERS[B.trainer];if(!T||!T[kind])return;B.said=B.said||new Set();const opts=Array.isArray(T[kind][0])?T[kind].filter(x=>!B.said.has(x[0])):[T[kind]].filter(x=>!B.said.has(x[0]));if(!opts.length)return;const l=pick(opts);B.said.add(l[0]);log(B,`${SHORT[B.trainer]||B.trainer}: "${l[0]}"`,l[1])};
 const SHORT={'남궁찬':'찬','유하리':'하리','오다온':'다온','백구름':'구름'};
 function foeTurn(){
  const t=foeNow();if(t.hp<=0)return;B.foeHit=false;const I=B.intent||{move:false};const u=I.target&&I.target.hp>0?I.target:pick(alive());if(!u)return;
- if(t.st.frozen){log(B,`${t.w}${josa(t.w,'은','는')} 얼어서 못 움직여요.`,`${t.w} is frozen.`);return}
- if(t.st.awk&&Math.random()<.5){log(B,`어색해서 ${t.w}${josa(t.w,'이','가')} 아무것도 못 했어요.`,`Too awkward: ${t.w} did nothing.`);return}
+ const blocked=(ko,e)=>{log(B,'막았다! '+ko,'Blocked! '+e);fxEv(u,0,'block');sfx('star');B.meFace='happy'};
+ if(t.st.frozen){blocked(`${t.w}${josa(t.w,'은','는')} 움직이지 못해요.`,`${t.w} can't move.`);return}
+ if(t.st.miss){t.st.miss=0;B.foeHit=true;blocked(`${t.w}의 ${I.move&&MOVES[t.w]?'「'+MOVES[t.w].n+'」':'공격'}${I.move?'이':'이'} 빗나갔어요.`,`${t.w}'s action missed.`);return}
+ if(t.st.awk&&Math.random()<.5){blocked(`어색해서 ${t.w}${josa(t.w,'이','가')} 아무것도 못 했어요.`,`Too awkward: ${t.w} did nothing.`);return}
  if(I.move&&t.cd<=0&&MOVES[t.w]){if(!B.wild&&Math.random()<.5)trainerSays('move');log(B,`${t.w}의 「${MOVES[t.w].n}」!`,`${t.w} used ${MOVES[t.w].n}!`);
-  const swapB={me:B.foe,foe:B.me,log:B.log,lastFx:null,foeHit:false};MOVES[t.w].fx(swapB,t,u);t.cd=MOVES[t.w].cd||2}
+  const swapB={me:B.foe,foe:B.me,log:B.log,lastFx:null,foeHit:false};MOVES[t.w].fx(swapB,t,u);t.cd=MOVES[t.w].cd||2;B.foeHit=true}
  else{hit(B,t,u,10);B.foeHit=true}
  if(u.hp<=0){sfx('door');B.foeFace='happy';log(B,`${u.w}${josa(u.w,'이','가')} 쓰러졌어요…`,`${u.w} fell…`)}
 }
@@ -285,10 +297,11 @@ function endTurn(){
  if(!B.wild&&!B.lowSaid&&B.foe.team.filter(w=>w.hp>0).length===1&&foeNow().hp<foeNow().max*.3){B.lowSaid=1;trainerSays('low')}
  chooseIntent();render();
 }
-function teamPick(then){
+function teamPick(then,opts){
  const owned=Object.keys(M.box);if(owned.length<=3){then(owned);return}
+ const T=opts&&TRAINERS[opts.trainer],vsLine=T?`<div class="bench">상대 · ${esc(SHORT[opts.trainer]||opts.trainer)}: ${esc(T.style||'')} · ${opts.foe.map(w=>'□'.repeat(w.length)).join(' ')}</div>`:opts&&opts.wild?'<div class="bench">상대 · 야생 단어 하나</div>':'';
  let sel=(M.team||[]).filter(w=>M.box[w]);for(const w of owned)if(sel.length<3&&!sel.includes(w))sel.push(w);
- const draw=()=>{const box=panel(`<h2>내 단어 고르기 (${sel.length}/3)<span></span></h2>
+ const draw=()=>{const box=panel(`<h2>내 단어 고르기 (${sel.length}/3)<span></span></h2>${vsLine}
   <div class="box">${owned.map(w=>`<button class="act" type="button" data-w="${esc(w)}" aria-pressed="${sel.includes(w)}" style="${sel.includes(w)?'background:var(--ink);color:var(--hull)':''}"><b>${esc(w)}${M.box[w].fresh?' <small>새</small>':''}</b><small>Lv.${lvOf(w)} · ${esc(MOVES[w].n)}</small></button>`).join('')}</div>
   <div class="row"><button class="btn" type="button" id="btCancel">안 할래</button><button class="btn" type="button" id="btGo" ${sel.length===3?'':'disabled'} style="background:var(--ink);color:var(--hull)">시작</button></div>`);
   box.querySelectorAll('.act').forEach(b=>b.onclick=()=>{const w=b.dataset.w;sel=sel.includes(w)?sel.filter(x=>x!==w):sel.length<3?[...sel,w]:sel;draw()});
@@ -298,9 +311,9 @@ function startBattle(opts){
  teamPick(team=>{
   M.team=team;team.forEach(w=>{if(M.box[w])delete M.box[w].fresh});store(M);
   const myLv=Math.round(team.reduce((a,w)=>a+lvOf(w),0)/team.length);if(opts.scale!=null)opts.lv=Math.max(1,myLv+opts.scale);
-  B={me:{team:team.map(w=>mon(w,lvOf(w),'me')),cur:0},foe:{team:opts.foe.map(w=>mon(w,opts.lv,'foe')),cur:0},log:[],fx:[],combo:0,intent:null,downShown:new Set(),meFace:'think',foeFace:'happy',wild:!!opts.wild,trainer:opts.trainer||'',lastFx:null,foeHit:false};
+  B={me:{team:team.map(w=>mon(w,lvOf(w),'me')),cur:0},foe:{team:opts.foe.map(w=>mon(w,opts.lv,'foe')),cur:0},log:[],fx:[],combo:0,intent:null,downShown:new Set(),used:new Set(),meFace:'think',foeFace:'happy',wild:!!opts.wild,trainer:opts.trainer||'',lastFx:null,foeHit:false};
   log(B,opts.wild?`야생 단어 「${opts.foe[0]}」${josa(opts.foe[0],'이','가')} 나타났어요!`:`${opts.trainer}${josa(opts.trainer,'이','가')} 배틀을 걸었어요!`,opts.wild?`A wild "${opts.foe[0]}" appeared!`:`${opts.trainer} wants to battle!`);
-  chooseIntent();intro()});
+  chooseIntent();intro()},opts);
 }
 function intro(){  // like the start of a Pokémon battle: the two of you, then 가자!
  const t=foeNow();sfx('bell');
@@ -325,8 +338,9 @@ function finish(){
  if(b.over==='win'){M.wins[T.key]=(M.wins[T.key]||0)+1;if(T.champ)M.champ=1;store(M);try{updateQuest()}catch(e){}
   const take=b.foe.team.map(w=>w.w).filter(w=>!M.box[w]);
   const after=T.champ?()=>{sfx('star');toast('방송부 챔피언!')}:null;
-  if(!take.length){open0(b.trainer,[say(b.trainer,T.win[0],T.win[1])]);if(after)after();return}
-  open0(b.trainer,[{...say(b.trainer,T.win[0],T.win[1]),choose:take.map(w=>[`「${esc(w)}」 — ${esc(MOVES[w].n)}`,()=>{addWord(w);try{updateQuest()}catch(e){}reveal(w,'새 단어!',after)}])}]);return}
+  if(!take.length){(M.team||[]).forEach(w=>{if(M.box[w])M.box[w].xp+=2});store(M);toast('내 단어들 경험치 +2');
+   open0(b.trainer,[say(b.trainer,T.again[0],T.again[1])]);if(after)after();return}
+  open0(b.trainer,[{...say(b.trainer,T.win[0],T.win[1]),choose:take.map(w=>[`「${esc(w)}」 — ${esc(MOVES[w].n)}: ${esc(MOVES[w].d)}`,()=>{addWord(w);try{updateQuest()}catch(e){}reveal(w,'새 단어!',after)}])}]);return}
  open0(b.trainer,[say(b.trainer,T.lose[0],T.lose[1]),say('백구름','…단어들 좀 쉬게 하고, 다시 해 봐.','…let your words rest, then try again.')]);
 }
 /* 단어 도감: all 20, the ones you have with their meaning and move */
@@ -362,7 +376,7 @@ talkWith=function(n){
  if(on()&&n){
   if(n.name==='백구름'){const T=TRAINERS['백구름'],opts=[['단어 도감',showDex]];
    if(beatAll())opts.push(['챔피언전!',()=>startBattle({trainer:'백구름',foe:T.team,scale:1+Math.min(2,M.wins.gureum||0)})]);opts.push(['처음부터',resetAsk],['나중에',null]);
-   const line=beatAll()?say('백구름',T.hi[0],T.hi[1]):say('백구름',`단어 ${Object.keys(M.box).length}/${WORDS.length}개. 찬, 하리, 다온을 다 이기면… 나랑 해.`,`${Object.keys(M.box).length}/${WORDS.length} words. Beat Chan, Hari and Daon… then me.`);
+   const line=M.champ?say('백구름',T.hi2[0],T.hi2[1]):beatAll()?say('백구름',T.hi[0],T.hi[1]):say('백구름',`단어 ${Object.keys(M.box).length}/${WORDS.length}개. 찬, 하리, 다온을 다 이기면… 나랑 해.`,`${Object.keys(M.box).length}/${WORDS.length} words. Beat Chan, Hari and Daon… then me.`);
    return open0('백구름',[{...line,choose:opts}])}
   if(TRAINERS[n.name]){const T=TRAINERS[n.name];return open0(n.name,[{...say(n.name,T.hi[0],T.hi[1]),choose:[['배틀!',()=>startBattle({trainer:n.name,foe:T.team,scale:(M.wins[T.key]?0:-1)+Math.min(2,M.wins[T.key]||0)})],['나중에',null]]}])}
  }
