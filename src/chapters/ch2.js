@@ -501,6 +501,11 @@ const TAG={art:{pal:{O:'#1B1E2B',g:'#3E8E5A',w:'#F4F1E6'},down:['OOOOOOOO','Ogww
 const pick=a=>a[Math.random()*a.length|0];  // a repeat line picked at random, so a character talked to often doesn't say the same thing
 
 
+/* the 분식집 talk moves on only from the table: A on whoever's turn it is (facing them, not the table) gets an aside, so talking
+   to the others doesn't push the scene by accident. Whose turn: from the flags (status() asks script(), so not that). */
+const bTurn=k=>f().afterSchool&&!f().hariMaybe&&(k==='hariB'?!f().hariGiveUp:k==='chanB'?!!f().hariGiveUp&&!has('어색하다'):!!f().joke&&!has('분위기'));
+const facingNpc=k=>{const n=NPC[k],[dx,dy]=D[player.dir];return ZID==='bunsik'&&player.x+dx===n.x&&player.y+dy===n.y};
+const aside=k=>bTurn(k)&&facingNpc(k);
 const NPC={
  gureum:{name:'백구름',zone:'bcast',x:5,y:3,dir:'up',look:LOOK.gureum,badge:['기회','놓치다'],banmal:1,
   hide:()=>!!f().hariMaybe,
@@ -710,6 +715,7 @@ const NPC={
  hariB:{nomark:1,name:'유하리',zone:'bunsik',x:9,y:5,dir:'down',look:LOOK.hari,sit:1,chair:STOOL,badge:['포기하다'],
   hide:()=>!f().afterSchool||!!f().hariMaybe,
   get after(){return f().joke?['찬 선배 농담… 사실 좀 웃겼어요.']:['…저 진짜 못 할 것 같아요.']},  // she only agrees to one song later, to 다온
+  script:()=>aside('hariB')?[{say:'…선배, 떡볶이 식어요.',face:'think'}]:null,
   talk:()=>[
    {who:'…',say:'떡볶이가 보글보글. 하리는 젓가락만 들고 있어요.',sit:{x:9,y:7,dir:'up',chair:STOOL_N}},
    {say:'선배, 저 방송… 못 할 것 같아요.',face:'sad'},
@@ -723,7 +729,7 @@ const NPC={
   hide:()=>!f().afterSchool||!!f().hariMaybe,
   get after(){return pick([['자동차를 톡 치면? …아, 이미 했지.'],['하리 웃었지? 봤지? 나 천재야.']])},
   status:()=>{if(!has('어색하다'))return f().hariGiveUp?'todo':'wait'},
-  script:()=>!has('어색하다')&&!f().hariGiveUp?[{say:'떡볶이 나왔다! 하리 얘기부터 들어 봐.'}]:null,
+  script:()=>aside('chanB')?[{say:'야, 하리 괜찮아? 너무 조용하다.',face:'think'}]:!has('어색하다')&&!f().hariGiveUp?[{say:'떡볶이 나왔다! 하리 얘기부터 들어 봐.'}]:null,
   /* you choose how to break the silence (the 목표 asks you to change the mood); every way leads into 찬's joke */
   talk:()=>{const rest=[
     {say:'자동차를 톡 치면 뭐게?',face:'think'},
@@ -746,7 +752,7 @@ const NPC={
  daonB:{nomark:1,name:'오다온',zone:'bunsik',x:8,y:7,dir:'up',look:LOOK.daon,sit:1,chair:STOOL_N,badge:['분위기','재촉하다','연락처','데려오다'],banmal:1,
   hide:()=>!f().afterSchool||!!f().hariMaybe,
   status:()=>{if(!has('분위기'))return f().joke?'todo':'wait'},
-  script:()=>!has('분위기')&&!f().joke?[{who:'나',say:'다온이도 왔네?'},{say:'나? 찬이한테 끌려왔어.',face:'angry'},{say:'학원 가기 전에 잠깐만이야.'}]:null,
+  script:()=>aside('daonB')?[{say:'나 학원 가야 돼. 빨리 얘기하자.'}]:!has('분위기')&&!f().joke?[{who:'나',say:'다온이도 왔네?'},{say:'나? 찬이한테 끌려왔어.',face:'angry'},{say:'학원 가기 전에 잠깐만이야.'}]:null,
   talk:()=>[
    {say:'찬이한테 끌려왔는데… 웃기긴 하네.',grammar:'gineun'},
    {say:'그나저나 하리가 웃었다. 다행이야.'},

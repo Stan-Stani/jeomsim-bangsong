@@ -38,9 +38,10 @@
  {inspect:['street',9,2]},
  {talk:'chanB'},
  {talk:'owner',wrong:true,shotBefore:'09-bunsik'},
- {talk:'hariB',wrong:true,shotSay:{text:'포기할까요',name:'10-hari-give-up'}},
- {talk:'chanB',shotSay:{text:'카를 톡',name:'11-joke'}},
- {talk:'daonB',wrong:true,shotSay:{text:'재촉하지 마',name:'12-daon-hurry'}},
+ {talk:'hariB',shotSay:{text:'식어요',name:'10a-hari-aside'}},  // A on 하리 herself: an aside; the talk moves on only from the table
+ {talk:'tableB',wrong:true,shotSay:{text:'포기할까요',name:'10-hari-give-up'}},
+ {talk:'tableB',shotSay:{text:'카를 톡',name:'11-joke'}},
+ {talk:'tableB',wrong:true,shotSay:{text:'재촉하지 마',name:'12-daon-hurry'}},
  {check:()=>state.f.hariMaybe&&state.items.includes('하리 연락처')&&state.items.includes('생수'),msg:'contact + water'},
  {check:()=>!state.f.nextDay&&C.NPC.hariMic.hide()&&C.NPC.daonL.hide(),msg:'same evening: the crew is not in the 방송실 yet'},
  {walkTo:['hall',18,7],then:'12b-hall-doors'},
