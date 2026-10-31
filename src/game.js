@@ -1,5 +1,9 @@
 /* Settings for the shared engine (walk-engine): this game's names, storage prefix and default player. */
-var GAME={prefix:'banghu',music:{by:'kimlinkku (Free Music Loop Pack)',url:'https://kimlinkku.itch.io/free-music-loop-pack'},title:'점심 방송',log:'단어 일지',
+var GAME={prefix:'banghu',
+ /* the credit for the playing track (the engine reads it when the music changes): 다온's theme is our own, the rest kimlinkku's */
+ get music(){return typeof bgmSrc!=='undefined'&&/daon-theme/.test(bgmSrc)?{by:"점심 방송 original, inspired by Toby Fox's Vriska's Theme (AlterniaBound)",url:'https://homestuck.bandcamp.com/track/vriskas-theme'}
+  :{by:'kimlinkku (Free Music Loop Pack)',url:'https://kimlinkku.itch.io/free-music-loop-pack'}},
+ title:'점심 방송',log:'단어 일지',
  /* spaced review: due again after 2 story beats or 5 minutes, then 5 beats or 20 minutes (★ within one 교시); later levels are
     hours and days, and one shared record lets a later 교시 bring earlier words back (class time, the notebook, the last round) */
  srs:{start:1,gap:[0,5*60e3,20*60e3,4*3600e3,24*3600e3,3*24*3600e3],beats:[0,2,5],shared:1},

@@ -2052,7 +2052,15 @@ const VARIANTS={
 const TILES={...SCHOOL_TILES,...VARIANTS,
 };
 const PLAYER=LOOK.player;
-const MUSIC='audio/cafe-alps.m4a';  // the whole 교시 (src: ~/Developer/music, CafeAlps)
+// The whole 교시 is Cafe Alps (src: ~/Developer/music, CafeAlps), except 다온's theme while she stops you at the classroom door.
+// When the 벌금 is paid her theme fades out over ~2.5 s (the engine's own switch is a cut), then Cafe Alps comes back.
+const CAFE='audio/cafe-alps.m4a',DAON='audio/daon-theme.m4a';let daonFade=null;
+const MUSIC=()=>{const F=f();
+ if(!F.paidFine)return ZID==='class'?DAON:CAFE;
+ if(bgmSrc!==DAON)return CAFE;
+ if(daonFade===null){const t0=performance.now();daonFade=setInterval(()=>{const k=Math.max(0,1-(performance.now()-t0)/2500);
+  if(bgm&&bgmSrc===DAON)bgm.volume=musicLevel()*k;if(k===0){clearInterval(daonFade);daonFade=0;updateMusic()}},50)}
+ return daonFade===0?CAFE:DAON};
 return {MUSIC,WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,seatPulled,seatPulledN};  // the school's desks and tables ask these whether a chair is pulled out
 }});
 </script>
@@ -5670,7 +5678,11 @@ return {MUSIC,WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,PHOTOS,ZONES,NPC,FOLL
 </script>
 <script>
 /* Settings for the shared engine (walk-engine): this game's names, storage prefix and default player. */
-var GAME={prefix:'banghu',music:{by:'kimlinkku (Free Music Loop Pack)',url:'https://kimlinkku.itch.io/free-music-loop-pack'},title:'점심 방송',log:'단어 일지',
+var GAME={prefix:'banghu',
+ /* the credit for the playing track (the engine reads it when the music changes): 다온's theme is our own, the rest kimlinkku's */
+ get music(){return typeof bgmSrc!=='undefined'&&/daon-theme/.test(bgmSrc)?{by:"점심 방송 original, inspired by Toby Fox's Vriska's Theme (AlterniaBound)",url:'https://homestuck.bandcamp.com/track/vriskas-theme'}
+  :{by:'kimlinkku (Free Music Loop Pack)',url:'https://kimlinkku.itch.io/free-music-loop-pack'}},
+ title:'점심 방송',log:'단어 일지',
  /* spaced review: due again after 2 story beats or 5 minutes, then 5 beats or 20 minutes (★ within one 교시); later levels are
     hours and days, and one shared record lets a later 교시 bring earlier words back (class time, the notebook, the last round) */
  srs:{start:1,gap:[0,5*60e3,20*60e3,4*3600e3,24*3600e3,3*24*3600e3],beats:[0,2,5],shared:1},
@@ -5931,7 +5943,7 @@ globalThis.GRAMMAR_NOTES={
 </script>
 <script>
 /* This build (version.json): v = a hash of the game, t = when this version first appeared. */
-globalThis.BUILD={"v": "f023ced1", "t": "2026-10-30T02:33Z"};
+globalThis.BUILD={"v": "1f74a43f", "t": "2026-10-31T01:36Z"};
 </script>
 <script>
 /* GENERATED from walk-engine/engine.js (8f3d663) — do not edit here; edit walk-engine and run its sync.sh. */

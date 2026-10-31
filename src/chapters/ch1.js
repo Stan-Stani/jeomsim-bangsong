@@ -906,7 +906,7 @@ const TILES={...SCHOOL_TILES,...VARIANTS,
 const PLAYER=LOOK.player;
 // The whole 교시 is Cafe Alps (src: ~/Developer/music, CafeAlps), except 다온's theme while she stops you at the classroom door.
 // When the 벌금 is paid her theme fades out over ~2.5 s (the engine's own switch is a cut), then Cafe Alps comes back.
-const CAFE='audio/cafe-alps.m4a',DAON='audio/daon.m4a';let daonFade=null;
+const CAFE='audio/cafe-alps.m4a',DAON='audio/daon-theme.m4a';let daonFade=null;
 const MUSIC=()=>{const F=f();
  if(!F.paidFine)return ZID==='class'?DAON:CAFE;
  if(bgmSrc!==DAON)return CAFE;
