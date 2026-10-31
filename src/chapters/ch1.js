@@ -904,6 +904,14 @@ const VARIANTS={
 const TILES={...SCHOOL_TILES,...VARIANTS,
 };
 const PLAYER=LOOK.player;
-const MUSIC='audio/cafe-alps.m4a';  // the whole 교시 (src: ~/Developer/music, CafeAlps)
+// The whole 교시 is Cafe Alps (src: ~/Developer/music, CafeAlps), except 다온's theme while she stops you at the classroom door.
+// When the 벌금 is paid her theme fades out over ~2.5 s (the engine's own switch is a cut), then Cafe Alps comes back.
+const CAFE='audio/cafe-alps.m4a',DAON='audio/daon.m4a';let daonFade=null;
+const MUSIC=()=>{const F=f();
+ if(!F.paidFine)return ZID==='class'?DAON:CAFE;
+ if(bgmSrc!==DAON)return CAFE;
+ if(daonFade===null){const t0=performance.now();daonFade=setInterval(()=>{const k=Math.max(0,1-(performance.now()-t0)/2500);
+  if(bgm&&bgmSrc===DAON)bgm.volume=musicLevel()*k;if(k===0){clearInterval(daonFade);daonFade=0;updateMusic()}},50)}
+ return daonFade===0?CAFE:DAON};
 return {MUSIC,WORDS,DICT,CONFUSE,BANK,Q,REVIEW,CLASS,ITEMS,ZONES,NPC,FOLLOW,INTRO,DONE,questText,clock,TILES,VARIANTS,PLAYER,seatPulled,seatPulledN};  // the school's desks and tables ask these whether a chair is pulled out
 }});
